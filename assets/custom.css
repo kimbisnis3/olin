@@ -1,0 +1,17 @@
+.selected {
+    background-color: #008B8B !important;
+    color: #ffffff !important;
+}
+
+.select2-container {
+    width: 100% !important;
+    padding: 0;
+}
+
+.invisible {
+    display: none;
+}
+
+.form-control {
+	border-radius: 0 !important;
+}
