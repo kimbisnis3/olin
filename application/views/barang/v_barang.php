@@ -164,7 +164,6 @@
       select2();
       getMenu();
       setTimeout(function(){ activemenu(); }, 500);
-      getSelect('sGroup','getGroupMenu');
 
       table = $('#table').DataTable({
           "processing": true,

@@ -181,6 +181,7 @@
   var table ;
 
   $(document).ready(function() {
+      $('.title').text('Fitur Aplikasi');
       allowAkses();
       select2();
       getMenu();
