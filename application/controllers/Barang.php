@@ -79,9 +79,11 @@ class Barang extends CI_Controller {
           echo "cURL Error #:" . $err;
         } else {
               $data = json_decode($response, true); 
+              $op = "<option value=''>-</option>";
               for ($i=0; $i < count($data['rajaongkir']['results']); $i++) {  
-                  echo "<option value='".$data['rajaongkir']['results'][$i]['province_id']."'>".$data['rajaongkir']['results'][$i]['province']."</option>"; 
+                $op .="<option value='".$data['rajaongkir']['results'][$i]['province_id']."'>".$data['rajaongkir']['results'][$i]['province']."</option>";
               }  
+                echo $op; 
         }
     }
 
@@ -111,9 +113,11 @@ class Barang extends CI_Controller {
           echo "cURL Error #:" . $err;
         } else {
           $data = json_decode($response, true); 
-              for ($i=0; $i < count($data['rajaongkir']['results']); $i++) {  
-                  echo "<option value='".$data['rajaongkir']['results'][$i]['city_id']."'>".$data['rajaongkir']['results'][$i]['city_name']."</option>"; 
+          $op = "<option value=''>-</option>";
+              for ($i=0; $i < count($data['rajaongkir']['results']); $i++) { 
+              $op .=  "<option value='".$data['rajaongkir']['results'][$i]['city_id']."'>".$data['rajaongkir']['results'][$i]['city_name']."</option>"; 
               }  
+                  echo $op;
 
         }
     }
@@ -150,9 +154,48 @@ class Barang extends CI_Controller {
           echo "cURL Error #:" . $err;
         } else {
           $data = json_decode($response, true); 
+          $op = "<option value=''>-</option>";
               for ($i=0; $i < count($data['rajaongkir']['results'][0]['costs']); $i++) {  
-                  echo "<option value='".$data['rajaongkir']['results'][0]['costs'][$i]['service']."'>".$data['rajaongkir']['results'][0]['costs'][$i]['service']." (".$data['rajaongkir']['results'][0]['costs'][$i]['description'].")</option>"; 
+                $res = $data['rajaongkir']['results'][0]['costs'][$i];
+                $op .= "<option value='@".$res['service']."@?".$res['cost'][0]['value']."?'>".$res['service']." (".$res['description']." - ".number_format($res['cost'][0]['value']).")</option>";
               }
+                  echo $op; 
+              // echo $response;
+        }
+    }
+
+    function tes_ongkir() {
+        $origin         = $this->input->get('origin'); 
+        $destination    = $this->input->get('destination'); 
+        $weight         = $this->input->get('weight') * 1000;
+        $courier        = $this->input->get('courier');
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+          CURLOPT_URL => "https://api.rajaongkir.com/starter/cost",
+          CURLOPT_RETURNTRANSFER => true,
+          CURLOPT_ENCODING => "",
+          CURLOPT_MAXREDIRS => 10,
+          CURLOPT_TIMEOUT => 30,
+          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+          CURLOPT_CUSTOMREQUEST => "POST",
+          // CURLOPT_POSTFIELDS => "origin={$origin}&destination={$destination}&weight={$weight}&courier={$courier}",
+          CURLOPT_POSTFIELDS => "origin=445&destination=151&weight=1&courier=jne",
+          CURLOPT_HTTPHEADER => array(
+            "content-type: application/x-www-form-urlencoded",
+            "key: 5c8590c12ef6879e2b829c4ab6aa955e"
+          ),
+        ));
+
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+
+        curl_close($curl);
+
+        if ($err) {
+          echo "cURL Error #:" . $err;
+        } else {
+          echo $response;
         }
     }
 

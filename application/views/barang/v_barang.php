@@ -59,7 +59,7 @@
                           <div class="col-md-4">
                             <div class="form-group">
                               <label>Berat</label>
-                              <input type="text" class="form-control" name="berat">
+                              <input type="text" class="form-control" name="berat" onkeyup="setService()">
                             </div>
                           </div>
                           <div class="col-md-8">
@@ -69,7 +69,7 @@
                                 <option value="">- Pilih Data -</option>
                                 <option value="jne">JNE</option>
                                 <option value="tiki">TIKI</option>
-                                <option value="post">POS</option>
+                                <option value="pos">POS</option>
                               </select>
                             </div>
                           </div>
@@ -78,10 +78,20 @@
                           <div class="col-md-8">
                             <div class="form-group">
                               <label>Service</label>
-                              <select class="form-control select2" id="select-service" name="serv">
+                              <select class="form-control select2" id="select-service" name="serv" onchange="setPrice()">
                                 <option value="">- Pilih Data -</option>
                               </select>
                             </div>
+                          </div>
+                          <div class="col-md-4">
+                            <label>Biaya</label>
+                            <input type="text" class="form-control" name="biaya" disabled="true">
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-md-4">
+                            <label>Kode Kurir</label>
+                            <input type="text" class="form-control" name="kodekurir" disabled="true">
                           </div>
                         </div>
                       </div>
@@ -365,7 +375,20 @@
       let weight      = $('[name="berat"]').val();
       let courier     = $('[name="kurir"]').val();
       $('#select-service').load(`<?php echo site_url()?>barang/request_ongkir?origin=${origin}&destination=${destination}&weight=${weight}&courier=${courier}`);
+      $('[name="biaya"]').val($('#select-service').val()) ; 
+      $('[name="biaya"]').val('');
       return false;
+  }
+
+  function setPrice() {
+    let s = $('#select-service').val()
+    if (s.length > 0) {
+      let b = s.match((/\?(.*?)\?/g));
+      let k = s.match((/\@(.*?)\@/g));
+      $('[name="biaya"]').val(b.toString().replace(/\?/g, '')) ;
+      $('[name="kodekurir"]').val(k.toString().replace(/\@/g, '')) ;
+    }
+    console.log(s)
   }
 
 
