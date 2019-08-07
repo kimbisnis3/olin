@@ -1,5 +1,85 @@
 <?php
 class Unimodel extends CI_Model{
+
+    function __construct() {
+        parent::__construct();
+    }
+
+    function getMenuInduk() {
+        $sql = "SELECT DISTINCT
+            taction.kategori_menu,
+            taction_group.group_action namainduk,
+            taction_group.kode kodeinduk,
+            taction_group.icon_group iconinduk
+        FROM
+            taction
+        LEFT OUTER JOIN topsi ON taction.id_action = topsi.ref_action_opsi
+        LEFT OUTER JOIN taction_group ON taction.group_action = taction_group.kode
+        WHERE
+            taction.entity_action = 'web'";
+
+        if ($this->session->userdata("issupper") != 1) {
+            $sql .=" AND topsi.ref_access_opsi = {$this->session->userdata("access")}";
+        }
+        
+        $sql .=" ORDER BY taction_group.kode ASC";
+
+        return $this->db->query($sql)->result();
+    }
+
+    function getMenuAnak() {
+        $sql = "SELECT
+            taction.kategori_menu,
+            taction.id_action,
+            taction.nama_action,
+            taction.application_handle,
+            taction.path,
+            taction_group.group_action namainduk,
+            taction_group.kode kodeinduk
+        FROM
+            taction
+        LEFT OUTER JOIN topsi ON taction.id_action = topsi.ref_action_opsi
+        LEFT OUTER JOIN taction_group ON taction.group_action = taction_group.kode
+        WHERE
+            taction.entity_action = 'web'";
+        if ($this->session->userdata("issupper") != 1) {
+            $sql .=" AND topsi.ref_access_opsi = {$this->session->userdata("access")}";
+        }
+        $sql .=" ORDER BY kategori_menu";
+
+        return $this->db->query($sql)->result();
+    }
+
+    function getaksesmenu(){
+        $access = $this->session->userdata("access");
+        $sql    = 
+            "SELECT
+            taction_group.group_action,
+            taction_group.icon_group,
+            taction.nama_action nama,
+            taction.icon_action icon,
+            taction.kategori_menu kategori
+        FROM
+            taction
+        LEFT OUTER JOIN topsi ON taction.id_action = topsi.ref_action_opsi
+        LEFT OUTER JOIN taction_group ON taction.group_action = taction_group.kode
+        WHERE
+            taction.entity_action = 'web' 
+        ";
+
+        if ($access != NULL or $access != '') {
+            $sql .= " AND topsi.ref_access_opsi = '$access'";
+        }
+
+        if ($access == NULL or $access == '') {
+        $sql .= " GROUP BY taction_group.icon_group,taction_group.sort_group, taction_group.group_action, taction.nama_action, taction.sort_menu,taction.icon_action,taction.kategori_menu";
+        }
+        $sql .= " ORDER BY taction_group.sort_group, taction.sort_menu ASC";
+
+
+        $query = $this->db->query($sql);
+        return $query->result();
+    }
    
 
     function que_all($sql)
@@ -58,19 +138,19 @@ class Unimodel extends CI_Model{
         return $this->db->get_where($tb,$where);
     }
 
-    public function datauser($username)
+    public function get_user_info($username)
     {
         $sql    = 
         "SELECT
             *
         FROM
             tuser
+        LEFT JOIN taccess ON tuser.ref_access_user = taccess.id_access
         WHERE 
-            tuser.nama_user='$username'
-        ";
+            tuser.nama_user='$username'";
 
         $query = $this->db->query($sql);
-        return $query->row();
+        return $query;
     }
 
     public function sessionkodeup($wheresession, $session_kode)

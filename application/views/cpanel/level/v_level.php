@@ -30,7 +30,7 @@
                             <div class="form-group">
                               <input type="hidden" name="id_opsi" >
                               <label>Nama Level</label>
-                              <select class="form-control" style="width: 100%; border-radius: 0px" name="access" id="access">
+                              <select class="form-control select2 input-level" style="width: 100%; border-radius: 0px" name="access" id="access">
                                 <option value="">--</option>
                               </select>
                             </div>
@@ -38,7 +38,7 @@
                           <div class="col-md-6">
                             <div class="form-group">
                               <label>Fitur Aplikasi</label>
-                              <select class="form-control" style="width: 100%; border-radius: 0px" name="action" id="action">
+                              <select class="form-control select2 input-fitur" style="width: 100%; border-radius: 0px" name="action" id="action">
                                 <option value="">--</option>
                               </select>
                             </div>
@@ -113,14 +113,10 @@
                     <div class="row">
                       <div class="col-md-3">
                         <div class="form-group">
-                          <label>Filter 1</label>
-                          <input type="text" class="form-control datepicker" name="xx">
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div class="form-group">
-                          <label>Filter 2</label>
-                          <input type="text" class="form-control" name="zzz">
+                          <label>User</label>
+                          <select class="form-control select2 input-level" name="filter-user" id="filter-level" onchange="filterAksesChange()">
+                                <option value="">--</option>
+                              </select>
                         </div>
                       </div>
                     </div>
@@ -183,15 +179,18 @@
       $('.title').text(title);
       allowAkses();
       select2();
-      getMenu();
-      getGroupMenu();
+      activemenux('menu-dev', 'menu-dev-level');
+      getAllUser();
+      getAllFitur();
 
       table = $('#table').DataTable({
           "processing": true,
           "ajax": {
               "url": `${apiurl}/getall`,
               "type": "POST",
-              "data": {},
+              "data": {
+                akses : function() { return $('#filter-level').val() }
+              },
           },
           "columns": [
           { "data": "no" }, 
@@ -223,10 +222,15 @@
       idx = -1;
   }
 
+  function filterAksesChange(){
+    refresh()
+  }
+
   function add_data() {
       state = 'add';
       $('#form-data')[0].reset();
       $('.select2').trigger('change');
+      $('#levelshow').attr('style','display : '); 
       $('#modal-data').modal('show');
       $('.modal-title').text('Tambah Data');
   }
@@ -246,8 +250,12 @@
           },
           dataType: "JSON",
           success: function(data) {
-              $('[name="id"]').val(data.id_opsi);
+              $('[name="id_opsi"]').val(data.id_opsi);
               (data.i == 't') ? $('[name="i"]').prop('checked',true) : $('[name="i"]').prop('checked',false);
+              (data.u == 't') ? $('[name="u"]').prop('checked',true) : $('[name="u"]').prop('checked',false);
+              (data.d == 't') ? $('[name="d"]').prop('checked',true) : $('[name="d"]').prop('checked',false);
+              (data.o == 't') ? $('[name="o"]').prop('checked',true) : $('[name="o"]').prop('checked',false);
+              $('#levelshow').attr('style','display : none'); 
               $('#modal-data').modal('show');
               $('.modal-title').text('Edit Data');
           },
@@ -321,14 +329,31 @@
       });
   }
 
-  function getGroupMenu() {
+  function getAllUser() {
       $.ajax({
-          url: '<?php echo base_url() ?>universe/getGroupMenu',
+          url: '<?php echo base_url() ?>universe/getAllLevel',
           type: "POST",
           dataType: "JSON",
           success: function(data) {
               for (var i = 0; i < data.length; i++) {
-                  $("#groupMenu").append('<option value=' + data[i].kode + '>' + data[i].group_action + '</option>');
+                  $(".input-level").append('<option value=' + data[i].id_access + '>' + data[i].nama_access + '</option>');
+              }
+          },
+          error: function(jqXHR, textStatus, errorThrown) {
+              alert('Error on process');
+          }
+      });
+
+  }
+
+  function getAllFitur() {
+      $.ajax({
+          url: '<?php echo base_url() ?>universe/getAllFiturByUser',
+          type: "POST",
+          dataType: "JSON",
+          success: function(data) {
+              for (var i = 0; i < data.length; i++) {
+                  $(".input-fitur").append('<option value=' + data[i].id_action + '>' + data[i].nama_action + '</option>');
               }
           },
           error: function(jqXHR, textStatus, errorThrown) {

@@ -54,7 +54,8 @@ class Universe extends CI_Controller {
         LEFT OUTER JOIN taction_group ON taction.group_action = taction_group.kode
         WHERE
             taction.entity_action = 'web'
-        AND topsi.ref_access_opsi = {$this->session->userdata("access")}";
+        AND topsi.ref_access_opsi = {$this->session->userdata("access")}
+        ORDER BY taction_group.kode ASC";
 
         $anak = "SELECT
             taction.kategori_menu,
@@ -82,6 +83,57 @@ class Universe extends CI_Controller {
 
     function getGroupMenu() {
         $r = $this->db->get('taction_group')->result();
+        echo json_encode($r);
+    }
+
+    public function getAllUser()
+    {
+        $sql    = 
+        "SELECT
+            *
+        FROM
+            tuser
+        LEFT JOIN taccess ON tuser.ref_access_user = taccess.id_access
+        WHERE 
+            taccess.issuper_access != 1";
+
+        $r = $this->db->query($sql)->result();
+        echo json_encode($r);
+    }
+
+    public function getAllLevel()
+    {
+        $sql    = 
+        "SELECT
+            *
+        FROM
+            taccess
+        WHERE 
+            taccess.issuper_access != 1";
+
+        $r = $this->db->query($sql)->result();
+        echo json_encode($r);
+    }
+
+    public function getAllFiturByUser()
+    {
+        $sql    = 
+        "SELECT
+            *
+        FROM
+            taction
+        LEFT JOIN topsi ON taction.id_action = topsi.ref_action_opsi
+        WHERE
+            taction.id_action NOT IN (
+                SELECT
+                    topsi.ref_action_opsi
+                FROM
+                    topsi
+                WHERE
+                    ref_access_opsi = '{$this->session->userdata('access')}'
+            )";
+
+        $r = $this->db->query($sql)->result();
         echo json_encode($r);
     }
 

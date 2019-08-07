@@ -7,7 +7,7 @@ class Level extends CI_Controller {
     public $indexpage   = 'cpanel/level/v_level';
     function __construct() {
         parent::__construct();
-        // include(APPPATH.'libraries/sessionsuper.php');
+        include(APPPATH.'libraries/sessionsuper.php');
     }
     function index(){
         $this->load->view($this->indexpage);  
@@ -41,12 +41,13 @@ class Level extends CI_Controller {
         $no         = 1;
         $list       = [];
         foreach ($result as $r) {
-            $row['id_opsi'] = $r->id_opsi;
+            $row['id'] = $r->id_opsi;
+            $row['nama_action'] = $r->nama_action;
             $row['no']      = $no;
-            $row['i']       = $r->i;
-            $row['u']       = $r->u;
-            $row['d']       = $r->d;
-            $row['p']       = $r->o;
+            $row['i']       = checkcolor($r->i);
+            $row['u']       = checkcolor($r->u);
+            $row['d']       = checkcolor($r->d);
+            $row['o']       = checkcolor($r->o);
 
             $list[] = $row;
             $no++;
@@ -56,13 +57,13 @@ class Level extends CI_Controller {
 
     public function savedata()
     {   
-        $d['useri']             = ien($this->session->userdata('nama_user'));
-        $d['ref_access_opsi']   = ien($this->session->userdata('ref_access_opsi'));
-        $d['ref_action_opsi']   = ien($this->session->userdata('ref_action_opsi'));
-        $d['i']                 = ien($this->session->userdata('i'));
-        $d['u']                 = ien($this->session->userdata('u'));
-        $d['d']                 = ien($this->session->userdata('d'));
-        $d['o']                 = ien($this->session->userdata('o'));
+        $d['useri']             = ien($this->session->userdata('username'));
+        $d['ref_access_opsi']   = ien($this->input->post('access'));
+        $d['ref_action_opsi']   = ien($this->input->post('action'));
+        $d['i']                 = ien($this->input->post('i'));
+        $d['u']                 = ien($this->input->post('u'));
+        $d['d']                 = ien($this->input->post('d'));
+        $d['o']                 = ien($this->input->post('o'));
 
         $result = $this->db->insert($this->table,$d);
         $r['sukses'] = $result ? 'success' : 'fail' ;
@@ -71,20 +72,20 @@ class Level extends CI_Controller {
 
     public function edit()
     {
-        $w['id_action']= $this->input->post('id');
+        $w['id_opsi']= $this->input->post('id');
         $data   = $this->db->get_where($this->table,$w)->row();
         echo json_encode($data);
     }
 
     function updatedata(){
 
-        $d['useru'] = ien($this->session->userdata('nama_user'));
-        $d['i']     = ien($this->session->userdata('i'));
-        $d['u']     = ien($this->session->userdata('u'));
-        $d['d']     = ien($this->session->userdata('d'));
-        $d['o']     = ien($this->session->userdata('o'));
+        $d['useru'] = ien($this->session->userdata('username'));
+        $d['i']     = ien($this->input->post('i'));
+        $d['u']     = ien($this->input->post('u'));
+        $d['d']     = ien($this->input->post('d'));
+        $d['o']     = ien($this->input->post('o'));
 
-        $w['id_opsi'] = $this->input->post('id');
+        $w['id_opsi'] = $this->input->post('id_opsi');
         $result = $this->db->update($this->table,$d,$w);
         $r['sukses'] = $result ? 'success' : 'fail' ;
         echo json_encode($r);
@@ -92,7 +93,7 @@ class Level extends CI_Controller {
 
     public function deletedata()
     {
-        $w['id_action'] = $this->input->post('id');
+        $w['id_opsi'] = $this->input->post('id');
         $result = $this->db->delete($this->table,$w);
         $r['sukses'] = $result ? 'success' : 'fail' ;
         echo json_encode($r);

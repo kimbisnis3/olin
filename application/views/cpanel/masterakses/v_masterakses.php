@@ -25,48 +25,10 @@
                   <form id="form-data">
                     <div class="row">
                       <div class="col-md-12">
-                        <div class="row panel panel-success" >
-                          <div class="col-md-6">
-                            <div class="form-group">
-                              <input type="hidden" name="id" >
-                              <label>Nama</label>
-                              <input type="text" name="nama_action" class="form-control">
-                            </div>
-                          </div>
-                          <div class="col-md-3">
-                            <div class="form-group">
-                              <label>Kategori</label>
-                              <input type="text" name="kategori_menu" class="form-control">
-                            </div>
-                          </div>
-                          <div class="col-md-3">
-                            <div class="form-group">
-                              <label>Handle</label>
-                              <input type="text" name="application_handle" class="form-control">
-                            </div>
-                          </div>
-                        </div>
-                        <div class="row panel panel-success">
-                          <div class="col-md-4">
-                            <div class="form-group">
-                              <label>Group</label>
-                              <select class="form-control" name="group_action" id="groupMenu">
-                                <option value="">--</option>
-                              </select>
-                            </div>
-                          </div>
-                          <div class="col-md-4">
-                            <div class="form-group">
-                              <label>Icon</label>
-                              <input type="text" name="icon_action" class="form-control">
-                            </div>
-                          </div>
-                          <div class="col-md-4">
-                            <div class="form-group">
-                              <label>Urutan</label>
-                              <input type="number" name="sort_menu" class="form-control">
-                            </div>
-                          </div>
+                        <div class="form-group">
+                          <label>Nama Akses</label>
+                          <input type="hidden" name="id_access">
+                          <input type="text" class="form-control" name="nama_access">
                         </div>
                       </div>
                     </div>
@@ -113,16 +75,9 @@
                       <table id="table" class="table table-striped table-bordered" cellspacing="0" width="100%">
                         <thead>
                           <tr id="repeat">
-                            <th width="2%">No.</th>
-                            <th width="2%">ID.</th>
-                            <th>Nama Fitur</th>
-                            <th>Kategori</th>
-                            <th>Handle Aplikasi</th>
-                            <th>ID Key</th>
-                            <th>Group</th>
-                            <th>Nama Icon</th>
-                            <th>Icon</th>
-                            <th>Urutan</th>
+                            <th width="5%">No</th>
+                            <th>ID</th>
+                            <th>Nama Akses</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -141,20 +96,18 @@
     </html>
   <?php $this->load->view('_partials/js'); ?>
   <script type="text/javascript">
-  var path = 'cpanel/fitur';
-  var title = 'Fitur Aplikasi';
-  var grupmenu = 'Cpanel';
+  var path = 'cpanel/masterakses';
+  var title = 'Master Akses';
+  var grupmenu = 'Agen';
   var apiurl = "<?php echo base_url('') ?>" + path;
   var state;
   var idx     = -1;
   var table ;
 
   $(document).ready(function() {
-      $('.title').text('Fitur Aplikasi');
+      $('.title').text(title);
       allowAkses();
-      select2();
-      getGroupMenu();
-      activemenux('menu-dev', 'menu-dev-fitur')
+      activemenux('menu-dev', 'menu-dev-masterakses')
 
       table = $('#table').DataTable({
           "processing": true,
@@ -165,15 +118,8 @@
           },
           "columns": [
           { "data": "no" }, 
-          { "data": "id" , "visible" : false},
-          { "data": "nama_action" },
-          { "data": "kategori_menu" },
-          { "data": "application_handle" },
-          { "data": "id" },
-          { "data": "group_action" },
-          { "data": "icon_action" },
-          { "data": "icon" },
-          { "data": "sort_menu" }
+          { "data": "id_access" , "visible" : false},
+          { "data": "nama_access" },
           ]
       });
 
@@ -219,14 +165,8 @@
           },
           dataType: "JSON",
           success: function(data) {
-              $('[name="id"]').val(data.id_action);
-              $('[name="nama_action"]').val(data.nama_action);
-              $('[name="application_handle"]').val(data.application_handle);
-              $('[name="group_action"]').val(data.group_action);
-              $('[name="icon_action"]').val(data.icon_action);
-              $('[name="sort_menu"]').val(data.sort_menu);
-              $('[name="kategori_menu"]').val(data.kategori_menu);
-              $('.select2').trigger('change');
+              $('[name="id_access"]').val(data.id_access);
+              $('[name="nama_access"]').val(data.nama_access);
               $('#modal-data').modal('show');
               $('.modal-title').text('Edit Data');
           },
@@ -298,23 +238,6 @@
               showNotif('Fail', 'Internal Error', 'danger');
           }
       });
-  }
-
-  function getGroupMenu() {
-      $.ajax({
-          url: '<?php echo base_url() ?>universe/getGroupMenu',
-          type: "POST",
-          dataType: "JSON",
-          success: function(data) {
-              for (var i = 0; i < data.length; i++) {
-                  $("#groupMenu").append('<option value=' + data[i].kode + '>' + data[i].group_action + '</option>');
-              }
-          },
-          error: function(jqXHR, textStatus, errorThrown) {
-              alert('Error on process');
-          }
-      });
-
   }
 
   </script>

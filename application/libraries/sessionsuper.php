@@ -1,7 +1,7 @@
 <?php
-	$issuper_access = $this->session->userdata('issuper_access');
+	$issuper = $this->session->userdata('issuper');
 	$title = 'Tersebut';
-	if ($issuper_access != 1) {
+	if ($issuper != 1) {
 		$this->session->set_flashdata('messageakses', '<script>messageakses("'.$title.'")</script>');
 	redirect('landingpage');
 }

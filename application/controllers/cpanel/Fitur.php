@@ -7,7 +7,7 @@ class Fitur extends CI_Controller {
     public $indexpage   = 'cpanel/fitur/v_fitur';
     function __construct() {
         parent::__construct();
-        // include(APPPATH.'libraries/sessionsuper.php');
+        include(APPPATH.'libraries/sessionsuper.php');
     }
     function index(){
         $this->load->view($this->indexpage);  
@@ -54,7 +54,7 @@ class Fitur extends CI_Controller {
 
     public function savedata()
     {   
-        $d['useri']             = $this->session->userdata('nama_user');
+        $d['useri']             = $this->session->userdata('username');
         $d['nama_action']       = $this->input->post('nama_action');
         $d['entity_action']     = 'web';
         $d['application_handle']= $this->input->post('application_handle');
@@ -76,7 +76,7 @@ class Fitur extends CI_Controller {
     }
 
     function updatedata(){
-        $d['useru']             = $this->session->userdata('nama_user');
+        $d['useru']             = $this->session->userdata('username');
         $d['dateu']             = 'now()';
         $d['nama_action']       = $this->input->post('nama_action');
         $d['entity_action']     = 'web';

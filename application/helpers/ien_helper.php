@@ -37,4 +37,16 @@ if (!function_exists('status')) {
        
         return $text;
     }
+
+    function checkcolor($text)
+    {
+        if ($text=='t') {
+            $text = '<span class="label label-success" style="align: center;"><i class="glyphicon glyphicon-ok" aria-hidden="true"></i></span>';
+        }
+        else {
+            $text = '<span class="label label-danger" style="align: center;"><i class="glyphicon glyphicon-remove" aria-hidden="true"></i></span>';
+        }
+       
+        return $text;
+    }
 }

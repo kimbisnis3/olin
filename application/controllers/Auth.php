@@ -25,19 +25,17 @@ class Auth extends CI_Controller{
             if($cek > 0){
                 $this->db->trans_start();
                 $wheresession = array(
-                    'lastin' => 'now()',
-                    'nama_user' => $username,
+                    'lastin' => 'now()'
                 );
                 $this->db->update('tuser', $wheresession);
-                $w['nama_user']  = $username;
-                $result = $this->db->get_where('tuser',$w)->row();
+                $result = $this->Unimodel->get_user_info($username)->row();
                 $d = array(
-                    'username'  => $username,
                     'status'    => "online",
                     'in'        => TRUE,
                     'id'        => $result->id_user,
-                    'nama'      => $result->nama_user,
+                    'username'  => $result->nama_user,
                     'access'    => $result->ref_access_user,
+                    'issuper'   => $result->issuper_access,
                 );
                 $this->session->set_userdata($d);
                 $this->db->trans_complete();

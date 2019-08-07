@@ -104,7 +104,13 @@
   		$(".menuanak-"+id_action).addClass("active");
   		$(".title").html(title);
 	}
-	
+
+	function activemenux(induk, anak) {
+		$("."+induk).addClass("active");
+  		$("."+anak).addClass("active");
+  		$(".title").html(title);
+	}
+
 	function getMenu() {
 		var mInudk;
 		var mChild;
@@ -119,7 +125,7 @@
 	            $.each(mInduk, function(i, v) {
 	                if (mInduk[i].kodeinduk == mInduk[i].kodeinduk) {
 	                    $(".sidebar-menu").append(`
-				<li class="treeview menuinduk-${mInduk[i].kodeinduk}">
+				<li class="treeview menu-user-list menuinduk-${mInduk[i].kodeinduk}">
 		          <a href="#">
 		            <i class="fa ${mInduk[i].iconinduk}"></i> <span>${mInduk[i].namainduk}</span>
 		            <span class="pull-right-container">
@@ -142,8 +148,6 @@
 	            showNotif('Gagal', 'Internal Error', 'danger')
 	        }
 	    });
-	 
-	    
 	}
 
 	function allowAkses() {
