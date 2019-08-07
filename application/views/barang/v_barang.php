@@ -25,30 +25,64 @@
                   <form id="form-data">
                     <div class="row">
                       <div class="col-md-12">
-                        <div class="form-group">
-                          <label>Judul</label>
-                          <input type="hidden" name="id">
-                          <input type="text" class="form-control" name="judul">
+                        <div class="row">
+                          <div class="col-md-6">
+                            <div class="form-group">
+                              <label>Provinsi Asal</label>
+                              <select class="form-control select2" id="select-provinsi" name="provinsi" onchange="setCity()">
+                                <option value="">- Pilih Data -</option>
+                              </select>
+                            </div>
+                            <div class="form-group">
+                              <label>Kota Asal</label>
+                              <select class="form-control select2" id="select-city" name="city">
+                                <option value="">- Pilih Data -</option>
+                              </select>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="form-group">
+                              <label>Provinsi Tujuan</label>
+                              <select class="form-control select2" id="select-provinsi-to" name="provinsito" onchange="setCityTo()">
+                                <option value="">- Pilih Data -</option>
+                              </select>
+                            </div>
+                            <div class="form-group">
+                              <label>Kota Tujuan</label>
+                              <select class="form-control select2" id="select-city-to" name="cityto">
+                                <option value="">- Pilih Data -</option>
+                              </select>
+                            </div>
+                          </div>
                         </div>
-                        <div class="form-group">
-                          <label>Select</label>
-                          <select class="form-control select2" id="selectsatu" name="select">
-                            <option value="">- Pilih Data -</option>
-                          </select>
+                        <div class="row">
+                          <div class="col-md-4">
+                            <div class="form-group">
+                              <label>Berat</label>
+                              <input type="text" class="form-control" name="berat">
+                            </div>
+                          </div>
+                          <div class="col-md-8">
+                            <div class="form-group">
+                              <label>Kurir</label>
+                              <select class="form-control select2" id="select-kurir" name="kurir" onchange="setService()">
+                                <option value="">- Pilih Data -</option>
+                                <option value="jne">JNE</option>
+                                <option value="tiki">TIKI</option>
+                                <option value="post">POS</option>
+                              </select>
+                            </div>
+                          </div>
                         </div>
-                        <div class="form-group">
-                          <label>Select Dua</label>
-                          <select class="form-control select2" id="selectdua" name="selectz">
-                            <option value="">- Pilih Data -</option>
-                          </select>
-                        </div>
-                        <div class="form-group">
-                          <label>Artikel</label>
-                          <input type="text" class="form-control" name="artikel" >
-                        </div>
-                        <div class="form-group">
-                          <label>Keterangan</label>
-                          <input type="text" class="form-control" name="ket" >
+                        <div class="row">
+                          <div class="col-md-8">
+                            <div class="form-group">
+                              <label>Service</label>
+                              <select class="form-control select2" id="select-service" name="serv">
+                                <option value="">- Pilih Data -</option>
+                              </select>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -162,8 +196,8 @@
       getAkses(title);
       allowAkses();
       select2();
-      getMenu();
-      setTimeout(function(){ activemenu(); }, 500);
+      activemenux('master', 'dataproduk');
+      setProvince();
 
       table = $('#table').DataTable({
           "processing": true,
@@ -195,29 +229,6 @@
         }
     });
   });
-
-  function tabel_detail() {
-      if (idx == -1) { return false }
-      $('#modal-detail').modal('show');
-      id = table.cell( idx, 1).data();
-      tablehr = $('#tabledetail').DataTable({
-          "destroy": true,
-          "processing": true,
-          "ajax": {
-              "url": `${apiurl}/getdetail`,
-              "data": {
-                  id: id
-              },
-              "type": "POST",
-          },
-          "columns": [
-            { "data": "no" },
-            { "data": "zzz" },
-            { "data": "zzz" },
-            { "data": "action" }
-          ]
-      });
-  }
 
   function refresh() {
       table.ajax.reload(null, false);
@@ -326,28 +337,38 @@
       });
   }
 
-  function aktif_data(id) {
-      $.ajax({
-          url: `${apiurl}/aktifdata`,
-          type: "POST",
-          dataType: "JSON",
-          data: {
-              id: id,
-          },
-          success: function(data) {
-              if (data.sukses == 'success') {
-                  refresh();
-                  showNotif('Sukses', 'Data Berhasil Diubah', 'success')
-              } else if (data.sukses == 'fail') {
-                  refresh();
-                  showNotif('Gagal', 'Data Gagal Diubah', 'danger')
-              }
-          },
-          error: function(jqXHR, textStatus, errorThrown) {
-              showNotif('Fail', 'Internal Error', 'danger');
-          }
-      });
+  function setProvince() {
+      $('#select-provinsi').load('<?php echo site_url()?>barang/request_province');
+      $('#select-provinsi-to').load('<?php echo site_url()?>barang/request_province');
+      return false;
   }
+
+  function setCity() {
+      let id_province = $('#select-provinsi').val();
+      if (id_province.length) {
+          $('#select-city').load(`<?php echo site_url()?>barang/request_city?province=${id_province}`);
+      }
+      return false;
+  }
+
+  function setCityTo() {
+      let id_province = $('#select-provinsi-to').val();
+      if (id_province) {
+          $('#select-city-to').load(`<?php echo site_url()?>barang/request_city?province=${id_province}`);
+      }
+      return false;
+  }
+
+  function setService() {
+      let origin      = $('[name="city"]').val();
+      let destination = $('[name="cityto"]').val();
+      let weight      = $('[name="berat"]').val();
+      let courier     = $('[name="kurir"]').val();
+      $('#select-service').load(`<?php echo site_url()?>barang/request_ongkir?origin=${origin}&destination=${destination}&weight=${weight}&courier=${courier}`);
+      return false;
+  }
+
+
 
   </script>
 </body>

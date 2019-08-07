@@ -10,6 +10,7 @@
 <script src="<?php echo base_url()?>assets/lte/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.js"></script>
 <script src="<?php echo base_url()?>assets/lte/plugins/ckeditor/ckeditor.js"></script>
 <script src="<?php echo base_url()?>assets/lte/plugins/pace/pace.js"></script>
+<script src="<?php echo base_url()?>assets/jquery.chained.js"></script>
 <!-- <script src="<?php echo base_url()?>assets/vue.min.js"></script>
 <script src="<?php echo base_url()?>assets/axios.min.js"></script> -->
 <script type="text/javascript">

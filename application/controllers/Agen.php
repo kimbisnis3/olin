@@ -2,7 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 class Agen extends CI_Controller {
     
-    public $table       = 'm_barang';
+    public $table       = 'mbarang';
     public $foldername  = 'barang';
     public $indexpage   = 'agen/v_agen';
     function __construct() {

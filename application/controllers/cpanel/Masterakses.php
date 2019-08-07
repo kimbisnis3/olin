@@ -21,7 +21,7 @@ class Masterakses extends CI_Controller {
             $row['id_access']       = $r->id_access;
             $row['no']              = $no;
             $row['nama_access']     = $r->nama_access;
-            $row['issuper_access']  = $r->issuper_access;
+            $row['issuper_access']  = 0;
 
             $list[] = $row;
             $no++;

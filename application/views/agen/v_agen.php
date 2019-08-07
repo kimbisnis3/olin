@@ -158,10 +158,8 @@
   var table ;
 
   $(document).ready(function() {
-      activemenu();
+      // activemenu();
       dpicker();
-      getSelect('selectsatu','getselects');
-      getSelect('selectdua','getselects');
 
       table = $('#table').DataTable({
           "processing": true,

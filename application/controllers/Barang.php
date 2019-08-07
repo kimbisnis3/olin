@@ -45,6 +45,117 @@ class Barang extends CI_Controller {
         echo json_encode($r);
     }
 
+    function loaddepartemen($kode)
+    {
+      $result = $this->M_pica->loaddepartemen($kode);
+      foreach ($result as $r) {
+          $data .= "<option value='".$r->kode."'>".$r->nama."</option>";
+      }
+      echo $data;
+   }
+
+    function request_province() {
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+          CURLOPT_URL => "https://api.rajaongkir.com/starter/province",
+          CURLOPT_RETURNTRANSFER => true,
+          CURLOPT_ENCODING => "",
+          CURLOPT_MAXREDIRS => 10,
+          CURLOPT_TIMEOUT => 30,
+          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+          CURLOPT_CUSTOMREQUEST => "GET",
+          CURLOPT_HTTPHEADER => array(
+            "key: 5c8590c12ef6879e2b829c4ab6aa955e"
+          ),
+        ));
+
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+
+        curl_close($curl);
+
+        if ($err) {
+          echo "cURL Error #:" . $err;
+        } else {
+              $data = json_decode($response, true); 
+              for ($i=0; $i < count($data['rajaongkir']['results']); $i++) {  
+                  echo "<option value='".$data['rajaongkir']['results'][$i]['province_id']."'>".$data['rajaongkir']['results'][$i]['province']."</option>"; 
+              }  
+        }
+    }
+
+    function request_city() {
+        $province = $this->input->get('province');
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+          CURLOPT_URL => "https://api.rajaongkir.com/starter/city?province={$province}",
+          CURLOPT_RETURNTRANSFER => true,
+          CURLOPT_ENCODING => "",
+          CURLOPT_MAXREDIRS => 10,
+          CURLOPT_TIMEOUT => 30,
+          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+          CURLOPT_CUSTOMREQUEST => "GET",
+          CURLOPT_HTTPHEADER => array(
+            "key: 5c8590c12ef6879e2b829c4ab6aa955e"
+          ),
+        ));
+
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+
+        curl_close($curl);
+
+        if ($err) {
+          echo "cURL Error #:" . $err;
+        } else {
+          $data = json_decode($response, true); 
+              for ($i=0; $i < count($data['rajaongkir']['results']); $i++) {  
+                  echo "<option value='".$data['rajaongkir']['results'][$i]['city_id']."'>".$data['rajaongkir']['results'][$i]['city_name']."</option>"; 
+              }  
+
+        }
+    }
+
+    function request_ongkir() {
+        $origin         = $this->input->get('origin'); 
+        $destination    = $this->input->get('destination'); 
+        $weight         = $this->input->get('weight') * 1000;
+        $courier        = $this->input->get('courier');
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+          CURLOPT_URL => "https://api.rajaongkir.com/starter/cost",
+          CURLOPT_RETURNTRANSFER => true,
+          CURLOPT_ENCODING => "",
+          CURLOPT_MAXREDIRS => 10,
+          CURLOPT_TIMEOUT => 30,
+          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+          CURLOPT_CUSTOMREQUEST => "POST",
+          CURLOPT_POSTFIELDS => "origin={$origin}&destination={$destination}&weight={$weight}&courier={$courier}",
+          // CURLOPT_POSTFIELDS => "origin=501&destination=114&weight=1700&courier=jne",
+          CURLOPT_HTTPHEADER => array(
+            "content-type: application/x-www-form-urlencoded",
+            "key: 5c8590c12ef6879e2b829c4ab6aa955e"
+          ),
+        ));
+
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+
+        curl_close($curl);
+
+        if ($err) {
+          echo "cURL Error #:" . $err;
+        } else {
+          $data = json_decode($response, true); 
+              for ($i=0; $i < count($data['rajaongkir']['results'][0]['costs']); $i++) {  
+                  echo "<option value='".$data['rajaongkir']['results'][0]['costs'][$i]['service']."'>".$data['rajaongkir']['results'][0]['costs'][$i]['service']." (".$data['rajaongkir']['results'][0]['costs'][$i]['description'].")</option>"; 
+              }
+        }
+    }
+
     public function edit()
     {
         $w['id']= $this->input->post('id');
