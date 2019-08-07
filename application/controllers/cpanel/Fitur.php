@@ -7,7 +7,7 @@ class Fitur extends CI_Controller {
     public $indexpage   = 'cpanel/fitur/v_fitur';
     function __construct() {
         parent::__construct();
-        // include(APPPATH.'libraries/sessionakses.php');
+        // include(APPPATH.'libraries/sessionsuper.php');
     }
     function index(){
         $this->load->view($this->indexpage);  

@@ -80,6 +80,11 @@ class Universe extends CI_Controller {
 
     }
 
+    function getGroupMenu() {
+        $r = $this->db->get('taction_group')->result();
+        echo json_encode($r);
+    }
+
     
 
 }

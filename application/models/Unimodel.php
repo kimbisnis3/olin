@@ -77,6 +77,34 @@ class Unimodel extends CI_Model{
     {
         $this->db->update('tuser', $session_kode, $wheresession);
     }
+    
+
+    function getaccess(){
+        $sql    = 
+        "SELECT
+            taccess.id_access,
+            taccess.nama_access
+        FROM
+            taccess
+        WHERE
+            taccess.issuper_access = '0'";
+
+        $query = $this->db->query($sql);
+        return $query->result();
+    }
+
+    function getaction(){
+        $sql    = 
+        "SELECT
+            taction.id_action,
+            taction.nama_action,
+            taction.application_handle
+        FROM
+            taction";
+
+        $query = $this->db->query($sql);
+        return $query->result();
+    }
 
 
 }
