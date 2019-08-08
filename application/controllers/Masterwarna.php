@@ -5,6 +5,7 @@ class Masterwarna extends CI_Controller {
     public $table       = 'mwarna';
     public $foldername  = 'warna';
     public $indexpage   = 'masterwarna/v_masterwarna';
+    public $printpage   = 'masterwarna/p_masterwarna';
     function __construct() {
         parent::__construct();
         include(APPPATH.'libraries/sessionakses.php');
@@ -73,6 +74,19 @@ class Masterwarna extends CI_Controller {
         $result = $this->db->delete($this->table,$w);
         $r['sukses'] = $result ? 'success' : 'fail' ;
         echo json_encode($r);
+    }
+
+    function cetak(){
+      $useGroupBy = 1;
+      $header = ['No','Kode','Nama','Kode Warna','Keterangan'];
+      $q      = "SELECT * FROM mwarna";
+      $body   = $this->db->query($q)->result();
+      $data['title']    = 'Laporan Warna';
+      $data['periodestart'] = '@tanggal';
+      $data['periodeend']   = '@tanggal';
+      $data['header'] = $header;
+      $data['body']   = $body;
+      $this->load->view($this->printpage,$data); 
     }
     
 }

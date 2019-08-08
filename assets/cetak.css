@@ -1,0 +1,21 @@
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 12px;
+}
+
+td,
+th {
+    border: 1px solid #616161;
+    text-align: left;
+    padding: 5px;
+}
+
+tr:nth-child(even) {
+    background-color: #e8e8e8;
+}
+
+.judul {
+  	text-align: center;
+}
