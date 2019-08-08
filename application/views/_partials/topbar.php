@@ -22,8 +22,8 @@
             <li class="user-header">
               <img src="<?php echo base_url() ?>assets/gambar/logo.png" class="img-circle" alt="User Image">
               <p>
-                <?php echo $this->session->userdata("nama") ?>
-                <span class="hidden-xs"> </span>
+                <?php echo $this->session->userdata("username") ?>
+                <span class="hidden-xs"> ( <?php echo $this->session->userdata("namaaccess") ?> )</span>
               </p>
             </li>
             <li class="user-footer">
@@ -35,6 +35,9 @@
               </div>
             </li>
           </ul>
+        </li>
+        <li>
+          <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
         </li>
       </ul>
     </div>

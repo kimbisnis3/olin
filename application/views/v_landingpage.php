@@ -21,8 +21,3 @@
   </body>
 </html>
 <?php $this->load->view('_partials/js'); ?>
-<script type="text/javascript">
-   $(document).ready(function() {
-      getMenu()
-   })
-</script>

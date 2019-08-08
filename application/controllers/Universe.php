@@ -20,7 +20,7 @@ class Universe extends CI_Controller {
     }
 
     function getAkses() {
-        $w['iduser']    = $this->session->userdata("id");
+        $w['akses']     = $this->session->userdata("access");
         $w['idmenu']    = $this->input->post("menu");
 
         $sql ="SELECT
@@ -30,14 +30,22 @@ class Universe extends CI_Controller {
             topsi.i,
             topsi.u,
             topsi.d,
-            topsi.o
+            topsi.o,
+            topsi.ref_access_opsi akses,
+            taccess.issuper_access super
         FROM
             topsi
         LEFT JOIN taction ON topsi.ref_action_opsi = taction.id_action
+        LEFT JOIN taccess ON topsi.ref_access_opsi = taccess.id_access
         LEFT OUTER JOIN taction_group ON taction.group_action = taction_group.kode
-        WHERE nama_action = '{$this->input->post('menu')}'";
+        WHERE 
+            nama_action = '{$this->input->post('menu')}'
+        AND 
+            topsi.ref_access_opsi = '{$this->session->userdata("access")}'";
 
-        $r['res'] = $this->db->query($sql)->row();
+        $r['res']       = $this->db->query($sql)->row();
+        $r['super']     = $w['akses'];
+        $r['akses']     = $this->db->query($sql)->num_rows() ;
         echo json_encode($r);
 
     }

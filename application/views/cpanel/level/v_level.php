@@ -30,7 +30,7 @@
                             <div class="form-group">
                               <input type="hidden" name="id_opsi" >
                               <label>Nama Level</label>
-                              <select class="form-control select2 input-level" style="width: 100%; border-radius: 0px" name="access" id="access">
+                              <select class="form-control select2 input-level" name="access" id="access">
                                 <option value="">--</option>
                               </select>
                             </div>
@@ -38,7 +38,7 @@
                           <div class="col-md-6">
                             <div class="form-group">
                               <label>Fitur Aplikasi</label>
-                              <select class="form-control select2 input-fitur" style="width: 100%; border-radius: 0px" name="action" id="action">
+                              <select class="form-control select2 input-fitur" name="action" id="action">
                                 <option value="">--</option>
                               </select>
                             </div>

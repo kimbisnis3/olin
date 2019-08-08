@@ -1,6 +1,4 @@
-<?php 
-  $menu = $this->Unimodel->getaksesmenu();
- ?>
+<?php $menu = $this->Unimodel->getaksesmenu_new() ?>
 <aside class="main-sidebar">
   <section class="sidebar">
     <div class="user-panel">
@@ -22,7 +20,6 @@
 
           if ($id != -1 && $id != $t->group_action) {
               echo '</ul>';
-
           }
 
           if ($id != $t->group_action) { ?>
@@ -73,7 +70,7 @@
             }?>
              
           <li class="<?php echo strtolower(str_replace(' ', '', $t->nama)); ?>">
-            <a href="<?php echo site_url( $t->kategori.'/'.strtolower(str_replace(' ', '', $t->nama))); ?>">
+            <a href="<?php echo site_url( strtolower(str_replace(' ', '', $t->nama))); ?>">
           <i class="fa <?php echo $icon ?>"></i> <span><?php echo $t->nama ?></span>
           </a>
           </li>
@@ -104,6 +101,7 @@
       </li>';
       }
       ?>
+
     </ul>
   </section>
 </aside>

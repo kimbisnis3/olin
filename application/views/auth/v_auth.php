@@ -4,7 +4,7 @@
 	<?php $this->load->view('_partials/head') ?>
 	<style type="text/css">
 		body {
-			background:#9adea9 !important;
+			background: #9ad3de !important;
 		}
 		.hue {
 		    background: #f35626;
@@ -28,7 +28,7 @@
 	<body class="hold-transition">
 		<div class="login-box">
 			<div class="login-logo hue">
-				<b>My Panel</b> <br>
+				<b>Olin</b> <br>
 			</div>
 			<div class="login-box-body" id="login">
 				<p class="login-box-msg">Login</p><br>
