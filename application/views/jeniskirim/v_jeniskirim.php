@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
   <?php $this->load->view('_partials/head'); ?>
+  <link href="<?php echo base_url() ?>assets/lte/plugins/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css" rel="stylesheet"/>
   <body class="hold-transition skin-blue sidebar-mini">
     <div class="wrapper" id="app">
       <?php $this->load->view('_partials/topbar'); ?>
@@ -31,27 +32,12 @@
                           <input type="text" class="form-control" name="nama" >
                         </div>
                         <div class="form-group">
-                          <label>Gambar</label>
-                          <div id="image-preview" onerror="imgError(this)"/></div><br>
-                          <input type="file" class="form-control" name="image" id="image" onchange="filePreview(this);">
+                          <label>Jarak</label>
+                          <input type="number" class="form-control" name="jarak" >
                         </div>
                         <div class="form-group">
-                          <input type="hidden" name="path" id="path">
-                        </div>
-                        <div class="form-group">
-                          <div class="form-group">
-                            <label>Model Design</label>
-                            <select class="form-control select2" id="selectsatu" name="ref_model">
-                              <option value="">- Pilih Data -</option>
-                              <?php foreach ($modesign as $i => $v): ?>
-                                <option value="<?php echo $v->kode ?>"><?php echo $v->nama; ?><span><img src="<?php echo base_url().$v->gambar ?>" class="img-select2"></span></option>
-                              <?php endforeach ?>
-                            </select>
-                          </div>
-                        </div>
-                        <div class="form-group">
-                          <label>Keterangan</label>
-                          <input type="text" class="form-control" name="ket" >
+                          <label>Nominal</label>
+                          <input type="number" class="form-control" name="nominal" >
                         </div>
                       </div>
                     </div>
@@ -101,10 +87,8 @@
                             <th width="5%">No</th>
                             <th>ID</th>
                             <th>Nama</th>
-                            <th>Gambar</th>
-                            <th>Keterangan</th>
-                            <th>Design</th>
-                            <th>Gambar Design</th>
+                            <th>Jarak</th>
+                            <th>Nominal</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -122,9 +106,10 @@
       </body>
     </html>
   <?php $this->load->view('_partials/js'); ?>
+  <script src="<?php echo base_url()?>assets/lte/plugins/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js"></script>
   <script type="text/javascript">
-  var path = 'mastergambar';
-  var title = 'Master Gambar';
+  var path = 'jeniskirim';
+  var title = 'Jenis Pengiriman';
   var grupmenu = 'Master Data';
   var apiurl = "<?php echo base_url('') ?>" + path;
   var state;
@@ -134,7 +119,7 @@
   $(document).ready(function() {
       getAkses(title);
       select2();
-      activemenux('masterdata', 'mastergambar');
+      activemenux('masterdata', 'jenispengiriman');
 
       table = $('#table').DataTable({
           "processing": true,
@@ -147,10 +132,8 @@
           { "data": "no" }, 
           { "data": "id" , "visible" : false},
           { "data": "nama" }, 
-          { "data": "image" }, 
-          { "data": "ket" },
-          { "data": "namadesign" },
-          { "data": "gambardesign" },
+          { "data": "jarak" }, 
+          { "data": "nominal" }
           ]
       });
 
@@ -168,27 +151,6 @@
     });
   });
 
-  function previewImage() {
-    document.getElementById("image-preview").style.display = "block";
-    var oFReader = new FileReader();
-     oFReader.readAsDataURL(document.getElementById("image").files[0]);
- 
-    oFReader.onload = function(oFREvent) {
-      document.getElementById("image-preview").src = oFREvent.target.result;
-    };
-  };
-
-  function filePreview(input) {
-    if (input.files && input.files[0]) {
-        var reader = new FileReader();
-        reader.onload = function (e) {
-            $('#img-preview').remove();
-            $('#image-preview').append('<img id="img-preview" src="'+e.target.result+'"/>');
-        }
-        reader.readAsDataURL(input.files[0]);
-    }
-}
-
   function refresh() {
       table.ajax.reload(null, false);
       idx = -1;
@@ -197,7 +159,6 @@
   function add_data() {
       state = 'add';
       $('#form-data')[0].reset();
-      $('#img-preview').remove();
       $('.select2').trigger('change');
       $('#modal-data').modal('show');
       $('.modal-title').text('Tambah Data');
@@ -210,7 +171,6 @@
       }
       state = 'update';
       $('#form-data')[0].reset();
-      $('#img-preview').remove();
       $.ajax({
           url: `${apiurl}/edit`,
           type: "POST",
@@ -221,11 +181,8 @@
           success: function(data) {
               $('[name="id"]').val(data.id);
               $('[name="nama"]').val(data.nama);
-              $('[name="ket"]').val(data.ket);
-              $('[name="ref_model"]').val(data.ref_model);
-              $('[name="path"]').val('.' + data.path);
-              $('#image-preview').append('<img id="img-preview" src="<?php echo base_url() ?>'+data.path+'"/>');
-              $('.select2').trigger('change');
+              $('[name="jarak"]').val(data.jarak);
+              $('[name="nominal"]').val(data.nominal);
               $('#modal-data').modal('show');
               $('.modal-title').text('Edit Data');
           },
@@ -242,16 +199,11 @@
       } else {
           url = `${apiurl}/updatedata`;
       }
-      var formData = new FormData($('#form-data')[0]);
       $.ajax({
           url: url,
           type: "POST",
-          data: formData,
+          data: $('#form-data').serializeArray(),
           dataType: "JSON",
-          mimeType: "multipart/form-data",
-          contentType: false,
-          cache: false,
-          processData: false,
           success: function(data) {
               if (data.sukses == 'success') {
                   $('#modal-data').modal('hide');
@@ -262,10 +214,9 @@
                   refresh();
                   showNotif('Sukses', 'Tidak Ada Perubahan', 'success')
               }
-
           },
           error: function(jqXHR, textStatus, errorThrown) {
-              alert('Error on process');
+              showNotif('Fail', 'Internal Error', 'danger')
           }
       });
   }

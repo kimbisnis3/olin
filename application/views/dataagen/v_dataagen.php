@@ -1,6 +1,20 @@
 <!DOCTYPE html>
 <html>
   <?php $this->load->view('_partials/head'); ?>
+  <style type="text/css">
+    .uni-green {
+      background-color: #66BB6A !important;
+      color : #ffffff;
+    }
+    .uni-red {
+        background-color: #ef5350 !important;
+        color : #ffffff;
+    }
+    .selected {
+        background-color: #008B8B !important;
+        color: #ffffff !important;
+    }
+  </style>
   <body class="hold-transition skin-blue sidebar-mini">
     <div class="wrapper" id="app">
       <?php $this->load->view('_partials/topbar'); ?>
@@ -28,30 +42,60 @@
                         <div class="form-group">
                           <label>Nama</label>
                           <input type="hidden" name="id">
-                          <input type="text" class="form-control" name="nama" >
+                          <input type="text" class="form-control" name="nama">
                         </div>
                         <div class="form-group">
-                          <label>Gambar</label>
-                          <div id="image-preview" onerror="imgError(this)"/></div><br>
-                          <input type="file" class="form-control" name="image" id="image" onchange="filePreview(this);">
+                          <label>Jenis Agen</label>
+                          <select class="form-control select2" name="ref_jenc">
+                            <option value="">-</option>
+                            <?php foreach ($jenc as $i => $v): ?>
+                              <option value="<?php echo $v->kode ?>"><?php echo $v->nama; ?></option>
+                            <?php endforeach ?>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label>Telp</label>
+                          <input type="text" class="form-control" name="telp" >
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label>Email</label>
+                          <input type="text" class="form-control" name="email" >
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div class="form-group">
+                          <label>Alamat</label>
+                          <input type="text" class="form-control" name="alamat" >
                         </div>
                         <div class="form-group">
-                          <input type="hidden" name="path" id="path">
-                        </div>
-                        <div class="form-group">
-                          <div class="form-group">
-                            <label>Model Design</label>
-                            <select class="form-control select2" id="selectsatu" name="ref_model">
-                              <option value="">- Pilih Data -</option>
-                              <?php foreach ($modesign as $i => $v): ?>
-                                <option value="<?php echo $v->kode ?>"><?php echo $v->nama; ?><span><img src="<?php echo base_url().$v->gambar ?>" class="img-select2"></span></option>
-                              <?php endforeach ?>
-                            </select>
-                          </div>
+                          <label>PIC</label>
+                          <input type="text" class="form-control" name="pic" >
                         </div>
                         <div class="form-group">
                           <label>Keterangan</label>
                           <input type="text" class="form-control" name="ket" >
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label>Username</label>
+                          <input type="text" class="form-control" name="user" >
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label>Password</label>
+                          <input type="password" class="form-control" name="pass" >
                         </div>
                       </div>
                     </div>
@@ -90,6 +134,7 @@
                     </div>
                     <div class="pull-right">
                       <button class="btn btn-warning btn-flat edit-btn invisible" onclick="edit_data()"><i class="fa fa-pencil"></i> Ubah</button>
+                      <button class="btn btn-success btn-flat edit-btn invisible" onclick="aktif_data()"><i class="fa fa-check"></i> Aktif</button>
                       <button class="btn btn-danger btn-flat delete-btn invisible" onclick="hapus_data()" ><i class="fa fa-trash"></i> Hapus</button>
                     </div>
                   </div>
@@ -101,10 +146,14 @@
                             <th width="5%">No</th>
                             <th>ID</th>
                             <th>Nama</th>
-                            <th>Gambar</th>
-                            <th>Keterangan</th>
-                            <th>Design</th>
-                            <th>Gambar Design</th>
+                            <th>Jenis Agen</th>
+                            <th>Alamat</th>
+                            <th>Telp</th>
+                            <th>Email</th>
+                            <th>PIC</th>
+                            <th>Ket</th>
+                            <th>User</th>
+                            <th>Pass</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -123,8 +172,8 @@
     </html>
   <?php $this->load->view('_partials/js'); ?>
   <script type="text/javascript">
-  var path = 'mastergambar';
-  var title = 'Master Gambar';
+  var path = 'dataagen';
+  var title = 'Data Agen';
   var grupmenu = 'Master Data';
   var apiurl = "<?php echo base_url('') ?>" + path;
   var state;
@@ -134,10 +183,19 @@
   $(document).ready(function() {
       getAkses(title);
       select2();
-      activemenux('masterdata', 'mastergambar');
+      activemenux('masterdata', 'dataagen');
 
       table = $('#table').DataTable({
           "processing": true,
+          "createdRow": function( row, data, dataIndex ) 
+          {
+            if ( data.aktif == "t" ) {        
+              $(row).addClass('uni-green');
+              console.log(row)
+            }else {        
+              $(row).addClass('uni-red');
+            }
+          },
           "ajax": {
               "url": `${apiurl}/getall`,
               "type": "POST",
@@ -147,10 +205,14 @@
           { "data": "no" }, 
           { "data": "id" , "visible" : false},
           { "data": "nama" }, 
-          { "data": "image" }, 
+          { "data": "jencust" },
+          { "data": "alamat" },
+          { "data": "telp" },
+          { "data": "email" },
+          { "data": "pic" },
           { "data": "ket" },
-          { "data": "namadesign" },
-          { "data": "gambardesign" },
+          { "data": "user" },
+          { "data": "pass" },
           ]
       });
 
@@ -168,27 +230,6 @@
     });
   });
 
-  function previewImage() {
-    document.getElementById("image-preview").style.display = "block";
-    var oFReader = new FileReader();
-     oFReader.readAsDataURL(document.getElementById("image").files[0]);
- 
-    oFReader.onload = function(oFREvent) {
-      document.getElementById("image-preview").src = oFREvent.target.result;
-    };
-  };
-
-  function filePreview(input) {
-    if (input.files && input.files[0]) {
-        var reader = new FileReader();
-        reader.onload = function (e) {
-            $('#img-preview').remove();
-            $('#image-preview').append('<img id="img-preview" src="'+e.target.result+'"/>');
-        }
-        reader.readAsDataURL(input.files[0]);
-    }
-}
-
   function refresh() {
       table.ajax.reload(null, false);
       idx = -1;
@@ -197,9 +238,9 @@
   function add_data() {
       state = 'add';
       $('#form-data')[0].reset();
-      $('#img-preview').remove();
       $('.select2').trigger('change');
       $('#modal-data').modal('show');
+      $('.select2').trigger('change');
       $('.modal-title').text('Tambah Data');
   }
 
@@ -210,7 +251,6 @@
       }
       state = 'update';
       $('#form-data')[0].reset();
-      $('#img-preview').remove();
       $.ajax({
           url: `${apiurl}/edit`,
           type: "POST",
@@ -221,10 +261,14 @@
           success: function(data) {
               $('[name="id"]').val(data.id);
               $('[name="nama"]').val(data.nama);
+              $('[name="alamat"]').val(data.alamat);
+              $('[name="telp"]').val(data.telp);
+              $('[name="email"]').val(data.email);
+              $('[name="pic"]').val(data.pic);
               $('[name="ket"]').val(data.ket);
-              $('[name="ref_model"]').val(data.ref_model);
-              $('[name="path"]').val('.' + data.path);
-              $('#image-preview').append('<img id="img-preview" src="<?php echo base_url() ?>'+data.path+'"/>');
+              $('[name="ref_jenc"]').val(data.ref_jenc);
+              $('[name="user"]').val(data.user);
+              $('[name="pass"]').val('');
               $('.select2').trigger('change');
               $('#modal-data').modal('show');
               $('.modal-title').text('Edit Data');
@@ -242,16 +286,11 @@
       } else {
           url = `${apiurl}/updatedata`;
       }
-      var formData = new FormData($('#form-data')[0]);
       $.ajax({
           url: url,
           type: "POST",
-          data: formData,
+          data: $('#form-data').serializeArray(),
           dataType: "JSON",
-          mimeType: "multipart/form-data",
-          contentType: false,
-          cache: false,
-          processData: false,
           success: function(data) {
               if (data.sukses == 'success') {
                   $('#modal-data').modal('hide');
@@ -262,10 +301,33 @@
                   refresh();
                   showNotif('Sukses', 'Tidak Ada Perubahan', 'success')
               }
-
           },
           error: function(jqXHR, textStatus, errorThrown) {
-              alert('Error on process');
+              showNotif('Fail', 'Internal Error', 'danger')
+          }
+      });
+  }
+
+  function aktif_data(id) {
+    id = table.cell( idx, 1).data();
+      $.ajax({
+          url: `${apiurl}/aktifdata`,
+          type: "POST",
+          dataType: "JSON",
+          data: {
+              id: id,
+          },
+          success: function(data) {
+              if (data.sukses == 'success') {
+                  refresh();
+                  showNotif('Sukses', 'Data Berhasil Diubah', 'success')
+              } else if (data.sukses == 'fail') {
+                  refresh();
+                  showNotif('Gagal', 'Data Gagal Diubah', 'danger')
+              }
+          },
+          error: function(jqXHR, textStatus, errorThrown) {
+              showNotif('Fail', 'Internal Error', 'danger');
           }
       });
   }

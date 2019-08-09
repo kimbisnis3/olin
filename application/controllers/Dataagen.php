@@ -1,44 +1,41 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-class Masterharga extends CI_Controller {
+class Dataagen extends CI_Controller {
     
-    public $table       = 'msatbrg';
-    public $foldername  = 'msatbrg';
-    public $indexpage   = 'masterharga/v_masterharga';
+    public $table       = 'mcustomer';
+    public $foldername  = 'mcustomer';
+    public $indexpage   = 'dataagen/v_dataagen';
     function __construct() {
         parent::__construct();
         include(APPPATH.'libraries/sessionakses.php');
     }
     function index(){
-        $data['satuan'] = $this->db->get('msatuan')->result();
-        $data['gudang'] = $this->db->get('mgudang')->result();
+        $data['jenc'] = $this->db->get('mjencust')->result();
         $this->load->view($this->indexpage,$data);  
     }
 
     public function getall(){
-        $q = "SELECT
-                msatbrg.id,
-                msatbrg.konv,
-                msatbrg.ket,
-                msatbrg.harga,
-                mbarang.nama namabarang,
-                msatuan.nama namasatuan,
-                mgudang.nama namagudang
-            FROM
-                msatbrg
-            LEFT JOIN mbarang ON mbarang.kode = msatbrg.ref_brg
-            LEFT JOIN msatuan ON msatuan.kode = msatbrg.ref_sat
-            LEFT JOIN mgudang ON mgudang.kode = msatbrg.ref_gud";
+        $q = "SELECT 
+                mcustomer.*,
+                mjencust.nama AS jencust
+            FROM 
+                mcustomer
+            LEFT JOIN mjencust ON mjencust.kode = mcustomer.ref_jenc";
         $result     = $this->db->query($q)->result();
         $list       = [];
         foreach ($result as $i => $r) {
-            $row['id']          = $r->id;
-            $row['no']          = $i + 1;
-            $row['konv']        = $r->konv;
-            $row['harga']       = number_format($r->harga);
-            $row['namabarang']  = $r->namabarang;
-            $row['namasatuan']  = $r->namasatuan;
-            $row['namagudang']  = $r->namagudang;
+            $row['id']      = $r->id;
+            $row['no']      = $i + 1;
+            $row['nama']    = $r->nama;
+            $row['alamat']  = $r->alamat;
+            $row['telp']    = $r->telp;
+            $row['email']   = $r->email;
+            $row['pic']     = $r->pic;
+            $row['ket']     = $r->ket;
+            $row['jencust'] = $r->jencust;
+            $row['aktif']   = $r->aktif;
+            $row['user']    = $r->user;
+            $row['pass']    = '****';
 
             $list[] = $row;
         }   
@@ -47,21 +44,19 @@ class Masterharga extends CI_Controller {
 
     public function savedata()
     {   
-        $this->db->trans_start();
-        $a['useri']     = $this->session->userdata('username');
-        $a['nama']      = $this->input->post('nama');
-        $a['ket']       = $this->input->post('ketBrg');
-        $this->db->insert('mbarang',$a);
-        $idBrg = $this->db->insert_id();
-        $kodeBrg = $this->db->get_where('mbarang',array('id' => $idBrg))->row()->kode;
-        $b['ref_brg']   = $kodeBrg;
-        $b['ref_sat']   = $this->input->post('ref_sat');
-        $b['konv']      = $this->input->post('konv');
-        $b['harga']     = $this->input->post('harga');
-        $b['ket']       = $this->input->post('ketHarga');
-        $b['ref_gud']   = $this->input->post('ref_gud');
-        $result = $this->db->insert('msatbrg',$b);
-        $this->db->trans_complete();
+        $d['useri']     = $this->session->userdata('username');
+        $d['nama']      = $this->input->post('nama');
+        $d['alamat']    = $this->input->post('alamat');
+        $d['telp']      = $this->input->post('telp');
+        $d['email']     = $this->input->post('email');
+        $d['pic']       = $this->input->post('pic');
+        $d['ket']       = $this->input->post('ket');
+        $d['ref_jenc']  = $this->input->post('ref_jenc');
+        $d['user']      = $this->input->post('user');
+        $d['pass']      = md5($this->input->post('pass'));
+        $d['aktif']     = 't';
+
+        $result = $this->db->insert($this->table,$d);
         $r['sukses'] = $result ? 'success' : 'fail' ;
         echo json_encode($r);
     }
