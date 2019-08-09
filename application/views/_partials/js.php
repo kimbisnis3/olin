@@ -123,8 +123,10 @@
   		$(".title").html(title);
 	}
 
-	function allowAkses() {
-		// $('.add-btn').remove();
+	function imgError(image) {
+	    image.onerror = "";
+	    image.src = "/images/noimage.gif";
+	    return true;
 	}
 
 </script>

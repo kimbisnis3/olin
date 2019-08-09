@@ -70,7 +70,7 @@
             }?>
              
           <li class="<?php echo strtolower(str_replace(' ', '', $t->nama)); ?>">
-            <a href="<?php echo site_url( strtolower(str_replace(' ', '', $t->nama))); ?>">
+            <a href="<?php echo site_url( strtolower(str_replace(' ', '', $t->url))); ?>">
           <i class="fa <?php echo $icon ?>"></i> <span><?php echo $t->nama ?></span>
           </a>
           </li>

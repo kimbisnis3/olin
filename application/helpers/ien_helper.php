@@ -49,4 +49,16 @@ if (!function_exists('status')) {
        
         return $text;
     }
+
+    function showimage($i){
+         
+        if ($i == NULL){
+            $i = "(Noimage)";
+        } else {
+            $img = base_url().''.$i;
+            $i = "<img style='max-width : 60px;' src='".$img."'>";
+        }
+
+        return $i;
+    }
 }

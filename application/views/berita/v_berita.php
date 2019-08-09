@@ -38,6 +38,9 @@
                     <input type="file" class="form-control" name="image" id="image" >
                   </div>
                   <div class="form-group">
+                    <input type="hidden" name="path" id="path">
+                  </div>
+                  <div class="form-group">
                     <label>Artikel</label>
                     <textarea class="form-control" rows="7" name="artikelx" id="artikelx"></textarea>
                   </div>
@@ -48,9 +51,6 @@
                   <div class="form-group">
                     <label>Keterangan</label>
                     <input type="text" class="form-control" name="ket" >
-                  </div>
-                  <div class="form-group">
-                    <input type="hidden" name="path" id="path">
                   </div>
                 </div>
                 </div>

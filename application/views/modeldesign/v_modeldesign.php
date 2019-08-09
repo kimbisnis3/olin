@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
   <?php $this->load->view('_partials/head'); ?>
-  <link href="<?php echo base_url() ?>assets/lte/plugins/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css" rel="stylesheet"/>
   <body class="hold-transition skin-blue sidebar-mini">
     <div class="wrapper" id="app">
       <?php $this->load->view('_partials/topbar'); ?>
@@ -32,13 +31,12 @@
                           <input type="text" class="form-control" name="nama" >
                         </div>
                         <div class="form-group">
-                          <label>Kode Warna</label>
-                          <div class="input-group colorpicker">
-                            <input type="text" class="form-control" name="kodewarna">
-                            <div class="input-group-addon">
-                              <i></i>
-                            </div>
-                          </div>
+                          <label>Gambar</label>
+                          <div id="image-preview" onerror="imgError(this)"/></div><br>
+                          <input type="file" class="form-control" name="image" id="image" onchange="filePreview(this);">
+                        </div>
+                        <div class="form-group">
+                          <input type="hidden" name="path" id="path">
                         </div>
                         <div class="form-group">
                           <label>Keterangan</label>
@@ -92,7 +90,7 @@
                             <th width="5%">No</th>
                             <th>ID</th>
                             <th>Nama</th>
-                            <th>Warna</th>
+                            <th>Gambar</th>
                             <th>Keterangan</th>
                           </tr>
                         </thead>
@@ -111,10 +109,9 @@
       </body>
     </html>
   <?php $this->load->view('_partials/js'); ?>
-  <script src="<?php echo base_url()?>assets/lte/plugins/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js"></script>
   <script type="text/javascript">
-  var path = 'masterwarna';
-  var title = 'Master Warna';
+  var path = 'modeldesign';
+  var title = 'Model Design';
   var grupmenu = 'Master Data';
   var apiurl = "<?php echo base_url('') ?>" + path;
   var state;
@@ -124,8 +121,7 @@
   $(document).ready(function() {
       getAkses(title);
       select2();
-      activemenux('masterdata', 'masterwarna');
-      $('.colorpicker').colorpicker()
+      activemenux('masterdata', 'modeldesign');
 
       table = $('#table').DataTable({
           "processing": true,
@@ -138,7 +134,7 @@
           { "data": "no" }, 
           { "data": "id" , "visible" : false},
           { "data": "nama" }, 
-          { "data": "colorc" }, 
+          { "data": "image" }, 
           { "data": "ket" }
           ]
       });
@@ -157,28 +153,26 @@
     });
   });
 
-  function tabel_detail() {
-      if (idx == -1) { return false }
-      $('#modal-detail').modal('show');
-      id = table.cell( idx, 1).data();
-      tablehr = $('#tabledetail').DataTable({
-          "destroy": true,
-          "processing": true,
-          "ajax": {
-              "url": `${apiurl}/getdetail`,
-              "data": {
-                  id: id
-              },
-              "type": "POST",
-          },
-          "columns": [
-            { "data": "no" },
-            { "data": "zzz" },
-            { "data": "zzz" },
-            { "data": "action" }
-          ]
-      });
-  }
+  function previewImage() {
+    document.getElementById("image-preview").style.display = "block";
+    var oFReader = new FileReader();
+     oFReader.readAsDataURL(document.getElementById("image").files[0]);
+ 
+    oFReader.onload = function(oFREvent) {
+      document.getElementById("image-preview").src = oFREvent.target.result;
+    };
+  };
+
+  function filePreview(input) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            $('#img-preview').remove();
+            $('#image-preview').append('<img id="img-preview" src="'+e.target.result+'"/>');
+        }
+        reader.readAsDataURL(input.files[0]);
+    }
+}
 
   function refresh() {
       table.ajax.reload(null, false);
@@ -188,7 +182,7 @@
   function add_data() {
       state = 'add';
       $('#form-data')[0].reset();
-      $('.select2').trigger('change');
+      $('#img-preview').remove();
       $('#modal-data').modal('show');
       $('.modal-title').text('Tambah Data');
   }
@@ -200,6 +194,7 @@
       }
       state = 'update';
       $('#form-data')[0].reset();
+      $('#img-preview').remove();
       $.ajax({
           url: `${apiurl}/edit`,
           type: "POST",
@@ -210,8 +205,9 @@
           success: function(data) {
               $('[name="id"]').val(data.id);
               $('[name="nama"]').val(data.nama);
-              $('[name="kodewarna"]').val(data.kodewarna);
               $('[name="ket"]').val(data.ket);
+              $('[name="path"]').val('.' + data.gambar);
+              $('#image-preview').append('<img id="img-preview" src="<?php echo base_url() ?>'+data.gambar+'"/>');
               $('#modal-data').modal('show');
               $('.modal-title').text('Edit Data');
           },
@@ -228,11 +224,16 @@
       } else {
           url = `${apiurl}/updatedata`;
       }
+      var formData = new FormData($('#form-data')[0]);
       $.ajax({
           url: url,
           type: "POST",
-          data: $('#form-data').serializeArray(),
+          data: formData,
           dataType: "JSON",
+          mimeType: "multipart/form-data",
+          contentType: false,
+          cache: false,
+          processData: false,
           success: function(data) {
               if (data.sukses == 'success') {
                   $('#modal-data').modal('hide');
@@ -243,9 +244,10 @@
                   refresh();
                   showNotif('Sukses', 'Tidak Ada Perubahan', 'success')
               }
+
           },
           error: function(jqXHR, textStatus, errorThrown) {
-              showNotif('Fail', 'Internal Error', 'danger')
+              alert('Error on process');
           }
       });
   }

@@ -1,42 +1,27 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-class Mastergambar extends CI_Controller {
+class Modeldesign extends CI_Controller {
     
-    public $table       = 'mgambar';
-    public $foldername  = 'mgambar';
-    public $indexpage   = 'mastergambar/v_mastergambar';
+    public $table       = 'mmodesign';
+    public $foldername  = 'mmodesign';
+    public $indexpage   = 'modeldesign/v_modeldesign';
     function __construct() {
         parent::__construct();
         include(APPPATH.'libraries/sessionakses.php');
     }
     function index(){
-        $data['modesign'] = $this->db->get('mmodesign')->result();
-        $this->load->view($this->indexpage,$data);  
+        $this->load->view($this->indexpage);  
     }
 
     public function getall(){
-        $q = "SELECT 
-            mgambar.id,
-            mgambar.kode,
-            mgambar.nama,
-            mgambar.ket,
-            mgambar.path,
-            mmodesign.nama namadesign,
-            mmodesign.gambar gambardesign
-        FROM 
-            mgambar 
-        LEFT JOIN mmodesign ON mgambar.ref_model = mmodesign.kode";
-
-        $result     = $this->db->query($q)->result();
+        $result     = $this->db->get($this->table)->result();
         $list       = [];
         foreach ($result as $i => $r) {
             $row['id']      = $r->id;
             $row['no']      = $i + 1;
             $row['nama']    = $r->nama;
-            $row['image']   = showimage($r->path);
+            $row['image']   = showimage($r->gambar);
             $row['ket']     = $r->ket;
-            $row['namadesign']      = $r->namadesign;
-            $row['gambardesign']    = showimage($r->gambardesign);
 
             $list[] = $row;
         }   
@@ -65,14 +50,12 @@ class Mastergambar extends CI_Controller {
             $d['useri']     = $this->session->userdata('username');
             $d['nama']      = $this->input->post('nama');
             $d['ket']       = $this->input->post('ket');
-            $d['ref_model'] = $this->input->post('ref_model');
             $result = $this->db->insert($this->table,$d);
         }else{
             $d['useri']     = $this->session->userdata('username');
             $d['nama']      = $this->input->post('nama');
             $d['ket']       = $this->input->post('ket');
-            $d['ref_model'] = $this->input->post('ref_model');
-            $d['path']      = $path.'/'.$this->upload->data('file_name');
+            $d['gambar']     = $path.'/'.$this->upload->data('file_name');
 
             $result = $this->db->insert($this->table,$d);
         }
@@ -99,8 +82,7 @@ class Mastergambar extends CI_Controller {
                 $d['dateu']     = 'now()';
                 $d['nama']      = $this->input->post('nama');
                 $d['ket']       = $this->input->post('ket');
-                $d['ref_model'] = $this->input->post('ref_model');
-                $d['path']      = $path.'/'.$this->upload->data('file_name').'.'.$ext ;
+                $d['gambar']    = $path.'/'.$this->upload->data('file_name').'.'.$ext ;
 
                 $w['id'] = $this->input->post('id');
                 $result = $this->db->update($this->table,$d,$w);
@@ -110,8 +92,7 @@ class Mastergambar extends CI_Controller {
                 $d['dateu']     = 'now()';
                 $d['nama']      = $this->input->post('nama');
                 $d['ket']       = $this->input->post('ket');
-                $d['ref_model'] = $this->input->post('ref_model');
-                $d['path']      = $path.'/'.$this->upload->data('file_name');
+                $d['gambar']    = $path.'/'.$this->upload->data('file_name');
 
                 $w['id'] = $this->input->post('id');
                 $result = $this->db->update($this->table,$d,$w);
@@ -125,8 +106,8 @@ class Mastergambar extends CI_Controller {
     public function deletedata()
     {
         $w['id'] = $this->input->post('id');
-        $sql = "SELECT path FROM {$this->table} WHERE id = {$this->input->post('id')}";
-        $path = $this->db->query($sql)->row()->path;
+        $sql = "SELECT gambar FROM {$this->table} WHERE id = {$this->input->post('id')}";
+        $path = $this->db->query($sql)->row()->gambar;
         
         @unlink('.'.$path);
         
@@ -135,4 +116,28 @@ class Mastergambar extends CI_Controller {
         $r['sukses'] = $result ? 'success' : 'fail' ;
         echo json_encode($r);
     }
+
+    // public function savedata()
+    // {   
+    //     $d['useri']     = $this->session->userdata('username');
+    //     $d['nama']      = $this->input->post('nama');
+    //     $d['colorc']    = $this->input->post('kodewarna');
+    //     $d['ket']       = $this->input->post('ket');
+
+    //     $result = $this->db->insert($this->table,$d);
+    //     $r['sukses'] = $result ? 'success' : 'fail' ;
+    //     echo json_encode($r);
+    // }
+    
+    // function updatedata(){
+    //     $d['useru']     = $this->session->userdata('username');
+    //     $d['dateu']     = 'now()';
+    //     $d['nama']      = $this->input->post('nama');
+    //     $d['colorc']    = $this->input->post('kodewarna');
+    //     $d['ket']       = $this->input->post('ket');
+    //     $w['id'] = $this->input->post('id');
+    //     $result = $this->db->update($this->table,$d,$w);
+    //     $r['sukses'] = $result ? 'success' : 'fail' ;
+    //     echo json_encode($r);
+    // }
 }

@@ -5,38 +5,6 @@ class Unimodel extends CI_Model{
         parent::__construct();
     }
 
-    function getaksesmenu(){
-        $access     = $this->session->userdata("access");
-        $issuper    = $this->session->userdata("issuper");
-        $sql    = 
-            "SELECT 
-            taction_group.group_action,
-            taction_group.icon_group,
-            taction.nama_action nama,
-            taction.icon_action icon,
-            taction.kategori_menu kategori
-        FROM
-            taction
-        LEFT OUTER JOIN topsi ON taction.id_action = topsi.ref_action_opsi
-        LEFT OUTER JOIN taction_group ON taction.group_action = taction_group.kode
-        WHERE
-            taction.entity_action = 'web' 
-        ";
-
-        if ($access != NULL or $access != '') {
-            $sql .= " AND topsi.ref_access_opsi = '$access'";
-        }
-
-        if ($access == NULL or $access == '') {
-        $sql .= " GROUP BY taction_group.icon_group,taction_group.sort_group, taction_group.group_action, taction.nama_action, taction.sort_menu,taction.icon_action,taction.kategori_menu";
-        }
-        $sql .= " ORDER BY taction_group.sort_group, taction.sort_menu ASC";
-
-
-        $query = $this->db->query($sql);
-        return $query->result();
-    }
-
     function getaksesmenu_new(){
         $access     = $this->session->userdata("access");
         $issuper    = $this->session->userdata("issuper");
@@ -46,7 +14,8 @@ class Unimodel extends CI_Model{
             taction_group.icon_group,
             taction.nama_action nama,
             taction.icon_action icon,
-            taction.kategori_menu kategori
+            taction.kategori_menu kategori,
+            taction.url
         FROM
             taction
         LEFT OUTER JOIN topsi ON taction.id_action = topsi.ref_action_opsi
@@ -60,7 +29,7 @@ class Unimodel extends CI_Model{
         }
 
         if ($access == '1' or $access == '1') {
-        $sql .= " GROUP BY taction_group.icon_group,taction_group.sort_group, taction_group.group_action, taction.nama_action, taction.sort_menu,taction.icon_action,taction.kategori_menu";
+        $sql .= " GROUP BY taction_group.icon_group,taction_group.sort_group, taction_group.group_action, taction.nama_action, taction.sort_menu,taction.icon_action,taction.kategori_menu,taction.url";
         }
         $sql .= " ORDER BY taction_group.sort_group, taction.sort_menu ASC";
 
