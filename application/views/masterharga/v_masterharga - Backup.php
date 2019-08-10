@@ -50,25 +50,6 @@
                     <div class="row">
                       <div class="col-md-6">
                         <div class="form-group">
-                          <label>Keterangan</label>
-                          <input type="text" class="form-control" name="ket" >
-                        </div>
-                      </div>
-                      <div class="col-md-6">
-                        <div class="form-group">
-                          <label>Gudang</label>
-                          <select class="form-control select2" name="ref_gud">
-                            <option value="">-</option>
-                            <?php foreach ($gudang as $i => $v): ?>
-                              <option value="<?php echo $v->kode ?>"><?php echo $v->nama; ?></option>
-                            <?php endforeach ?>
-                          </select>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-6">
-                        <div class="form-group">
                           <label>Konv</label>
                           <input type="text" class="form-control" name="konv" >
                         </div>
@@ -86,36 +67,31 @@
                       </div>
                     </div>
                     <div class="row">
-                      <div class="col-md-6">
+                      <div class="col-md-12">
                         <div class="form-group">
                           <label>Harga</label>
                           <input type="number" class="form-control" name="harga" >
                         </div>
-                      </div>
-                      <div class="col-md-6">
                         <div class="form-group">
                           <label>Keterangan</label>
                           <input type="text" class="form-control" name="ket" >
                         </div>
                       </div>
                     </div>
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div class="form-group">
+                          <label>Gudang</label>
+                          <select class="form-control select2" name="ref_gud">
+                            <option value="">-</option>
+                            <?php foreach ($gudang as $i => $v): ?>
+                              <option value="<?php echo $v->kode ?>"><?php echo $v->nama; ?></option>
+                            <?php endforeach ?>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
                   </form>
-                </div>
-                <div class="box-body pad">
-                  <div class="table-responsive mailbox-messages">
-                    <table id="table-harga" class="table table-striped table-bordered" cellspacing="0" width="100%">
-                      <thead>
-                        <tr id="repeat">
-                          <th>Konv</th>
-                          <th>Satuan</th>
-                          <th>Harga</th>
-                          <th>Keterangan</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                      </tbody>
-                    </table>
-                  </div>
                 </div>
               </div>
               <div class="modal-footer">
@@ -191,8 +167,6 @@
   var state;
   var idx     = -1;
   var table ;
-  var sat   = [];
-  var arsat = JSON.stringify(dspen);
 
   $(document).ready(function() {
       getAkses(title);
@@ -230,45 +204,11 @@
             }
         }
     });
-
-    tableharga = $('#table-harga').DataTable({
-          "processing": true,
-          "paging": false,
-          "lengthChange": false,
-          "searching": false,
-          "ordering": false,
-          "info": false,
-          "destroy" : true,
-          "data": $.parseJSON(arrsat),
-
-          "columns": [
-          { "data": "konv" },
-          { "data": "satuan" },
-          { "data": "harga" },
-          { "data": "Keterangan" },
-          ]
-      });
   });
 
   function refresh() {
       table.ajax.reload(null, false);
       idx = -1;
-  }
-
-  function add_harga() {
-      var konv    = $('[name="Konv"]').val();
-      var harga   = $('[name="harga"]').val();
-      var satuan  = $('[name="satuan"]').val();
-      var ketsatuan  = $('[name="ketsatuan"]').val();
-
-      sat.push({
-          'konv': konv,
-          'harga': harga,
-          'satuan': satuan,
-          'ketsatuan': ketsatuan
-      });
-      tableharga.ajax.reload(null, false);
-      $('#form-pen')[0].reset();
   }
 
   function add_data() {

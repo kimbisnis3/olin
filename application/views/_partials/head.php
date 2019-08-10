@@ -13,4 +13,29 @@
     <link href="<?php echo base_url() ?>assets/lte/plugins/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css" rel="stylesheet"/>
     <link href="<?php echo base_url() ?>assets/custom.css" rel="stylesheet"/>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+    <style type="text/css">
+        td.details-control {
+            background: url('<?php echo base_url(); ?>assets/details_open.png') no-repeat center center !important;
+            cursor: pointer  !important;
+        }
+
+        tr.shown td.details-control {
+            background: url('<?php echo base_url(); ?>assets/details_close.png') no-repeat center center !important;
+        }
+        .uni-green {
+            background-color: #66BB6A !important;
+            color : #ffffff;
+        }
+        .uni-red {
+            background-color: #ef5350 !important;
+            color : #ffffff;
+        }
+        .selected {
+            background-color: #008B8B !important;
+            color: #ffffff !important;
+        }
+        .modal {
+            overflow-y:auto !important; 
+        }
+    </style>
 </head>
