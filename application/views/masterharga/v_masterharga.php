@@ -28,7 +28,7 @@
           </ol>
         </section>
         <div class="modal fade" id="modal-data" role="dialog" data-backdrop="static">
-          <div class="modal-dialog">
+          <div class="modal-dialog modal-lg">
             <div class="modal-content">
               <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -38,23 +38,27 @@
                 <div class="box-body pad">
                   <form id="form-data">
                     <div class="row">
-                      <div class="col-md-12">
+                      <div class="col-md-7">
                         <div class="form-group">
                           <label>Nama</label>
                           <input type="hidden" name="idbarang">
                           <input type="hidden" name="idsatbarang">
+                          <input type="hidden" name="kode">
                           <input type="text" class="form-control" name="nama">
                         </div>
                       </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-6">
+                      <div class="col-md-5">
                         <div class="form-group">
                           <label>Keterangan</label>
                           <input type="text" class="form-control" name="ket" >
                         </div>
                       </div>
+                    </div>
+                    <div class="row">
                       <div class="col-md-6">
+                        
+                      </div>
+                      <div class="col-md-6 invisible">
                         <div class="form-group">
                           <label>Gudang</label>
                           <select class="form-control select2" name="ref_gud">
@@ -66,40 +70,46 @@
                         </div>
                       </div>
                     </div>
-                    <div class="row">
-                      <div class="col-md-6">
-                        <div class="form-group">
-                          <label>Konv</label>
-                          <input type="text" class="form-control" name="konv" >
-                        </div>
-                      </div>
-                      <div class="col-md-6">
-                        <div class="form-group">
-                          <label>Satuan</label>
-                          <select class="form-control select2" name="ref_sat">
-                            <option value="">-</option>
-                            <?php foreach ($satuan as $i => $v): ?>
-                              <option value="<?php echo $v->kode ?>"><?php echo $v->nama; ?></option>
-                            <?php endforeach ?>
-                          </select>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-6">
-                        <div class="form-group">
-                          <label>Harga</label>
-                          <input type="number" class="form-control" name="harga" >
-                        </div>
-                      </div>
-                      <div class="col-md-6">
-                        <div class="form-group">
-                          <label>Keterangan</label>
-                          <input type="text" class="form-control" name="ket" >
-                        </div>
-                      </div>
-                    </div>
                   </form>
+                </div>
+                <div class="box box-info">
+                <div class="box-header">
+                  <div class="row">
+                    <div class="col-md-3">
+                      <div class="form-group">
+                        <label>Konv</label>
+                        <input type="number" class="form-control" name="konv" >
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                      <div class="form-group">
+                        <label>Satuan</label>
+                        <select class="form-control select2" name="ref_sat">
+                          <option value="">-</option>
+                          <?php foreach ($satuan as $i => $v): ?>
+                          <option value="<?php echo $v->kode ?>"><?php echo $v->nama; ?></option>
+                          <?php endforeach ?>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                      <div class="form-group">
+                        <label>Harga</label>
+                        <input type="number" class="form-control" name="harga" >
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                      <div class="form-group">
+                        <label>Keterangan Harga</label>
+                        <input type="text" class="form-control" name="ketsatuan" >
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="pull-right">
+                      <button style="margin-right: 19px!important" type="button" class="btn btn-primary btn-flat add-btn invisible" onclick="add_harga()" ><i class="fa fa-plus"></i> Tambah</button>
+                    </div>
+                  </div>
                 </div>
                 <div class="box-body pad">
                   <div class="table-responsive mailbox-messages">
@@ -110,12 +120,14 @@
                           <th>Satuan</th>
                           <th>Harga</th>
                           <th>Keterangan</th>
+                          <th>Opsi</th>
                         </tr>
                       </thead>
                       <tbody>
                       </tbody>
                     </table>
                   </div>
+                </div>
                 </div>
               </div>
               <div class="modal-footer">
@@ -158,15 +170,12 @@
                       <table id="table" class="table table-striped table-bordered" cellspacing="0" width="100%">
                         <thead>
                           <tr id="repeat">
+                            <th width="1%"></th>
                             <th width="5%">No</th>
                             <th>ID</th>
-                            <th>ID Barang</th>
+                            <th>Kode</th>
                             <th>Nama Barang</th>
-                            <th>Konv</th>
-                            <th>Nama Satuan</th>
-                            <th>Harga</th>
-                            <th>Nama Gudang</th>
-                          </tr>
+                            <th>Keterangan</th>
                         </thead>
                         <tbody>
                         </tbody>
@@ -192,7 +201,7 @@
   var idx     = -1;
   var table ;
   var sat   = [];
-  var arsat = JSON.stringify(dspen);
+  var arrsat = JSON.stringify(sat);
 
   $(document).ready(function() {
       getAkses(title);
@@ -206,19 +215,22 @@
               "type": "POST",
               "data": {},
           },
-          "columns": [
+          "columns": [{ 
+              "className": 'details-control',
+              "orderable": false,
+              "data": null,
+              "defaultContent": ''
+          },
+          //data 0 for detail-controls
           { "data": "no" }, 
           { "data": "id" , "visible" : false},
-          { "data": "idbarang" , "visible" : false},
-          { "data": "namabarang" },
-          { "data": "konv" },
-          { "data": "namasatuan" },
-          { "data": "harga" },
-          { "data": "namagudang" },
+          { "data": "kode" , "visible" : false},
+          { "data": "nama" },
+          { "data": "ket" }
           ]
       });
 
-    $('#table tbody').on('click', 'tr', function() {
+    $('#table tbody').on('click', '.odd', function() {
         if ($(this).hasClass('selected')) {
             $(this).removeClass('selected');
             idx = -1;
@@ -231,6 +243,32 @@
         }
     });
 
+    $('#table tbody').on('click', '.even', function() {
+        if ($(this).hasClass('selected')) {
+            $(this).removeClass('selected');
+            idx = -1;
+        } else {
+            table.$('tr.selected').removeClass('selected');
+            $(this).addClass('selected');
+            if (table.row(this).index() > -1) {
+                idx = table.row(this).index();
+            }
+        }
+    });
+
+    $('#table tbody').on('click', 'td.details-control', function() {
+        var tr = $(this).closest('tr');
+        var row = table.row(tr);
+
+        if (row.child.isShown()) {
+            row.child.hide();
+            tr.removeClass('shown');
+        } else {
+            format(row.child, row.data());
+            tr.addClass('shown');
+        }
+    });
+
     tableharga = $('#table-harga').DataTable({
           "processing": true,
           "paging": false,
@@ -240,15 +278,42 @@
           "info": false,
           "destroy" : true,
           "data": $.parseJSON(arrsat),
-
+          "columnDefs": [{
+              "targets": -1,
+              "data": null,
+              "defaultContent": "<button class='btn btn-sm btn-danger btn-flat'><i class='fa fa-trash'></i></button>"
+          }],
           "columns": [
           { "data": "konv" },
           { "data": "satuan" },
           { "data": "harga" },
-          { "data": "Keterangan" },
+          { "data": "ketsatuan" },
+          { "data": "btn"}
           ]
       });
+
+      $('#table-harga tbody').on( 'click', 'button', function () {
+        var data = tableharga.row( $(this).parents('tr') ).data();
+        sat.splice(data, 1);
+        reloadharga();
+    } );
   });
+
+  function format(callback, data) {
+      $.ajax({
+          url: `${apiurl}/getdetail`,
+          type: "POST",
+          data: {
+            kodebarang : data.kode
+          },
+          success: function(response) {
+              callback($(response)).show();
+          },
+          error: function() {
+              $('#output').html('Bummer: there was an error!');
+          }
+      });
+  }
 
   function refresh() {
       table.ajax.reload(null, false);
@@ -256,23 +321,30 @@
   }
 
   function add_harga() {
-      var konv    = $('[name="Konv"]').val();
-      var harga   = $('[name="harga"]').val();
-      var satuan  = $('[name="satuan"]').val();
-      var ketsatuan  = $('[name="ketsatuan"]').val();
-
       sat.push({
-          'konv': konv,
-          'harga': harga,
-          'satuan': satuan,
-          'ketsatuan': ketsatuan
+          'konv': $('[name="konv"]').val(),
+          'harga': $('[name="harga"]').val(),
+          'ref_sat': $('[name="ref_sat"]').val(),
+          'satuan': $('[name="ref_sat"] option:selected').html(),
+          'ketsatuan': $('[name="ketsatuan"]').val()
       });
-      tableharga.ajax.reload(null, false);
-      $('#form-pen')[0].reset();
+      reloadharga();
+      $('[name="konv"]').val('');
+      $('[name="harga"]').val('');
+      $('[name="ref_sat"]').val('');
+      $('[name="ketsatuan"]').val('');
+      $('.select2').trigger('change');
+  }
+
+  function reloadharga() {
+      a = JSON.stringify(sat);
+      tableharga.clear().rows.add($.parseJSON(a)).draw();
   }
 
   function add_data() {
       state = 'add';
+      sat   = [];
+      reloadharga()
       $('#form-data')[0].reset();
       $('.select2').trigger('change');
       $('#modal-data').modal('show');
@@ -281,7 +353,7 @@
   }
 
   function edit_data() {
-      id = table.cell( idx, 1).data();
+      kode = table.cell( idx, 3).data();
       if (idx == -1) {
           return false;
       }
@@ -291,18 +363,16 @@
           url: `${apiurl}/edit`,
           type: "POST",
           data: {
-              id: id,
+              kode: kode,
           },
           dataType: "JSON",
           success: function(data) {
-              $('[name="idsatbarang"]').val(data.idsatbarang);
-              $('[name="idbarang"]').val(data.idbarang);
-              $('[name="nama"]').val(data.namabarang);
-              $('[name="konv"]').val(data.konv);
-              $('[name="harga"]').val(data.harga);
-              $('[name="ket"]').val(data.ket);
-              $('[name="ref_sat"]').val(data.ref_sat);
-              $('[name="ref_gud"]').val(data.ref_gud);
+              $('[name="idbarang"]').val(data.barang.idbarang);
+              $('[name="nama"]').val(data.barang.nama);
+              $('[name="ket"]').val(data.barang.ket);
+              $('[name="kode"]').val(data.barang.kode);
+              sat = data.harga;
+              reloadharga();
               $('.select2').trigger('change');
               $('#modal-data').modal('show');
               $('.modal-title').text('Edit Data');
@@ -314,6 +384,8 @@
   }
 
   function savedata() {
+      formValid('nama','Nama');
+      formValid('ket','Keterangan');
       var url;
       if (state == 'add') {
           url = `${apiurl}/savedata`;
@@ -323,7 +395,15 @@
       $.ajax({
           url: url,
           type: "POST",
-          data: $('#form-data').serializeArray(),
+          data: {
+            idbarang    : $('[name="idbarang"]').val(),
+            kode        : $('[name="kode"]').val(),
+            idsatbarang : $('[name="idsatbarang"]').val(),
+            nama        : $('[name="nama"]').val(),
+            ket         : $('[name="ket"]').val(),
+            ref_gud     : $('[name="ref_gud"]').val(),
+            arrHarga    : JSON.stringify(sat)
+          },
           dataType: "JSON",
           success: function(data) {
               if (data.sukses == 'success') {
@@ -343,7 +423,6 @@
   }
 
   function hapus_data() {
-    //ini id barang
       id = table.cell( idx, 2).data();
       if (idx == -1) {
           return false;

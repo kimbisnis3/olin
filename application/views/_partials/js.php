@@ -129,4 +129,13 @@
 	    return true;
 	}
 
+
+  function formValid(name,cap) {
+      if ($('[name="' + name + '"]').val() == '' || $('[name="' + name + '"]').val() == null) {
+          // $('[name="' + name + '"]').focus();
+          showNotif('','Kolom '+ cap+' Wajib Diisi', 'danger');
+          return false;
+      }
+  }
+
 </script>

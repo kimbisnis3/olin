@@ -73,7 +73,7 @@
                       <div class="row">
                         <div class="col-md-12">
                           <div class="form-group">
-                            <label>Serial Number</label>
+                            <label>Kode Design</label>
                             <input type="hidden" name="id">
                             <input type="hidden" name="ref_brg">
                             <input type="text" class="form-control" name="sn">
