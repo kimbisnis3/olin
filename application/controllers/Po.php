@@ -31,6 +31,7 @@ class Po extends CI_Controller {
         $this->db->trans_begin();
         $upcorel    = $this->libre->goUpload('corel','corel-'.time(),$this->foldername);
         $upimage    = $this->libre->goUpload('image','img-'.time(),$this->foldername);
+        $a['useri']     = $this->session->userdata('username');
         $a['ref_cust']  = $this->input->post('ref_cust');
         $a['tanggal']   = date('Y-m-d', strtotime($this->input->post('tanggal')));
         $a['ref_gud']   = $this->input->post('ref_gud');
@@ -44,9 +45,18 @@ class Po extends CI_Controller {
         $this->db->insert('xorder',$a);
         $idOrder = $this->db->insert_id();
         $kodeOrder = $this->db->get_where('xorder',array('id' => $idOrder))->row()->kode;
+        $satBrg = $this->db->get_where('msatbrg',array('kode' => $this->input->post('ref_satbrg')))->row();
+        $b['useri']     = $this->session->userdata('username');
         $b['ref_order'] = $kodeOrder;
         $b['ref_satbrg']= $this->input->post('ref_satbrg');
         $b['jumlah']    = $this->input->post('jumlah');
+        $b['harga']     = $satBrg->harga;
+        $b['ref_brg']   = $satBrg->ref_brg;
+        $b['ref_gud']   = $satBrg->ref_gud;
+        $b['ket']       = $satBrg->ket;
+        $this->db->insert('xorderd',$b);
+        $idOrderd = $this->db->insert_id();
+        $c['ref_orderd'] = $kodeOrder;
 
         if ($this->db->trans_status() === FALSE)
         {
