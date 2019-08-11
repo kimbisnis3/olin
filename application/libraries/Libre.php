@@ -21,4 +21,10 @@ class libre
             return null;
         }
     }
+
+    public function delFile($link)
+    {
+        @unlink('.'.$link);
+        return 'oke';
+    }
 }

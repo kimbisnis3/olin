@@ -61,4 +61,6 @@ if (!function_exists('status')) {
 
         return $i;
     }
+
+    // <a href='javascript:void(0)' class='btn btn-sm btn-info' data-toggle='tooltip' data-placement='top' title='Unduh' onclick='unduh_data(".$r->id.")'><i class='glyphicon glyphicon-download-alt'></i></a>
 }

@@ -57,5 +57,19 @@ function btnd($text)
  
     return $text;
 }
+
+function btndownload($text)
+{
+    if ($text != '' || $text != null) {
+        $text = ("
+        <button type='button' class='btn btn-sm btn-primary btn-flat' onclick='unduh_data(\"{$text}\")'><i class='fa fa-download'></i> Unduh</button>
+        ");
+    } else {
+        $text = ("File Tidak Ada");
+    }
+    
+
+    return $text;
+}
  
 ?>
