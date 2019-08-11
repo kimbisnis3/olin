@@ -30,7 +30,8 @@ class Pembayaran extends CI_Controller {
                 xpelunasan
             LEFT JOIN mcustomer ON mcustomer.kode = xpelunasan.ref_cust
             LEFT JOIN mgudang ON mgudang.kode = xpelunasan.ref_gud
-            LEFT JOIN mjenbayar ON mjenbayar.kode = xpelunasan.ref_jenbayar";
+            LEFT JOIN mjenbayar ON mjenbayar.kode = xpelunasan.ref_jenbayar
+            WHERE xpelunasan.void IS NOT NULL";
         $result     = $this->db->query($q)->result();
         $list       = [];
         foreach ($result as $i => $r) {
