@@ -13,46 +13,6 @@
             <li class="active title"></li>
           </ol>
         </section>
-        <div class="modal fade" id="modal-customer" role="dialog" data-backdrop="static">
-          <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title"></h4>
-              </div>
-              <div class="modal-body">
-                <div class="box">
-                  <div class="box-header">
-
-                  </div>
-                  <div class="box-body pad">
-                    <div class="table-responsive mailbox-messages">
-                      <table id="table-customer" class="table table-striped table-bordered" cellspacing="0" width="100%">
-                        <thead>
-                          <tr>
-                            <th width="5%">No</th>
-                            <th>ID</th>
-                            <th>Nama</th>
-                            <th>Alamat</th>
-                            <th>Telp</th>
-                            <th>Email</th>
-                            <th>Pic</th>
-                            <th></th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-warning btn-flat" data-dismiss="modal">Tutup</button>
-              </div>
-            </div>
-          </div>
-          </div>  <!-- END MODAL SPEK-->
           <div class="modal fade" id="modal-data" role="dialog" data-backdrop="static">
             <div class="modal-dialog">
               <div class="modal-content">
@@ -61,36 +21,165 @@
                   <h4 class="modal-title"></h4>
                 </div>
                 <div class="modal-body">
-                  <div class="box-body pad">
-                    <form id="form-data">
+                  <form id="form-data">
+                    <div class="box-body pad">
                       <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                           <div class="form-group">
                             <label>Agen</label>
                             <input type="hidden" name="id">
-                            <input type="text" class="form-control" name="ref_cust" >
-                            <input type="text" class="form-control" name="namacust" onfocus="open_cust()">
+                            <div class="input-group">
+                              <input type="hidden" class="form-control" name="ref_cust">
+                              <input type="text" class="form-control" name="namacust" disabled="true">
+                              <div class="input-group-btn">
+                                <button type="button" class="btn btn-primary btn-flat" onclick="open_cust()"><i class="fa fa-table"></i></button>
+                              </div>
+                            </div>
                           </div>
+                        </div>
+                        <div class="col-md-6">
                           <div class="form-group">
-                            <label>Gambar</label>
-                            <div id="image-preview" onerror="imgError(this)"/></div><br>
-                            <input type="file" class="form-control" name="image" id="image" onchange="filePreview(this);">
-                          </div>
-                          <div class="form-group">
-                            <label>File Corel</label>
-                            <input type="file" class="form-control" name="corel" id="corel">
-                          </div>
-                          <div class="form-group">
-                            <label>Tanggal</label>
-                            <input type="text" class="form-control datepicker" name="tanggal">
-                          </div>
-                          <div class="form-group">
-                            <input type="hidden" name="path" id="path">
+                            <label>Produk</label>
+                            <input type="hidden" name="id">
+                            <div class="input-group">
+                              <input type="hidden" class="form-control" name="kodebrg">
+                              <input type="text" class="form-control" name="namabarang" disabled="true">
+                              <div class="input-group-btn">
+                                <button type="button" class="btn btn-primary btn-flat" onclick="open_barang()"><i class="fa fa-table"></i></button>
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </form>
-                  </div>
+                      <div class="row">
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <label>Tanggal</label>
+                            <input type="text" class="form-control datepicker" name="tgl">
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <label>Keterangan</label>
+                            <input type="text" class="form-control" name="ket">
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <label>File Corel * </label>
+                            <input type="file" class="form-control" name="corel" id="corel">
+                            <input type="hidden" name="pathcorel" id="path">
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <label>Gambar</label>
+                            <input type="file" class="form-control" name="image" id="image">
+                            <input type="hidden" name="pathimg" id="path">
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <label>Layanan</label>
+                            <select class="form-control select2" name="ref_layanan">
+                              <option value="">-</option>
+                              <?php foreach ($mlayanan as $i => $v): ?>
+                              <option value="<?php echo $v->kode ?>"><?php echo $v->nama; ?></option>
+                              <?php endforeach ?>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <label>Pengiriman</label>
+                            <select class="form-control select2" name="ref_layanan" onchange="changelayanan()" id="ref_layanan">
+                              <option value="">-</option>
+                              <?php foreach ($mkirim as $i => $v): ?>
+                              <option value="<?php echo $v->kode ?>"><?php echo $v->nama; ?></option>
+                              <?php endforeach ?>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="box-body pad invisible fadeIn animated" id="box-kurir">
+                      <div class="row">
+                        <div class="col-md-12">
+                          <div class="row">
+                            <div class="col-md-6">
+                              <div class="form-group">
+                                <label>Provinsi Asal</label>
+                                <select class="form-control select2" id="select-provinsi" name="provinsi" onchange="setCity()">
+                                  <option value="">- Pilih Data -</option>
+                                </select>
+                              </div>
+                              <div class="form-group">
+                                <label>Kota Asal</label>
+                                <select class="form-control select2" id="select-city" name="city">
+                                  <option value="">- Pilih Data -</option>
+                                </select>
+                              </div>
+                            </div>
+                            <div class="col-md-6">
+                              <div class="form-group">
+                                <label>Provinsi Tujuan</label>
+                                <select class="form-control select2" id="select-provinsi-to" name="provinsito" onchange="setCityTo()">
+                                  <option value="">- Pilih Data -</option>
+                                </select>
+                              </div>
+                              <div class="form-group">
+                                <label>Kota Tujuan</label>
+                                <select class="form-control select2" id="select-city-to" name="cityto">
+                                  <option value="">- Pilih Data -</option>
+                                </select>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-md-4">
+                              <div class="form-group">
+                                <label>Berat (kg)</label>
+                                <input type="text" class="form-control" name="berat" onkeyup="setService()">
+                              </div>
+                            </div>
+                            <div class="col-md-8">
+                              <div class="form-group">
+                                <label>Kurir</label>
+                                <select class="form-control select2" id="select-kurir" name="kurir" onchange="setService()">
+                                  <option value="">- Pilih Data -</option>
+                                  <option value="jne">JNE</option>
+                                  <option value="tiki">TIKI</option>
+                                  <option value="pos">POS</option>
+                                </select>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-md-7">
+                              <div class="form-group">
+                                <label>Service</label>
+                                <select class="form-control select2" id="select-service" name="serv" onchange="setPrice()">
+                                  <option value="">- Pilih Data -</option>
+                                </select>
+                              </div>
+                            </div>
+                            <div class="col-md-3">
+                              <label>Biaya</label>
+                              <input type="text" class="form-control" name="biaya" disabled="true">
+                            </div>
+                            <div class="col-md-2">
+                              <label>Kode Kurir</label>
+                              <input type="text" class="form-control" name="kodekurir" disabled="true">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-warning btn-flat" data-dismiss="modal">Batal</button>
@@ -99,6 +188,84 @@
               </div>
             </div>
             </div>  <!-- END MODAL INPUT-->
+            <div class="modal fade" id="modal-customer" role="dialog" data-backdrop="static">
+              <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Daftar Agen</h4>
+                  </div>
+                  <div class="modal-body">
+                    <div class="box">
+                      <div class="box-header">
+                      </div>
+                      <div class="box-body pad">
+                        <div class="table-responsive mailbox-messages">
+                          <table id="table-customer" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                            <thead>
+                              <tr>
+                                <th width="5%">No</th>
+                                <th>ID</th>
+                                <th>Nama</th>
+                                <th>Alamat</th>
+                                <th>Telp</th>
+                                <th>Email</th>
+                                <th>Pic</th>
+                                <th>Opsi</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-warning btn-flat" data-dismiss="modal">Tutup</button>
+                  </div>
+                </div>
+              </div>
+              </div>  <!-- END MODAL SPEK-->
+              <div class="modal fade" id="modal-barang" role="dialog" data-backdrop="static">
+              <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Daftar Produk</h4>
+                  </div>
+                  <div class="modal-body">
+                    <div class="box">
+                      <div class="box-header">
+                      </div>
+                      <div class="box-body pad">
+                        <div class="table-responsive mailbox-messages">
+                          <table id="table-barang" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                            <thead>
+                              <tr>
+                                <th width="5%">No</th>
+                                <th>ID</th>
+                                <th>Kode</th>
+                                <th>Nama</th>
+                                <th>Satuan</th>
+                                <th>Harga</th>
+                                <th>Keterangan</th>
+                                <th>Opsi</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-warning btn-flat" data-dismiss="modal">Tutup</button>
+                  </div>
+                </div>
+              </div>
+              </div>  <!-- END MODAL SPEK-->
             <div id="modal-konfirmasi" class="modal fade" role="dialog">
               <div class="modal-dialog modal-sm">
                 <div class="modal-content">
@@ -161,10 +328,18 @@
   var table ;
 
   $(document).ready(function() {
+      $('.add-btn, .edit-btn, .delete-btn').prop('disabled',true);
       getAkses(title);
       select2();
       activemenux('transaksi', 'purchaseorder');
       dpicker();
+      setProvince();
+      $('#select-city').prop("disabled",true);
+      $('#select-city-to').prop("disabled",true);
+      $('#select-service').prop("disabled",true);
+      Pace.on('done', function() {
+          $('.add-btn, .edit-btn, .delete-btn').prop('disabled',false);
+      });
 
       table = $('#table').DataTable({
           "processing": true,
@@ -220,18 +395,14 @@
   }
 
   function open_cust() {
-      console.log('terbukalah')
       $('#modal-customer').modal('show');
-      $('.modal-title').text('Customer');
       tablecust = $('#table-customer').DataTable({
           "processing": true,
           "destroy": true,
           "ajax": {
               "url": `${apiurl}/loadcustomer`,
               "type": "POST",
-              "data": {
-                  kodebarang: table.cell(idx, 4).data()
-              }
+              "data": {}
           },
           "columnDefs": [{
               "targets": -1,
@@ -253,6 +424,46 @@
 
       $('#table-customer tbody').on('click', 'button', function() {
           var data = tablecust.row($(this).parents('tr')).data();
+          $('[name="ref_cust"]').val(data.kode);
+          $('[name="namacust"]').val(data.nama);
+          $('#modal-customer').modal('hide');
+      });
+
+  }
+
+  function open_barang() {
+      $('#modal-barang').modal('show');
+      tablebarang = $('#table-barang').DataTable({
+          "processing": true,
+          "destroy": true,
+          "ajax": {
+              "url": `${apiurl}/loadbrg`,
+              "type": "POST",
+              "data": {}
+          },
+          "columnDefs": [{
+              "targets": -1,
+              "data": null,
+              "defaultContent": "<button class='btn btn-sm btn-success btn-flat'><i class='fa fa-check'></i></button>"
+          }],
+          "columns": [
+            { "data": "no" }, 
+            { "data": "id" , "visible" : false},
+            { "data": "kode" , "visible" : false},
+            { "data": "nama" },
+            { "data": "namasatuan" },
+            { "data": "harga" },
+            { "data": "ket" },
+            { "data": "opsi" },
+          ]
+
+      });
+
+      $('#table-barang tbody').on('click', 'button', function() {
+          var data = tablebarang.row($(this).parents('tr')).data();
+          $('[name="kodebrg"]').val(data.kode);
+          $('[name="namabarang"]').val(data.nama);
+          $('#modal-barang').modal('hide');
       });
 
   }
@@ -263,6 +474,7 @@
       state = 'add';
       $('#form-data')[0].reset();
       $('#img-preview').remove();
+      $('#select-provinsi').val('10'); //set to Jawa Tengah
       $('.select2').trigger('change');
       $('#modal-data').modal('show');
       $('.modal-title').text('Tambah Data');
@@ -368,6 +580,82 @@
               showNotif('Fail', 'Internal Error', 'danger');
           }
       });
+  }
+
+  function changelayanan() {
+    let kode = $('#ref_layanan').val();
+    let label= $('#ref_layanan option:selected').html();
+    if ((kode == 'GX0002') || (label == 'kurir')) {
+      $('#box-kurir').removeClass('invisible');
+    } else {
+      $('#box-kurir').addClass('invisible');
+    }
+  }
+
+  function setProvince() {
+      $('#select-provinsi').load(`${apiurl}/request_province`, function(){
+        console.log('finish')
+        $('#select-provinsi').val('10');
+        $('#select-provinsi').trigger('change');
+      });
+      $('#select-provinsi-to').load(`${apiurl}/request_province`, function(){
+        console.log('finish')
+      });
+      return false;
+  }
+
+  function setCity() {
+      let id_province = $('#select-provinsi').val();
+      $('#select-city').prop("disabled",true);
+      if (id_province.length) {
+          $('#select-city').load(`${apiurl}/request_city?province=${id_province}`, function() {
+            console.log('finish City');
+            $('#select-city').prop("disabled",false)
+            $('#select-city').val('445');
+            $('#select-city').trigger('change');
+          });
+      }
+      return false;
+  }
+
+  function setCityTo() {
+      let id_province = $('#select-provinsi-to').val();
+      $('#select-city-to').prop("disabled",true);
+      if (id_province) {
+          $('#select-city-to').load(`${apiurl}/request_city?province=${id_province}`, function () {
+            console.log('finish City to');
+            $('#select-city-to').prop("disabled",false)
+          });
+      }
+      return false;
+  }
+
+  function setService() {
+      let origin      = $('[name="city"]').val();
+      let destination = $('[name="cityto"]').val();
+      let weight      = $('[name="berat"]').val();
+      let courier     = $('[name="kurir"]').val();
+      if ($('#select-kurir').val()) {
+        $('#select-service').load(`${apiurl}/request_ongkir?origin=${origin}&destination=${destination}&weight=${weight}&courier=${courier}`, function() {
+        console.log('finish Service');
+        $('#select-service').prop("disabled",false)
+      });
+      }
+      
+      $('[name="biaya"]').val($('#select-service').val()) ; 
+      $('[name="biaya"]').val('');
+      $('[name="kodekurir"]').val('');
+      return false;
+  }
+
+  function setPrice() {
+    let s = $('#select-service').val()
+    if (s.length > 0) {
+      let b = s.match((/\?(.*?)\?/g));
+      let k = s.match((/\@(.*?)\@/g));
+      $('[name="biaya"]').val(b.toString().replace(/\?/g, ''));
+      $('[name="kodekurir"]').val(k.toString().replace(/\@/g, ''));
+    }
   }
 
   </script>

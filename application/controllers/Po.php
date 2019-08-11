@@ -37,6 +37,8 @@ class Po extends CI_Controller {
         $this->db->trans_begin();
         $upcorel    = $this->libre->goUpload('corel','corel-'.time(),$this->foldername);
         $upimage    = $this->libre->goUpload('image','img-'.time(),$this->foldername);
+        $a['pathcorel'] = $upcorel;
+        $a['pathimage'] = $upimage;
         $a['useri']     = $this->session->userdata('username');
         $a['ref_cust']  = $this->input->post('ref_cust');
         $a['tgl']       = date('Y-m-d', strtotime($this->input->post('tgl')));
@@ -44,12 +46,11 @@ class Po extends CI_Controller {
         $a['ref_kirim'] = $this->input->post('ref_kirim');
         $a['ref_layanan'] = $this->input->post('ref_layanan');
         $a['ket']       = $this->input->post('ket');
-        $a['lokasidari']= $this->input->post('lokasidari');
-        $a['lokasike']  = $this->input->post('lokasike');
-        $a['bykirim']   = $this->input->post('bykirim');
-        $a['kgkirim']   = $this->input->post('kgkirim');
-        $a['pathcorel'] = $upcorel;
-        $a['pathimage'] = $upimage;
+        $a['lokasidari']= $this->input->post('provinsi').' - '.$this->input->post('city');
+        $a['lokasike']  = $this->input->post('provinsito').' - '.$this->input->post('cityto');
+        $a['kgkirim']   = $this->input->post('berat');
+        $a['bykirim']   = $this->input->post('biaya');
+        $a['kurir']     = $this->input->post('kodekurir');
         $this->db->insert('xorder',$a);
 
         $idOrder = $this->db->insert_id();
@@ -116,7 +117,7 @@ class Po extends CI_Controller {
                 mcustomer.email,
                 mcustomer.pic,
                 mcustomer.ket,
-                mcustomer.aktif,
+                mcustomer.aktif
             FROM
                 mcustomer
             WHERE aktif = 't'";
@@ -166,20 +167,12 @@ class Po extends CI_Controller {
             $row['nama']        = $r->nama;
             $row['kode']        = $r->kode;
             $row['ket']         = $r->ket;
-            $row['konv']        = $r->konv;
             $row['namasatuan']  = $r->namasatuan;
             $row['harga']       = $r->harga;
 
             $list[] = $row;
         }   
         echo json_encode(array('data' => $list));
-    }
-
-    function getbrg()
-    {
-        $w['id']= $this->input->post('id');
-        $data   = $this->db->get_where('mcustomer',$w)->row();
-        echo json_encode($data);
     }
 
     public function edit()
@@ -215,17 +208,114 @@ class Po extends CI_Controller {
         echo json_encode($r);
     }
 
-    function cetak(){
-      $useGroupBy = 1;
-      $header = ['No','Kode','Nama','Kode Warna','Keterangan'];
-      $q      = "SELECT * FROM mwarna";
-      $body   = $this->db->query($q)->result();
-      $data['title']    = 'Laporan Warna';
-      $data['periodestart'] = '@tanggal';
-      $data['periodeend']   = '@tanggal';
-      $data['header'] = $header;
-      $data['body']   = $body;
-      $this->load->view($this->printpage,$data); 
+    function request_province() {
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+          CURLOPT_URL => "https://api.rajaongkir.com/starter/province",
+          CURLOPT_RETURNTRANSFER => true,
+          CURLOPT_ENCODING => "",
+          CURLOPT_MAXREDIRS => 10,
+          CURLOPT_TIMEOUT => 30,
+          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+          CURLOPT_CUSTOMREQUEST => "GET",
+          CURLOPT_HTTPHEADER => array(
+            "key: 5c8590c12ef6879e2b829c4ab6aa955e"
+          ),
+        ));
+
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+
+        curl_close($curl);
+
+        if ($err) {
+          echo "cURL Error #:" . $err;
+        } else {
+              $data = json_decode($response, true); 
+              $op = "<option value=''>-</option>";
+              for ($i=0; $i < count($data['rajaongkir']['results']); $i++) {  
+                $op .="<option value='".$data['rajaongkir']['results'][$i]['province_id']."'>".$data['rajaongkir']['results'][$i]['province']."</option>";
+              }  
+                echo $op; 
+        }
+    }
+
+    function request_city() {
+        $province = $this->input->get('province');
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+          CURLOPT_URL => "https://api.rajaongkir.com/starter/city?province={$province}",
+          CURLOPT_RETURNTRANSFER => true,
+          CURLOPT_ENCODING => "",
+          CURLOPT_MAXREDIRS => 10,
+          CURLOPT_TIMEOUT => 30,
+          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+          CURLOPT_CUSTOMREQUEST => "GET",
+          CURLOPT_HTTPHEADER => array(
+            "key: 5c8590c12ef6879e2b829c4ab6aa955e"
+          ),
+        ));
+
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+
+        curl_close($curl);
+
+        if ($err) {
+          echo "cURL Error #:" . $err;
+        } else {
+          $data = json_decode($response, true); 
+          $op = "<option value=''>-</option>";
+              for ($i=0; $i < count($data['rajaongkir']['results']); $i++) { 
+              $op .=  "<option value='".$data['rajaongkir']['results'][$i]['city_id']."'>".$data['rajaongkir']['results'][$i]['city_name']."</option>"; 
+              }  
+                  echo $op;
+
+        }
+    }
+
+    function request_ongkir() {
+        $origin         = $this->input->get('origin'); 
+        $destination    = $this->input->get('destination'); 
+        $weight         = $this->input->get('weight') * 1000;
+        $courier        = $this->input->get('courier');
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+          CURLOPT_URL => "https://api.rajaongkir.com/starter/cost",
+          CURLOPT_RETURNTRANSFER => true,
+          CURLOPT_ENCODING => "",
+          CURLOPT_MAXREDIRS => 10,
+          CURLOPT_TIMEOUT => 30,
+          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+          CURLOPT_CUSTOMREQUEST => "POST",
+          CURLOPT_POSTFIELDS => "origin={$origin}&destination={$destination}&weight={$weight}&courier={$courier}",
+          // CURLOPT_POSTFIELDS => "origin=501&destination=114&weight=1700&courier=jne",
+          CURLOPT_HTTPHEADER => array(
+            "content-type: application/x-www-form-urlencoded",
+            "key: 5c8590c12ef6879e2b829c4ab6aa955e"
+          ),
+        ));
+
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+
+        curl_close($curl);
+
+        if ($err) {
+          echo "cURL Error #:" . $err;
+        } else {
+          $data = json_decode($response, true); 
+          $op = "<option value=''>-</option>";
+              for ($i=0; $i < count($data['rajaongkir']['results'][0]['costs']); $i++) {  
+                $res = $data['rajaongkir']['results'][0]['costs'][$i];
+                $op .= "<option value='@".$res['service']."@?".$res['cost'][0]['value']."?'>".$res['service']." (".$res['description']." - ".number_format($res['cost'][0]['value']).")</option>";
+              }
+                  echo $op; 
+              // echo $response;
+        }
     }
     
 }
