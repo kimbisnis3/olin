@@ -13,86 +13,31 @@
             <li class="active title"></li>
           </ol>
         </section>
-        <div class="modal fade" id="modal-data" role="dialog" data-backdrop="static">
-          <div class="modal-dialog">
+        <div class="modal fade" id="modal-customer" role="dialog" data-backdrop="static">
+          <div class="modal-dialog modal-lg">
             <div class="modal-content">
               <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                 <h4 class="modal-title"></h4>
               </div>
               <div class="modal-body">
-                <div class="box-body pad">
-                  <form id="form-data">
-                    <div class="row">
-                      <div class="col-md-12">
-                        <div class="form-group">
-                          <label>Nama</label>
-                          <input type="hidden" name="id">
-                          <input type="text" class="form-control" name="nama" >
-                        </div>
-                        <div class="form-group">
-                          <label>Gambar</label>
-                          <div id="image-preview" onerror="imgError(this)"/></div><br>
-                          <input type="file" class="form-control" name="image" id="image" onchange="filePreview(this);">
-                        </div>
-                        <div class="form-group">
-                          <label>File Corel</label>
-                          <input type="file" class="form-control" name="corel" id="corel">
-                        </div>
-                        <div>
-                          <label>Tanggal</label>
-                          <input type="text" class="form-control datepicker" name="tanggal">
-                        </div>
-                        <div class="form-group">
-                          <input type="hidden" name="path" id="path">
-                        </div>
-                      </div>
-                    </div>
-                  </form>
-                </div>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-warning btn-flat" data-dismiss="modal">Batal</button>
-                <button type="button" id="btnSave" onclick="savedata()" class="btn btn-primary btn-flat">Simpan</button>
-              </div>
-            </div>
-          </div>
-          </div>  <!-- END MODAL INPUT-->
-          <div id="modal-konfirmasi" class="modal fade" role="dialog">
-            <div class="modal-dialog modal-sm">
-              <div class="modal-content">
-                <div class="modal-body">
-                  <button type="button" class="close" data-dismiss="modal">&times;</button>
-                  <center><h4 class="modal-title"></h4></center>
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-warning btn-flat" data-dismiss="modal">Tidak</button>
-                  <button type="button" id="btnHapus" class="btn btn-danger btn-flat">Ya</button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <section class="content">
-            <div class="row">
-              <div class="col-xs-12">
-                <div class="box box-info">
+                <div class="box">
                   <div class="box-header">
-                    <div class="pull-left">
-                      <button class="btn btn-success btn-flat refresh-btn" onclick="refresh()"><i class="fa fa-refresh"></i> Refresh</button>
-                      <button class="btn btn-primary btn-flat add-btn invisible" onclick="add_data()" ><i class="fa fa-plus"></i> Tambah</button>
-                    </div>
-                    <div class="pull-right">
-                      <button class="btn btn-warning btn-flat edit-btn invisible" onclick="edit_data()"><i class="fa fa-pencil"></i> Ubah</button>
-                      <button class="btn btn-danger btn-flat delete-btn invisible" onclick="hapus_data()" ><i class="fa fa-trash"></i> Hapus</button>
-                    </div>
+
                   </div>
-                  <div class="box-body">
+                  <div class="box-body pad">
                     <div class="table-responsive mailbox-messages">
-                      <table id="table" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                      <table id="table-customer" class="table table-striped table-bordered" cellspacing="0" width="100%">
                         <thead>
-                          <tr id="repeat">
+                          <tr>
                             <th width="5%">No</th>
                             <th>ID</th>
+                            <th>Nama</th>
+                            <th>Alamat</th>
+                            <th>Telp</th>
+                            <th>Email</th>
+                            <th>Pic</th>
+                            <th></th>
                           </tr>
                         </thead>
                         <tbody>
@@ -102,13 +47,109 @@
                   </div>
                 </div>
               </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-warning btn-flat" data-dismiss="modal">Tutup</button>
+              </div>
             </div>
-          </section>
-          </div><!-- /.content-wrapper -->
-          <?php $this->load->view('_partials/foot'); ?>
-        </div>
-      </body>
-    </html>
+          </div>
+          </div>  <!-- END MODAL SPEK-->
+          <div class="modal fade" id="modal-data" role="dialog" data-backdrop="static">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                  <h4 class="modal-title"></h4>
+                </div>
+                <div class="modal-body">
+                  <div class="box-body pad">
+                    <form id="form-data">
+                      <div class="row">
+                        <div class="col-md-12">
+                          <div class="form-group">
+                            <label>Agen</label>
+                            <input type="hidden" name="id">
+                            <input type="text" class="form-control" name="ref_cust" >
+                            <input type="text" class="form-control" name="namacust" onfocus="open_cust()">
+                          </div>
+                          <div class="form-group">
+                            <label>Gambar</label>
+                            <div id="image-preview" onerror="imgError(this)"/></div><br>
+                            <input type="file" class="form-control" name="image" id="image" onchange="filePreview(this);">
+                          </div>
+                          <div class="form-group">
+                            <label>File Corel</label>
+                            <input type="file" class="form-control" name="corel" id="corel">
+                          </div>
+                          <div class="form-group">
+                            <label>Tanggal</label>
+                            <input type="text" class="form-control datepicker" name="tanggal">
+                          </div>
+                          <div class="form-group">
+                            <input type="hidden" name="path" id="path">
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-warning btn-flat" data-dismiss="modal">Batal</button>
+                  <button type="button" id="btnSave" onclick="savedata()" class="btn btn-primary btn-flat">Simpan</button>
+                </div>
+              </div>
+            </div>
+            </div>  <!-- END MODAL INPUT-->
+            <div id="modal-konfirmasi" class="modal fade" role="dialog">
+              <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                  <div class="modal-body">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <center><h4 class="modal-title"></h4></center>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-warning btn-flat" data-dismiss="modal">Tidak</button>
+                    <button type="button" id="btnHapus" class="btn btn-danger btn-flat">Ya</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <section class="content">
+              <div class="row">
+                <div class="col-xs-12">
+                  <div class="box box-info">
+                    <div class="box-header">
+                      <div class="pull-left">
+                        <button class="btn btn-success btn-flat refresh-btn" onclick="refresh()"><i class="fa fa-refresh"></i> Refresh</button>
+                        <button class="btn btn-primary btn-flat add-btn invisible" onclick="add_data()" ><i class="fa fa-plus"></i> Tambah</button>
+                      </div>
+                      <div class="pull-right">
+                        <button class="btn btn-warning btn-flat edit-btn invisible" onclick="edit_data()"><i class="fa fa-pencil"></i> Ubah</button>
+                        <button class="btn btn-danger btn-flat delete-btn invisible" onclick="hapus_data()" ><i class="fa fa-trash"></i> Hapus</button>
+                      </div>
+                    </div>
+                    <div class="box-body">
+                      <div class="table-responsive mailbox-messages">
+                        <table id="table" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                          <thead>
+                            <tr id="repeat">
+                              <th width="5%">No</th>
+                              <th>ID</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+            </div><!-- /.content-wrapper -->
+            <?php $this->load->view('_partials/foot'); ?>
+          </div>
+        </body>
+      </html>
   <?php $this->load->view('_partials/js'); ?>
   <script type="text/javascript">
   var path = 'po';
@@ -153,30 +194,70 @@
   });
 
   function previewImage() {
-    document.getElementById("image-preview").style.display = "block";
-    var oFReader = new FileReader();
-     oFReader.readAsDataURL(document.getElementById("image").files[0]);
- 
-    oFReader.onload = function(oFREvent) {
-      document.getElementById("image-preview").src = oFREvent.target.result;
-    };
+      document.getElementById("image-preview").style.display = "block";
+      var oFReader = new FileReader();
+      oFReader.readAsDataURL(document.getElementById("image").files[0]);
+
+      oFReader.onload = function(oFREvent) {
+          document.getElementById("image-preview").src = oFREvent.target.result;
+      };
   };
 
   function filePreview(input) {
-    if (input.files && input.files[0]) {
-        var reader = new FileReader();
-        reader.onload = function (e) {
-            $('#img-preview').remove();
-            $('#image-preview').append('<img id="img-preview" src="'+e.target.result+'"/>');
-        }
-        reader.readAsDataURL(input.files[0]);
-    }
-}
+      if (input.files && input.files[0]) {
+          var reader = new FileReader();
+          reader.onload = function(e) {
+              $('#img-preview').remove();
+              $('#image-preview').append('<img id="img-preview" src="' + e.target.result + '"/>');
+          }
+          reader.readAsDataURL(input.files[0]);
+      }
+  }
 
   function refresh() {
       table.ajax.reload(null, false);
       idx = -1;
   }
+
+  function open_cust() {
+      console.log('terbukalah')
+      $('#modal-customer').modal('show');
+      $('.modal-title').text('Customer');
+      tablecust = $('#table-customer').DataTable({
+          "processing": true,
+          "destroy": true,
+          "ajax": {
+              "url": `${apiurl}/loadcustomer`,
+              "type": "POST",
+              "data": {
+                  kodebarang: table.cell(idx, 4).data()
+              }
+          },
+          "columnDefs": [{
+              "targets": -1,
+              "data": null,
+              "defaultContent": "<button class='btn btn-sm btn-success btn-flat'><i class='fa fa-check'></i></button>"
+          }],
+          "columns": [
+            { "data": "no" }, 
+            { "data": "id" , "visible" : false},
+            { "data": "kode" , "visible" : false},
+            { "data": "nama" },
+            { "data": "alamat" },
+            { "data": "telp" },
+            { "data": "email" },
+            { "data": "opsi" },
+          ]
+
+      });
+
+      $('#table-customer tbody').on('click', 'button', function() {
+          var data = tablecust.row($(this).parents('tr')).data();
+      });
+
+  }
+
+
 
   function add_data() {
       state = 'add';
