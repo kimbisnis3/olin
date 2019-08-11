@@ -474,5 +474,14 @@ class Po extends CI_Controller {
               // echo $response;
         }
     }
+
+    function savefile(){
+        $d['pathcorel']  = $this->libre->goUploadUpdate('editcorel','corel-'.time(),$this->foldername,$this->input->post('editcorel'));
+        $d['pathimage']  = $this->libre->goUploadUpdate('editimage','img-'.time(),$this->foldername,$this->input->post('editimage'));
+        $w['kode'] = $this->input->post('editkodefile');
+        $result = $this->db->update('xorder',$d,$w);
+        $r['sukses'] = $result ? 'success' : 'fail' ;
+        echo json_encode($r);
+    }
     
 }

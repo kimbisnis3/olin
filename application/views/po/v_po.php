@@ -341,6 +341,7 @@
                         <div class="col-md-6">
                           <div class="form-group">
                             <label>File Corel * </label>
+                            <input type="text" name="editkodefile">
                             <input type="file" class="form-control" name="editcorel" id="editcorel">
                             <input type="text" name="editpathcorel">
                           </div>
@@ -358,7 +359,7 @@
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-warning btn-flat" data-dismiss="modal">Batal</button>
-                  <button type="button" id="btnSave" onclick="savedata()" class="btn btn-primary btn-flat">Simpan</button>
+                  <button type="button" id="btnSave" onclick="savefile()" class="btn btn-primary btn-flat">Simpan</button>
                 </div>
               </div>
             </div>
@@ -668,11 +669,43 @@
 
       $('#table-file tbody').on('click', '#btn-edit-file', function() {
           var data = tablefile.row($(this).parents('tr')).data();
+          $('#form-file')[0].reset();
           $('[name="editpathcorel"]').val(data.pathcorel);
           $('[name="editpathimage"]').val(data.pathimage);
+          $('[name="editkodefile"]').val(data.kode);
           $('#modal-input-file').modal('show');
       });
 
+  }
+
+  function savefile() {
+      var formfile = new FormData($('#form-file')[0]);
+      url = "<?php echo base_url() ?>po/savefile"
+      $.ajax({
+          url: url,
+          type: "POST",
+          data: formfile,
+          dataType: "JSON",
+          mimeType: "multipart/form-data",
+          contentType: false,
+          cache: false,
+          processData: false,
+          success: function(data) {
+              if (data.sukses == 'success') {
+                  $('#modal-input-file').modal('hide');
+                  // refresh();
+                  showNotif('Sukses', 'Data Berhasil Diubah', 'success')
+              } else if (data.sukses == 'fail') {
+                  $('#modal-input-file').modal('hide');
+                  // refresh();
+                  showNotif('Sukses', 'Tidak Ada Perubahan', 'success')
+              }
+
+          },
+          error: function(jqXHR, textStatus, errorThrown) {
+              showNotif('Fail', 'Internal Error', 'danger')
+          }
+      });
   }
 
   function add_data() {
