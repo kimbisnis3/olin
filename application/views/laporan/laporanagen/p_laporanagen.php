@@ -1,52 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><?php echo $title; ?></title>
+    <link href="<?php echo base_url() ?>assets/cetak.css" rel="stylesheet"/>
+  </head>
+  <body onload="window.print()">
+  <h2 class="judul"><?php echo (isset($title) ? $title : '') ?></h2>
+  <h4><?php echo (isset($periodestart) ? 'Periode : '.$periodestart : ''); ?> <?php echo (isset($periodeend) ? 'Sampai : '.$periodeend : ''); ?></h4>
+  <h4><?php echo (isset($filter) ? $filter : ''); ?></h4>
 <?php 
-$id = -1;
-$no= 1;
-foreach ($maintenance as $t) {
+$id = 1;
+foreach ($body as $i => $t) {
 
-    if ($id != -1 && $id != $t->namaperalatan) {
+    if ($id != 1 && $id != $t->mjencust_nama) {
         echo '</tbody>';
         echo '</table>';
         $no= 1;
     }
 
-    if ($id != $t->namaperalatan) { ?>
+    if ($id != $t->mjencust_nama) { ?>
 
-        <table id="table" cellspacing="0" witdh="100%" class="table table-striped table-bordered">
-        <?php echo '<thead><b>'.$t->namaperalatan.'</b></thead>'; ?> 
-        <tr>
+      <?php echo '<p><b>'.$t->mjencust_nama.'</b></p>'; ?>
+      <table>
+      <tr>
         <th>No. </th>
-        <th>Tanggal</th>
-        <th>Jenis Perawatan / Perbaikan</th>
-        <th>Spare Part</th>
+        <th>Nama</th>
+        <th>Alamat</th>
+        <th>Telp</th>
+        <th>Email</th>
         <th>Keterangan</th>
-        </tr>
-        </thead>
-        <tbody>
+      </tr>
+      </thead>
+      <tbody>
 
-      <?php $id = $t->namaperalatan; } 
-        $spart = $t->spart;
-        $sparepart="";
-
-        if ($spart == 't') {
-          $sparepart=" Ya ";
-        }
-        else {
-          $sparepart = "Tidak";
-        }
-      ?>
+      <?php $id = $t->mjencust_nama; } ?>
 
        <tr>
-       <td width="2%"><?php echo $no ?></td>
-       <td class="tdcenter"><?php echo id_date($t->tgl); ?></td>
-       <td class="tdcenter"><?php echo $t->perbaikan; ?></td>
-       <td width="10%"><?php echo $sparepart; ?></td>
+       <td width="2%"><?php echo $i + 1 ?></td>
+       <td class="tdcenter"><?php echo $t->nama; ?></td>
+       <td class="tdcenter"><?php echo $t->alamat; ?></td>
+       <td width="10%"><?php echo $t->telp; ?></td>
+       <td class="tdcenter"><?php echo $t->email; ?></td>
        <td class="tdcenter"><?php echo $t->ket; ?></td>
        </tr>
 
-  <?php $no++;}
+<?php }
 
 echo '</tbody>';
 echo '</table>';
 
 ?>
 
+</body>
+</html>

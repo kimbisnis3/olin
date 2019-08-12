@@ -11,7 +11,7 @@
 <script src="<?php echo base_url()?>assets/lte/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.js"></script>
 <script src="<?php echo base_url()?>assets/lte/plugins/ckeditor/ckeditor.js"></script>
 <script src="<?php echo base_url()?>assets/lte/plugins/pace/pace.js"></script>
-<script src="assets/numeral.min.js"></script>
+<script src="<?php echo base_url()?>assets/numeral.min.js"></script>
 <script type="text/javascript">
 
 	var php_base_url = '<?php echo base_url() ?>';

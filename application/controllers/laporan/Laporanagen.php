@@ -14,27 +14,25 @@ class Laporanagen extends CI_Controller {
         $this->load->view($this->indexpage);  
     }
 
-    function cetak(){
-      $useGroupBy = 1;
-      $header = ['No','Nama','Alamat','Telp','Email','PIC','Nama Agen'];
-      $q      = "SELECT
-                    mcustomer.nama,
-                    mcustomer.alamat,
-                    mcustomer.telp,
-                    mcustomer.email,
-                    mcustomer.pic,
-                    mcustomer.ket,
-                    mjencust.nama mjencust_nama
-                FROM
-                    mcustomer
-                LEFT JOIN mjencust ON mjencust.kode = mcustomer.ref_jenc";
-      $body   = $this->db->query($q)->result();
-      $data['title']    = 'Laporan Data Agen';
-      $data['periodestart'] = '@tanggal';
-      $data['periodeend']   = '@tanggal';
-      $data['header'] = $header;
-      $data['body']   = $body;
-      $this->load->view($this->printpage,$data); 
+    function cetak()
+    {
+        $q     = "SELECT
+                mcustomer.nama,
+                mcustomer.alamat,
+                mcustomer.telp,
+                mcustomer.email,
+                mcustomer.pic,
+                mcustomer.ket,
+                mjencust.nama mjencust_nama
+            FROM
+                mcustomer
+            LEFT JOIN mjencust ON mjencust.kode = mcustomer.ref_jenc";
+        $body   = $this->db->query($q)->result();
+        $data['title']    = 'Laporan Data Agen';
+        // $data['periodestart'] = '@tanggal';
+        // $data['periodeend']   = '@tanggal';
+        $data['body']         = $body;
+        $this->load->view($this->printpage,$data);
     }
     
 }
