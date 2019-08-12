@@ -18,11 +18,13 @@ class Pembayaran extends CI_Controller {
         $q = "SELECT 
                 xpelunasan.id,
                 xpelunasan.kode,
-                xpelunasan.tgl,
+                xpelunasan.tgl tgl_real,
+                to_char(xpelunasan.tgl, 'DD Mon YYYY') tgl,
                 xpelunasan.total,
                 xpelunasan.bayar,
                 xpelunasan.posted,
                 xpelunasan.ket,
+                xpelunasan.ref_jual,
                 mcustomer.nama mcustomer_nama,
                 mgudang.nama mgudang_nama,
                 mjenbayar.nama mjenbayar_nama
@@ -31,7 +33,7 @@ class Pembayaran extends CI_Controller {
             LEFT JOIN mcustomer ON mcustomer.kode = xpelunasan.ref_cust
             LEFT JOIN mgudang ON mgudang.kode = xpelunasan.ref_gud
             LEFT JOIN mjenbayar ON mjenbayar.kode = xpelunasan.ref_jenbayar
-            WHERE xpelunasan.void IS NOT NULL";
+            WHERE xpelunasan.void IS NOT TRUE";
         $result     = $this->db->query($q)->result();
         $list       = [];
         foreach ($result as $i => $r) {
@@ -45,6 +47,8 @@ class Pembayaran extends CI_Controller {
             $row['total']           = $r->total;
             $row['bayar']           = $r->bayar;
             $row['ket']             = $r->ket;
+            $row['posted']          = $r->posted;
+            $row['ref_jual']          = $r->ref_jual;
 
             $list[] = $row;
         }   
@@ -65,7 +69,7 @@ class Pembayaran extends CI_Controller {
                 msatbrg.harga,
                 msatbrg.ref_brg,
                 msatbrg.ref_sat,
-                msatuan.nama satuan
+                msatuan.nama satuan_nama
             FROM
                 xpelunasand
             LEFT JOIN mbarang ON mbarang.kode = xpelunasand.ref_brg
@@ -75,19 +79,20 @@ class Pembayaran extends CI_Controller {
         $result     = $this->db->query($q)->result();
         $str        = '<table class="table">
                         <tr>
+                            <th>No</th>
+                            <th>Nama</th>
                             <th>Konv</th>
                             <th>Satuan</th>
                             <th>Harga</th>
-                            <th>Gudang</th>
                             <th>Keterangan</th>
                         </tr>';
-        foreach ($result as $r) {
+        foreach ($result as $i => $r) {
             $str    .= '<tr>
+                            <td>'.($i + 1).'.</td>
                             <td>'.$r->nama.'</td>
                             <td>'.$r->konv.'</td>
-                            <td>'.$r->namasatuan.'</td>
+                            <td>'.$r->satuan_nama.'</td>
                             <td>'.$r->harga.'</td>
-                            <td>'.$r->namagudang.'</td>
                             <td>'.$r->ket.'</td>
                         </tr>';
         }
@@ -119,15 +124,17 @@ class Pembayaran extends CI_Controller {
                 ) + xorder.bykirim total
             FROM
                 xorder
-            LEFT JOIN mcustomer ON mcustomer.kode = xorder.ref_cust";
+            LEFT JOIN mcustomer ON mcustomer.kode = xorder.ref_cust
+            WHERE xorder.void IS NOT TRUE";
         $result     = $this->db->query($q)->result();
         $list       = [];
         foreach ($result as $i => $r) {
             $row['no']              = $i + 1;
             $row['id']              = $r->id;
             $row['kode']            = $r->kode;
-            $row['tgl']             = $r->tgl;
+            $row['ref_cust']        = $r->ref_cust;
             $row['mcustomer_nama']  = $r->mcustomer_nama;
+            $row['tgl']             = $r->tgl;
             $row['total']           = $r->total;
             $row['ket']             = $r->ket;
 
@@ -146,8 +153,10 @@ class Pembayaran extends CI_Controller {
         $a['bayar']     = $this->input->post('bayar');
         $a['ket']       = $this->input->post('ket');
         $a['ref_jual']  = $this->input->post('ref_order');
+        $a['ref_jenbayar']  = $this->input->post('ref_jenbayar');
+        $a['posted']    = 'f';
 
-        $result = $this->db->insert('xpelunasan',$d);
+        $result = $this->db->insert('xpelunasan',$a);
         $idpelun = $this->db->insert_id();
         $kodepelun = $this->db->get_where('xpelunasan',array('id' => $idpelun))->row()->kode;
         $dataOrderd = $this->db->get_where('xorderd',array('ref_order' => $this->input->post('ref_order')))->result();
@@ -159,19 +168,18 @@ class Pembayaran extends CI_Controller {
                 "jumlah"    => $r->jumlah,
                 "ref_satbrg"=> $r->ref_satbrg,
                 "ket"       => $r->ket,
+                "harga"     => $r->harga,
             );
             $b[] = $row;
         }
         $result = $this->db->insert_batch('xpelunasand',$b);
-        if ($this->db->trans_status() === FALSE)
-        {
+        if ($this->db->trans_status() === FALSE) {
             $this->db->trans_rollback();
             $r = array(
                 'sukses' => 'fail', 
             );
         }
-        else
-        {
+        else {
             $this->db->trans_commit();
             $r = array(
                 'sukses' => 'success'
@@ -182,27 +190,30 @@ class Pembayaran extends CI_Controller {
 
     public function edit()
     {
-        $w['id']= $this->input->post('id');
-        $data   = $this->db->get_where($this->table,$w)->row();
+        $this->input->post('kode');
+        $q = "SELECT 
+                xpelunasan.id,
+                xpelunasan.kode,
+                xpelunasan.tgl tgl_real,
+                to_char(xpelunasan.tgl, 'DD Mon YYYY') tgl,
+                xpelunasan.total,
+                xpelunasan.bayar,
+                xpelunasan.posted,
+                xpelunasan.ket,
+                xpelunasan.ref_jual,
+                xpelunasan.ref_jenbayar,
+                xpelunasan.ref_cust,
+                mcustomer.nama mcustomer_nama,
+                mgudang.nama mgudang_nama,
+                mjenbayar.nama mjenbayar_nama
+            FROM 
+                xpelunasan
+            LEFT JOIN mcustomer ON mcustomer.kode = xpelunasan.ref_cust
+            LEFT JOIN mgudang ON mgudang.kode = xpelunasan.ref_gud
+            LEFT JOIN mjenbayar ON mjenbayar.kode = xpelunasan.ref_jenbayar
+            WHERE xpelunasan.kode = '{$this->input->post('kode')}' ";
+        $data   = $this->db->query($q)->row();
         echo json_encode($data);
-    }
-
-    function updatedata(){
-        $d['useru']     = $this->session->userdata('username');
-        $d['dateu']     = 'now()';
-        $d['nama']      = $this->input->post('nama');
-        $d['alamat']    = $this->input->post('alamat');
-        $d['telp']      = $this->input->post('telp');
-        $d['email']     = $this->input->post('email');
-        $d['pic']       = $this->input->post('pic');
-        $d['ket']       = $this->input->post('ket');
-        $d['ref_jenc']  = $this->input->post('ref_jenc');
-        $d['user']      = $this->input->post('user');
-        $d['pass']      = md5($this->input->post('pass'));
-        $w['id'] = $this->input->post('id');
-        $result = $this->db->update($this->table,$d,$w);
-        $r['sukses'] = $result ? 'success' : 'fail' ;
-        echo json_encode($r);
     }
 
     function updatedata()
@@ -216,31 +227,33 @@ class Pembayaran extends CI_Controller {
         $a['bayar']     = $this->input->post('bayar');
         $a['ket']       = $this->input->post('ket');
         $a['ref_jual']  = $this->input->post('ref_order');
-        $kodepelun      = $this->input->post('kode');
-        $this->db->update('xpelunasan',$a,array('kode' => $kodepelun ));
-        $this->db->delete('xpelunasand',array('ref_pelun' => $kodeBrg ));
+        $a['ref_jenbayar']  = $this->input->post('ref_jenbayar');
+        $kodepelun           = $this->input->post('kode');
+
+        $result = $this->db->update('xpelunasan',$a,array('kode' => $kodepelun, ));
+        $this->db->delete('xpelunasand',array('ref_pelun' => $kodepelun));
         $dataOrderd = $this->db->get_where('xorderd',array('ref_order' => $this->input->post('ref_order')))->result();
         foreach ($dataOrderd as $r) {
             $row    = array(
-                "useri"     => $this->session->userdata('username'),
+                "useru"     => $this->session->userdata('username'),
+                "dateu"     => 'now()',
                 "ref_pelun" => $kodepelun,
                 "ref_brg"   => $r->ref_brg,
                 "jumlah"    => $r->jumlah,
                 "ref_satbrg"=> $r->ref_satbrg,
                 "ket"       => $r->ket,
+                "harga"     => $r->harga,
             );
             $b[] = $row;
         }
-        $this->db->insert_batch('xpelunasand',$b);
-        if ($this->db->trans_status() === FALSE)
-        {
+        $result = $this->db->insert_batch('xpelunasand',$b);
+        if ($this->db->trans_status() === FALSE) {
             $this->db->trans_rollback();
             $r = array(
                 'sukses' => 'fail', 
             );
         }
-        else
-        {
+        else {
             $this->db->trans_commit();
             $r = array(
                 'sukses' => 'success'
@@ -250,33 +263,22 @@ class Pembayaran extends CI_Controller {
     }
 
     function validdata() {
-        $sql = "SELECT posted FROM xpelunasan WHERE id = {$this->input->post('id')}";
-        $s = $this->db->query($sql)->row()->posted;
-        (($s == 'f') || ($s == '') || ($s == null)) ? $status = 't' : $status = 'f';
-        $d['posted'] = $status;
-        $w['id'] = $this->input->post('id');   
-        $result = $this->db->update($this->table,$d,$w);
-        $r['sukses'] = $result > 0 ? 'success' : 'fail' ;
+        $d['posted']    = 't';
+        $w['id']        = $this->input->post('id');   
+        $result         = $this->db->update('xpelunasan',$d,$w);
+        $r['sukses']    = $result ? 'success' : 'fail' ;
         echo json_encode($r);
 
     }
 
     function voiddata() 
     {
-        $d['void'] = 't';
-        $w['id'] = $this->input->post('id');   
-        $result = $this->db->update($this->table,$d,$w);
+        $d['void']  = 't';
+        $w['id']    = $this->input->post('id');   
+        $result     = $this->db->update($this->table,$d,$w);
         $r['sukses'] = $result ? 'success' : 'fail' ;
         echo json_encode($r);
 
-    }
-
-    public function deletedata()
-    {
-        $w['id'] = $this->input->post('id');
-        $result = $this->db->delete($this->table,$w);
-        $r['sukses'] = $result ? 'success' : 'fail' ;
-        echo json_encode($r);
     }
     
 }

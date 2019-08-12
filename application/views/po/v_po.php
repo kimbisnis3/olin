@@ -247,7 +247,7 @@
                   </div>
                 </div>
               </div>
-              </div>  <!-- END MODAL SPEK-->
+              </div>  <!-- END MODAL cust-->
               <div class="modal fade" id="modal-barang" role="dialog" data-backdrop="static">
               <div class="modal-dialog modal-lg">
                 <div class="modal-content">

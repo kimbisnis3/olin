@@ -200,14 +200,16 @@ class Po extends CI_Controller {
         $a['ref_cust']  = $this->input->post('ref_cust');
         $a['tgl']       = date('Y-m-d', strtotime($this->input->post('tgl')));
         $a['ref_gud']   = $this->input->post('ref_gud');
-        $a['ref_kirim'] = $this->input->post('ref_kirim');
-        $a['ref_layanan'] = $this->input->post('ref_layanan');
-        $a['ket']       = $this->input->post('ket');
-        $a['lokasidari']= $this->input->post('mask-provinsi').' - '.$this->input->post('mask-city');
-        $a['lokasike']  = $this->input->post('mask-provinsito').' - '.$this->input->post('mask-cityto');
-        $a['kgkirim']   = $this->input->post('berat');
-        $a['bykirim']   = $this->input->post('biaya');
-        $a['kurir']     = $this->input->post('kodekurir');
+        if ($this->input->post('ref_kirim') == 'GX0002') {
+            $a['ref_kirim'] = $this->input->post('ref_kirim');
+            $a['ref_layanan'] = $this->input->post('ref_layanan');
+            $a['ket']       = $this->input->post('ket');
+            $a['lokasidari']= $this->input->post('mask-provinsi').' - '.$this->input->post('mask-city');
+            $a['lokasike']  = $this->input->post('mask-provinsito').' - '.$this->input->post('mask-cityto');
+            $a['kgkirim']   = $this->input->post('berat');
+            $a['bykirim']   = $this->input->post('biaya');
+            $a['kurir']     = $this->input->post('kodekurir');
+        }
         $this->db->insert('xorder',$a);
 
         $idOrder = $this->db->insert_id();
@@ -268,6 +270,11 @@ class Po extends CI_Controller {
                 );
         }
         echo json_encode($r);
+    }
+
+    public function updatedata() 
+    {
+        
     }
 
     function loadcustomer(){
@@ -363,6 +370,19 @@ class Po extends CI_Controller {
         $result = $this->db->update($this->table,$d,$w);
         $r['sukses'] = $result ? 'success' : 'fail' ;
         echo json_encode($r);
+    }
+
+    function savefile(){
+        // $d['pathcorel']  = $this->libre->goUploadUpdate('editcorel','corel-'.time(),$this->foldername,$this->input->post('editcorel'));
+        // $d['pathimage']  = $this->libre->goUploadUpdate('editimage','img-'.time(),$this->foldername,$this->input->post('editimage'));
+        // $w['kode'] = $this->input->post('editkodefile');
+        // $result = $this->db->update('xorder',$d,$w);
+        // $r['sukses'] = $result ? 'success' : 'fail' ;
+        // echo json_encode($r);
+
+        // $t = $this->input->file('editcorel');
+        $t = !empty($_FILES['editcorel']['name']);
+        echo json_encode($t);
     }
 
     function request_province() {
@@ -473,15 +493,6 @@ class Po extends CI_Controller {
                   echo $op; 
               // echo $response;
         }
-    }
-
-    function savefile(){
-        $d['pathcorel']  = $this->libre->goUploadUpdate('editcorel','corel-'.time(),$this->foldername,$this->input->post('editcorel'));
-        $d['pathimage']  = $this->libre->goUploadUpdate('editimage','img-'.time(),$this->foldername,$this->input->post('editimage'));
-        $w['kode'] = $this->input->post('editkodefile');
-        $result = $this->db->update('xorder',$d,$w);
-        $r['sukses'] = $result ? 'success' : 'fail' ;
-        echo json_encode($r);
     }
     
 }
