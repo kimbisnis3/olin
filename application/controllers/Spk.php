@@ -108,6 +108,7 @@ class Spk extends CI_Controller {
         $d['tgl']       = date('Y-m-d', strtotime($this->input->post('tgl')));
         $d['jumlah']    = $this->input->post('jumlah');
         $d['ket']       = $this->input->post('ket');
+        $d['ref_gud']   = $this->libre->gud_def();
         $d['status']    = '0';
 
         $result = $this->db->insert('xprocorder',$d);
@@ -196,6 +197,7 @@ class Spk extends CI_Controller {
     function voiddata() 
     {
         $d['void'] = 't';
+        $d['tglvoid'] = 'now()';
         $w['id'] = $this->input->post('id');   
         $result = $this->db->update($this->table,$d,$w);
         $r['sukses'] = $result ? 'success' : 'fail' ;

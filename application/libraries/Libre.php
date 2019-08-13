@@ -7,7 +7,7 @@ class libre
     public function goUpload($field,$filename,$dir)
     {
         $ci=& get_instance();
-        $config['upload_path'] = $dir;
+        $config['upload_path'] = './uploads/'.$dir;
         if (!is_dir($config['upload_path'])) {
             mkdir($config['upload_path'], 0777, TRUE);
         }
@@ -22,17 +22,17 @@ class libre
         }
     }
 
-    public function goUploadUpdate($field,$filename,$dir,$oldpath)
-    {
-        $ci=& get_instance();
-        $this->goUpload($field,$filename,$dir);
-        @unlink(".".$oldpath);
-        
-    }
-
     public function delFile($link)
     {
         @unlink('.'.$link);
         return 'oke';
+    }
+
+    public function gud_def(){
+        return 'GX0001';
+    }
+
+    public function appname(){
+        return 'Olin';
     }
 }

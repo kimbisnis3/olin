@@ -3,7 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Po extends CI_Controller {
     
     public $table       = 'xorder';
-    public $foldername  = './uploads/po';
+    public $foldername  = 'po';
     public $indexpage   = 'po/v_po';
 
     function __construct() {
@@ -293,7 +293,7 @@ class Po extends CI_Controller {
         $a['dateu']     = 'now()';
         $a['ref_cust']  = $this->input->post('ref_cust');
         $a['tgl']       = date('Y-m-d', strtotime($this->input->post('tgl')));
-        $a['ref_gud']   = $this->input->post('ref_gud');
+        $a['ref_gud']   = $this->libre->gud_def();
         $a['ket']       = $this->input->post('ket');
         $a['ref_kirim'] = $this->input->post('ref_kirim');
         $a['ref_layanan'] = $this->input->post('ref_layanan');
@@ -487,6 +487,7 @@ class Po extends CI_Controller {
     public function deletedata()
     {
         $d['void'] = 't';
+        $d['tglvoid'] = 'now()';
         $w['id'] = $this->input->post('id');
         $result = $this->db->update($this->table,$d,$w);
         $r['sukses'] = $result ? 'success' : 'fail' ;

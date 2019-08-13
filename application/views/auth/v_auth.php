@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html> 
-	<title>My Panel</title>
+	<title><?php echo $this->libre->appname(); ?></title>
 	<?php $this->load->view('_partials/head') ?>
 	<style type="text/css">
 		body {
@@ -28,7 +28,7 @@
 	<body class="hold-transition">
 		<div class="login-box">
 			<div class="login-logo hue">
-				<b>Olin</b> <br>
+				<b><?php echo $this->libre->appname(); ?></b> <br>
 			</div>
 			<div class="login-box-body" id="login">
 				<p class="login-box-msg">Login</p><br>
@@ -43,7 +43,7 @@
 					</div>
 					<div class="row">
 						<div class="col-xs-12">
-							<button type="button" class="btn btn-success btn-block btn-flat btn-lg" onclick="login()">Masuk</button>
+							<button type="button" class="btn btn-success btn-block btn-flat btn-lg btn-login" onclick="login()">Masuk</button>
 						</div>
 					</div>
 				</form>
@@ -58,6 +58,7 @@
 <script src="<?php echo base_url()?>assets/vanta/vanta.birds.min.js"></script>
 <script type="text/javascript">
 	function login() {
+		$('.btn-login').prop('disabled',true);
 		$.ajax({
           url: '<?php echo base_url() ?>auth/auth_process/',
           type: "POST",
@@ -71,12 +72,15 @@
                   showNotif(data.caption, data.msg, data.class)
                   setTimeout(function(){ window.location.href = "<?php echo base_url() ?>landingpage" }, 1000);
                   ;
+                  // $('.btn-login').prop('disabled',false);
               } else if (data.result == 'fail') {
                   showNotif(data.caption, data.msg, data.class)
+                  $('.btn-login').prop('disabled',false);
               }
           },
           error: function(jqXHR, textStatus, errorThrown) {
               showNotif('Gagal', 'Internal Error', 'danger')
+              $('.btn-login').prop('disabled',false);
           }
       });
 	}

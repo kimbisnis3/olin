@@ -15,6 +15,8 @@ class Sj extends CI_Controller {
     }
 
     public function getall(){
+        $filterawal = date('Y-m-d', strtotime($this->input->get('filterawal')));
+        $filterakhir = date('Y-m-d', strtotime($this->input->get('filterakhir')));
         $q = "SELECT
                 xsuratjalan.id,
                 xsuratjalan.kode,
@@ -24,6 +26,7 @@ class Sj extends CI_Controller {
                 xsuratjalan.biayakirim,
                 xsuratjalan.ref_cust,
                 xsuratjalan.ket,
+                xsuratjalan.posted,
                 mcustomer.nama mcustomer_nama
             FROM
                 xsuratjalan
@@ -35,51 +38,13 @@ class Sj extends CI_Controller {
             $row['no']              = $i + 1;
             $row['id']              = $r->id;
             $row['kode']            = $r->kode;
-            $row['tgl']             = $r->tgl;
-            $row['tglkirim']        = $r->tglkirim;
+            $row['tgl']             = id_date($r->tgl);
+            $row['tglkirim']        = id_date($r->tglkirim);
             $row['biayakirim']      = $r->biayakirim;
             $row['mcustomer_nama']  = $r->mcustomer_nama;
             $row['ket']             = $r->ket;
-
-            $list[] = $row;
-        }   
-        echo json_encode(array('data' => $list));
-    }
-
-    public function getproc(){
-        $q = "SELECT
-                xorder.id,
-                xorder.kode,
-                xorder.tgl,
-                xorder.ket,
-                xorder.pic,
-                xorder.kgkirim,
-                xorder.bykirim,
-                xorder.ref_cust,
-                mcustomer.nama mcustomer_nama,
-                (
-                    SELECT
-                        SUM (
-                            xorderd.harga * xorderd.jumlah
-                        )
-                    FROM
-                        xorderd
-                    WHERE
-                        xorderd.ref_order = xorder.kode
-                ) + xorder.bykirim total
-            FROM
-                xorder
-            LEFT JOIN mcustomer ON mcustomer.kode = xorder.ref_cust";
-        $result     = $this->db->query($q)->result();
-        $list       = [];
-        foreach ($result as $i => $r) {
-            $row['no']              = $i + 1;
-            $row['id']              = $r->id;
-            $row['kode']            = $r->kode;
-            $row['tgl']             = $r->tgl;
-            $row['mcustomer_nama']  = $r->mcustomer_nama;
-            $row['total']           = $r->total;
-            $row['ket']             = $r->ket;
+            $row['kirim']           = $r->kirim;
+            $row['posted']          = $r->posted;
 
             $list[] = $row;
         }   
@@ -109,9 +74,9 @@ class Sj extends CI_Controller {
             LEFT JOIN msatbrg ON msatbrg.kode = xsuratjaland.ref_satbrg
             LEFT JOIN msatuan ON msatuan.kode = msatbrg.ref_sat
             LEFT JOIN mgudang ON mgudang.kode = msatbrg.ref_gud
-            WHERE xsuratjaland.ref_xsuratjaland = '$kodesj'";
+            WHERE xsuratjaland.ref_suratjalan = '$kodesj'";
         $result     = $this->db->query($q)->result();
-        $str        = '<table class="table">
+        $str        = '<table class="table fadeIn animated">
                         <tr>
                             <th>Produk</th>
                             <th>Jumlah</th>
@@ -122,13 +87,55 @@ class Sj extends CI_Controller {
             $str    .= '<tr>
                             <td>'.$r->nama.'</td>
                             <td>'.$r->xsuratjaland_jumlah.'</td>
-                            <td>'.$r->namasatuan.'</td>
-                            <td>'.$r->harga.'</td>
+                            <td>'.$r->satuan.'</td>
+                            <td>'.number_format($r->harga).'</td>
                         </tr>';
         }
 
         $str        .= '</table>';
         echo $str;
+    }
+
+    public function getproc(){
+        $q = "SELECT
+                xprocorder.id,
+                xprocorder.kode,
+                xprocorder.tgl,
+                xprocorder.ref_brg,
+                xprocorder.ref_order,
+                xprocorder.status,
+                xorder.kode xorder_kode,
+                xorder.bykirim,
+                xorder.ket,
+                xorder.ref_cust,
+                xorder.kirimke,
+                mbarang.nama mbarang_nama,
+                mcustomer.nama mcustomer_nama
+            FROM
+                xprocorder
+            LEFT JOIN mbarang ON mbarang.kode = xprocorder.ref_brg
+            LEFT JOIN xorder ON xorder.kode = xprocorder.ref_order
+            LEFT JOIN mcustomer ON mcustomer.kode = xorder.ref_cust
+            WHERE xprocorder.status >= '4'
+            AND xprocorder.void IS NOT TRUE";
+        $result     = $this->db->query($q)->result();
+        $list       = [];
+        foreach ($result as $i => $r) {
+            $row['no']              = $i + 1;
+            $row['id']              = $r->id;
+            $row['kode']            = $r->kode;
+            $row['tgl']             = id_date($r->tgl);
+            $row['mcustomer_nama']  = $r->mcustomer_nama;
+            $row['bykirim']         = $r->bykirim;
+            $row['status']          = $r->status;
+            $row['ket']             = $r->ket;
+            $row['mbarang_nama']    = $r->mbarang_nama;
+            $row['ref_cust']        = $r->ref_cust;
+            $row['kirimke']         = $r->kirimke;
+
+            $list[] = $row;
+        }   
+        echo json_encode(array('data' => $list));
     }
 
     public function savedata()
@@ -137,17 +144,17 @@ class Sj extends CI_Controller {
         $a['useri']     = $this->session->userdata('username');
         $a['ref_cust']  = $this->input->post('ref_cust');
         $a['tgl']       = date('Y-m-d', strtotime($this->input->post('tgl')));
-        $a['ref_cust']  = $this->input->post('ref_cust');
         $a['kirim']     = $this->input->post('kirim');
-        $a['tglkirim']  = $this->input->post('tglkirim');
+        $a['tglkirim']  = date('Y-m-d', strtotime($this->input->post('tglkirim')));
         $a['ket']       = $this->input->post('ket');
         $a['biayakirim']= $this->input->post('biayakirim');
         $a['pic']       = $this->input->post('pic');
+        $a['ref_gud']    = $this->libre->gud_def();
 
-        $this->db->insert('xsuratjalan',$d);
+        $this->db->insert('xsuratjalan',$a);
         $kodeorder = $this->input->post('ref_order');
         $idsj = $this->db->insert_id();
-        $kodesj = $this->db->get_where('xsuratjalan',array('id' => $idOrder))->row()->kode;
+        $kodesj = $this->db->get_where('xsuratjalan',array('id' => $idsj))->row()->kode;
         $dataOrderd = $this->db->get_where('xorderd',array('ref_order' => $kodeorder))->result();
         foreach ($dataOrderd as $r) {
             $row    = array(
@@ -179,8 +186,24 @@ class Sj extends CI_Controller {
 
     public function edit()
     {
-        $w['id']= $this->input->post('id');
-        $data   = $this->db->get_where($this->table,$w)->row();
+        $kode= $this->input->post('kode');
+        $q ="SELECT
+                xsuratjalan.id,
+                xsuratjalan.kode,
+                to_char(xsuratjalan.tgl, 'DD Mon YYYY') tgl,
+                to_char(xsuratjalan.tglkirim, 'DD Mon YYYY') tglkirim,
+                xsuratjalan.kirim,
+                xsuratjalan.biayakirim,
+                xsuratjalan.ref_cust,
+                xsuratjalan.ket,
+                xsuratjalan.posted,
+                xsuratjalan.pic,
+                mcustomer.nama mcustomer_nama
+            FROM
+                xsuratjalan
+            LEFT JOIN mcustomer ON mcustomer.kode = xsuratjalan.ref_cust
+            WHERE xsuratjalan.kode = '$kode'";
+        $data   = $this->db->query($q)->row();
         echo json_encode($data);
     }
 
@@ -214,7 +237,7 @@ class Sj extends CI_Controller {
     }
 
     function validdata() {
-        $sql = "SELECT posted FROM xpelunasan WHERE id = {$this->input->post('id')}";
+        $sql = "SELECT posted FROM {$this->table} WHERE id = {$this->input->post('id')}";
         $s = $this->db->query($sql)->row()->posted;
         (($s == 'f') || ($s == '') || ($s == null)) ? $status = 't' : $status = 'f';
         $d['posted'] = $status;
@@ -228,6 +251,7 @@ class Sj extends CI_Controller {
     function voiddata() 
     {
         $d['void'] = 't';
+        $d['tglvoid'] = 'now()';
         $w['id'] = $this->input->post('id');   
         $result = $this->db->update($this->table,$d,$w);
         $r['sukses'] = $result ? 'success' : 'fail' ;

@@ -33,22 +33,21 @@
                               <div class="input-group">
                                 <input type="text" class="form-control" name="ref_order" readonly="true">
                                 <div class="input-group-btn">
-                                  <button type="button" class="btn btn-primary btn-flat" onclick="open_order()"><i class="fa fa-table"></i></button>
+                                  <button type="button" class="btn btn-primary btn-flat" onclick="open_proc()"><i class="fa fa-table"></i></button>
                                 </div>
                               </div>
                             </div>
                             <div class="form-group">
-                              <label>Total</label>
-                              <input type="text" class="form-control" name="total" readonly="true">
+                              <label>Kirim Ke</label>
+                              <input type="text" class="form-control" name="kirim">
                             </div>
                             <div class="form-group">
-                              <label>Jenis Bayar</label>
-                              <select class="form-control select2" name="ref_jenbayar">
-                                <option> - </option>
-                                <?php foreach ($jenisbayar as $i => $v): ?>
-                                <option value="<?php echo $v->kode ?>"><?php echo $v->nama; ?></option>
-                                <?php endforeach ?>
-                              </select>
+                              <label>Tanggal</label>
+                              <input type="text" class="form-control datepicker" name="tgl" >
+                            </div>
+                            <div class="form-group">
+                              <label>PIC</label>
+                              <input type="text" class="form-control" name="pic">
                             </div>
                           </div>
                           <div class="col-md-6">
@@ -58,17 +57,13 @@
                               <input type="text" class="form-control" name="mcustomer_nama" readonly="true"/>
                             </div>
                             <div class="form-group">
-                              <label>Tanggal</label>
-                              <input type="text" class="form-control datepicker" name="tgl">
+                              <label>Biaya Kirim</label>
+                              <input type="number" class="form-control" name="biayakirim">
                             </div>
                             <div class="form-group">
-                              <label>Bayar</label>
-                              <input type="number" class="form-control" name="bayar">
+                              <label>Tanggal Kirim</label>
+                              <input type="text" class="form-control datepicker" name="tglkirim">
                             </div>
-                          </div>
-                        </div>
-                        <div class="row">
-                          <div class="col-md-12">
                             <div class="form-group">
                               <label>Keterangan</label>
                               <input type="text" class="form-control" name="ket">
@@ -87,7 +82,7 @@
             </div>
           </div>
           </div>  <!-- END MODAL INPUT-->
-          <div class="modal fade" id="modal-order" role="dialog" data-backdrop="static">
+          <div class="modal fade" id="modal-proc" role="dialog" data-backdrop="static">
             <div class="modal-dialog modal-lg">
               <div class="modal-content">
                 <div class="modal-header">
@@ -100,16 +95,19 @@
                     </div>
                     <div class="box-body pad">
                       <div class="table-responsive mailbox-messages">
-                        <table id="table-order" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                        <table id="table-proc" class="table table-striped table-bordered" cellspacing="0" width="100%">
                           <thead>
                             <tr>
                               <th width="5%">No</th>
                               <th>ID</th>
                               <th>Kode</th>
                               <th>Ref Cust</th>
+                              <th>Kirim Ke</th>
+                              <th>Ref Biaya</th>
+                              <th>Kirim Ke</th>
                               <th>Agen</th>
                               <th>Tanggal</th>
-                              <th>Total</th>
+                              <th>Status</th>
                               <th>Keterangan</th>
                               <th>Opsi</th>
                             </tr>
@@ -198,11 +196,10 @@
                               <th>Kode</th>
                               <th>Posted</th>
                               <th>Tanggal</th>
+                              <th>Tanggal Kirim</th>
                               <th>Agen</th>
-                              <th>Kode PO</th>
-                              <th>Jenis Bayar</th>
-                              <th>Total</th>
-                              <th>Bayar</th>
+                              <th>Kirim Ke</th>
+                              <th>Biaya</th>
                               <th>Keterangan</th>
                             </tr>
                           </thead>
@@ -222,8 +219,8 @@
       </html>
   <?php $this->load->view('_partials/js'); ?>
   <script type="text/javascript">
-  var path = 'pembayaran';
-  var title = 'Pembayaran';
+  var path = 'sj';
+  var title = 'Surat Jalan ';
   var grupmenu = 'Transaksi';
   var apiurl = "<?php echo base_url('') ?>" + path;
   var state;
@@ -233,7 +230,7 @@
   $(document).ready(function() {
       getAkses(title);
       select2();
-      activemenux('transaksi', 'pembayaran');
+      activemenux('transaksi', 'suratjalan');
       dpicker();
       setMonth('filterawal',30);
       setMonth('filterakhir',0);
@@ -267,11 +264,10 @@
           { "data": "kode" , "visible" : false},
           { "data": "posted" , "visible" : false},
           { "data": "tgl" }, 
+          { "data": "tglkirim" },
           { "data": "mcustomer_nama" },
-          { "data": "ref_jual" },
-          { "data": "mjenbayar_nama" },
-          { "data": "total" },
-          { "data": "bayar" },
+          { "data": "kirim" },
+          { "data": "biayakirim" },
           { "data": "ket" },
           ]
       });
@@ -321,7 +317,7 @@
           url: `${apiurl}/getdetail`,
           type: "POST",
           data: {
-              kodepelunasan: data.kode
+              kodesj: data.kode
           },
           success: function(response) {
               callback($(response)).show();
@@ -338,7 +334,7 @@
           "processing": true,
           "destroy": true,
           "ajax": {
-              "url": `${apiurl}/getorder`,
+              "url": `${apiurl}/getproc`,
               "type": "POST",
               "data": {}
           },
@@ -352,9 +348,12 @@
             { "data": "id" , "visible" : false},
             { "data": "kode" , "visible" : false},
             { "data": "ref_cust" , "visible" : false},
-            { "data": "mcustomer_nama" },
+            { "data": "ref_cust" , "visible" : false},
+            { "data": "bykirim" , "visible" : false},
+            { "data": "kirimke" , "visible" : false},
+            { "data": "mbarang_nama" },
             { "data": "tgl" },
-            { "data": "total" },
+            { "data": "status" },
             { "data": "ket" },
             { "data": "opsi" },
           ]
@@ -362,12 +361,13 @@
       });
 
       $('#table-proc tbody').on('click', '#pilih-data', function() {
-          var data = tableorder.row($(this).parents('tr')).data();
+          var data = tableproc.row($(this).parents('tr')).data();
           $('[name="ref_cust"]').val(data.ref_cust);
           $('[name="mcustomer_nama"]').val(data.mcustomer_nama);
           $('[name="ref_order"]').val(data.kode);
-          $('[name="total"]').val(data.total);
-          $('#modal-order').modal('hide');
+          // $('[name="biayakirim"]').val(data.bykirim);
+          $('[name="kirim"]').val(data.kirimke);
+          $('#modal-proc').modal('hide');
       });
 
   }
@@ -410,11 +410,11 @@
               $('[name="ref_cust"]').val(data.ref_cust);
               $('[name="mcustomer_nama"]').val(data.mcustomer_nama);
               $('[name="tgl"]').val(data.tgl);
-              $('[name="total"]').val(data.total);
-              $('[name="bayar"]').val(data.bayar);
+              $('[name="tglkirim"]').val(data.tglkirim);
+              $('[name="biayakirim"]').val(data.biayakirim);
+              $('[name="pic"]').val(data.pic);
+              $('[name="kirim"]').val(data.kirim);
               $('[name="ket"]').val(data.ket);
-              $('[name="ref_order"]').val(data.ref_jual);
-              $('[name="ref_jenbayar"]').val(data.ref_jenbayar);
               $('.select2').trigger('change');
               $('#modal-data').modal('show');
               $('.modal-title').text('Edit Data');

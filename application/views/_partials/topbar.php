@@ -1,7 +1,7 @@
 <header class="main-header">
   <a class="logo">
-    <span class="logo-mini"><b>My</b></span>
-    <span class="logo-lg"><b>My</b>Panel</span>
+    <span class="logo-mini"><b><?php echo $this->libre->appname(); ?></b></span>
+    <span class="logo-lg"><b><?php echo $this->libre->appname(); ?></b></span>
   </a>
   <nav class="navbar navbar-static-top">
     <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">

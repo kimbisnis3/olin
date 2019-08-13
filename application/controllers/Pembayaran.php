@@ -159,6 +159,7 @@ class Pembayaran extends CI_Controller {
         $a['ket']       = $this->input->post('ket');
         $a['ref_jual']  = $this->input->post('ref_order');
         $a['ref_jenbayar']  = $this->input->post('ref_jenbayar');
+        $a['ref_gud']   = $this->libre->gud_def();
         $a['posted']    = 'f';
 
         $result = $this->db->insert('xpelunasan',$a);
@@ -279,6 +280,7 @@ class Pembayaran extends CI_Controller {
     function voiddata() 
     {
         $d['void']  = 't';
+        $d['tglvoid'] = 'now()';
         $w['id']    = $this->input->post('id');   
         $result     = $this->db->update($this->table,$d,$w);
         $r['sukses'] = $result ? 'success' : 'fail' ;
