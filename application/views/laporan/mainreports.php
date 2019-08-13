@@ -4,8 +4,8 @@
     <title><?php echo $title; ?></title>
     <link href="<?php echo base_url() ?>assets/cetak.css" rel="stylesheet"/>
   </head>
-  <!-- <body onload="window.print()"> -->
-  <body>
+  <body onload="window.print()">
+  <!-- <body> -->
   <h2 class="judul"><?php echo (isset($title) ? $title : '') ?></h2>
   <h4><?php echo (isset($periodestart) ? 'Periode : '.$periodestart : ''); ?> <?php echo (isset($periodeend) ? 'Sampai : '.$periodeend : ''); ?></h4>
   <h4><?php echo (isset($filter) ? $filter : ''); ?></h4>

@@ -1,15 +1,16 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-class Laporanagen extends CI_Controller {
+class Laporanproduksi extends CI_Controller {
     
-    public $table       = 'laporanagen';
+    public $table       = 'laporanproduksi';
     public $indexpage   = 'laporan/prevreports';
     public $printpage   = 'laporan/mainreports';
-    public $titlepage   = 'Laporan Data Agen';
+    public $titlepage   = 'Laporan Produksi';
     function __construct() {
         parent::__construct();
         include(APPPATH.'libraries/sessionakses.php');
     }
+
     function index()
     {
         $setGb ='[
@@ -17,10 +18,10 @@ class Laporanagen extends CI_Controller {
             {"val":"nama","label":"Nama"},
             {"val":"alamat","label":"Alamat"}
         ]';
-        $data['gb']     = json_decode($setGb); 
+        $data['gb']             = json_decode($setGb); 
+        $data['filter_date']    = 1; 
         $data['title']  = $this->titlepage;
         $this->load->view($this->indexpage,$data);
-          
     }
 
     function cetak()
@@ -39,8 +40,8 @@ class Laporanagen extends CI_Controller {
                 mcustomer
             LEFT JOIN mjencust ON mjencust.kode = mcustomer.ref_jenc";
         $res   = $this->db->query($q)->result_array();
-        // $data['periodestart'] = '@tanggal';
-        // $data['periodeend']   = '@tanggal';
+        $data['periodestart'] = $this->input->post('awal');
+        $data['periodeend']   = $this->input->post('akhir');
         $data['header'] = ['Nama','Alamat','Telp','Email','Alamat'];
         $data['body']   = ['nama','alamat','telp','email','ket'];
         $data['title']  = $this->titlepage;;
