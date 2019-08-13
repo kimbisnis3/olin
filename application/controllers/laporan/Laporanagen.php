@@ -38,7 +38,7 @@ class Laporanagen extends CI_Controller {
             FROM
                 mcustomer
             LEFT JOIN mjencust ON mjencust.kode = mcustomer.ref_jenc";
-        $res   = $this->db->query($q)->result_array();
+        $data['result']  = $this->db->query($q)->result_array();
         // $data['periodestart'] = '@tanggal';
         // $data['periodeend']   = '@tanggal';
         $data['header'] = ['Nama','Alamat','Telp','Email','Alamat'];

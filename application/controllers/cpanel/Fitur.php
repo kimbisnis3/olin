@@ -23,6 +23,7 @@ class Fitur extends CI_Controller {
             taction.icon_action,
             taction.sort_menu,
             taction.kategori_menu,
+            taction.url,
             taction_group.group_action namagroup
         FROM
             taction
@@ -45,6 +46,7 @@ class Fitur extends CI_Controller {
             $row['icon']               = "<i class='fa ". $r->icon_action."'></i>";
             $row['sort_menu']           = $r->sort_menu;
             $row['kategori_menu']       = $r->kategori_menu;
+            $row['url']                 = $r->url;
 
             $list[] = $row;
             $no++;
@@ -62,6 +64,7 @@ class Fitur extends CI_Controller {
         $d['icon_action']       = $this->input->post('icon_action');
         $d['sort_menu']         = $this->input->post('sort_menu');
         $d['kategori_menu']     = $this->input->post('kategori_menu');
+        $d['url']     = $this->input->post('url');
 
         $result = $this->db->insert($this->table,$d);
         $r['sukses'] = $result ? 'success' : 'fail' ;
@@ -85,6 +88,7 @@ class Fitur extends CI_Controller {
         $d['icon_action']       = $this->input->post('icon_action');
         $d['sort_menu']         = $this->input->post('sort_menu');
         $d['kategori_menu']     = $this->input->post('kategori_menu');
+        $d['url']     = $this->input->post('url');
 
         $w['id_action'] = $this->input->post('id');
         $result = $this->db->update($this->table,$d,$w);

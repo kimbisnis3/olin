@@ -1,6 +1,6 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-class Laporanagen extends CI_Controller {
+class Laporankirim extends CI_Controller {
     
     public $table       = 'laporanagen';
     public $indexpage   = 'laporan/prevreports';
@@ -39,7 +39,7 @@ class Laporanagen extends CI_Controller {
             FROM
                 mcustomer
             LEFT JOIN mjencust ON mjencust.kode = mcustomer.ref_jenc";
-        $res   = $this->db->query($q)->result_array();
+        $data['result'] = $this->db->query($q)->result_array();
         $data['periodestart'] = $this->input->post('awal');
         $data['periodeend']   = $this->input->post('akhir');
         $data['header'] = ['Nama','Alamat','Telp','Email','Alamat'];

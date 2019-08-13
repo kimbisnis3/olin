@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <?php $this->load->view('_partials/head'); ?>
-  <body class="hold-transition skin-green sidebar-mini">
+  <body class="hold-transition skin-blue sidebar-mini">
     <div class="wrapper" id="app">
       <?php $this->load->view('_partials/topbar'); ?>
       <?php $this->load->view('_partials/sidebar'); ?>
@@ -68,6 +68,14 @@
                             </div>
                           </div>
                         </div>
+                        <div class="row panel panel-success">
+                          <div class="col-md-4">
+                            <div class="form-group">
+                              <label>Url</label>
+                              <input type="text" name="url" class="form-control">
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </form>
@@ -123,6 +131,7 @@
                             <th>Nama Icon</th>
                             <th>Icon</th>
                             <th>Urutan</th>
+                            <th>Url</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -151,9 +160,7 @@
 
   $(document).ready(function() {
       $('.title').text('Fitur Aplikasi');
-      allowAkses();
       select2();
-      getGroupMenu();
       activemenux('menu-dev', 'menu-dev-fitur')
 
       table = $('#table').DataTable({
@@ -173,7 +180,8 @@
           { "data": "group_action" },
           { "data": "icon_action" },
           { "data": "icon" },
-          { "data": "sort_menu" }
+          { "data": "sort_menu" },
+          { "data": "url" },
           ]
       });
 
@@ -226,6 +234,7 @@
               $('[name="icon_action"]').val(data.icon_action);
               $('[name="sort_menu"]').val(data.sort_menu);
               $('[name="kategori_menu"]').val(data.kategori_menu);
+              $('[name="url"]').val(data.url);
               $('.select2').trigger('change');
               $('#modal-data').modal('show');
               $('.modal-title').text('Edit Data');

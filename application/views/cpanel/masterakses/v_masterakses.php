@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <?php $this->load->view('_partials/head'); ?>
-  <body class="hold-transition skin-green sidebar-mini">
+  <body class="hold-transition skin-blue sidebar-mini">
     <div class="wrapper" id="app">
       <?php $this->load->view('_partials/topbar'); ?>
       <?php $this->load->view('_partials/sidebar'); ?>
@@ -106,7 +106,6 @@
 
   $(document).ready(function() {
       $('.title').text(title);
-      allowAkses();
       activemenux('menu-dev', 'menu-dev-masterakses')
 
       table = $('#table').DataTable({
