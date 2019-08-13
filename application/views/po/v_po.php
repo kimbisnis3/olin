@@ -83,7 +83,7 @@
                           </div>
                         </div>
                         <div class="col-md-6">
-                          <div class="row">
+                          <div class="row box-upload">
                             <div class="col-md-6">
                               <div class="form-group">
                                 <label>File Corel * </label>
@@ -101,9 +101,14 @@
                           </div>
                         </div>
                       </div>
-                      
                       <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <label>Penerima</label>
+                            <input type="text" class="form-control" name="kirimke">
+                          </div>
+                        </div>
+                        <div class="col-md-4">
                           <div class="form-group">
                             <label>Layanan</label>
                             <select class="form-control select2" name="ref_layanan">
@@ -114,7 +119,7 @@
                             </select>
                           </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                           <div class="form-group">
                             <label>Pengiriman</label>
                             <select class="form-control select2" name="ref_kirim" onchange="changekirim()" id="ref_kirim">
@@ -419,6 +424,7 @@
                         <button class="btn btn-primary btn-flat add-btn invisible" onclick="add_data()" ><i class="fa fa-plus"></i> Tambah</button>
                       </div>
                       <div class="pull-right">
+                        <button class="btn btn-warning btn-flat edit-btn invisible" onclick="edit_data()"><i class="fa fa-pencil"></i> Ubah</button>
                         <button class="btn btn-success btn-flat file-btn" onclick="open_file()"><i class="fa fa-file"></i> File</button>
                         <button class="btn btn-danger btn-flat delete-btn invisible" onclick="hapus_data()" ><i class="fa fa-trash"></i> Hapus</button>
                       </div>
@@ -466,7 +472,8 @@
   var table ;
 
   $(document).ready(function() {
-      $('.add-btn, .edit-btn, .delete-btn').prop('disabled',true);
+      $('.add-btn, .edit-btn, .delete-btn, .file-btn').prop('disabled',true);
+      $('.fa-refresh').addClass('fa-spin');
       getAkses(title);
       setMonth('filterawal',30);
       setMonth('filterakhir',0);
@@ -478,7 +485,8 @@
       $('#select-city-to').select2({ disabled: true });
       $('#select-service').select2({ disabled: true });
       Pace.on('done', function() {
-          $('.add-btn, .edit-btn, .delete-btn').prop('disabled',false);
+          $('.add-btn, .edit-btn, .delete-btn, .file-btn').prop('disabled',false);
+          $('.fa-refresh').removeClass('fa-spin');
       });
       nilaimax('berat',30)
       nilaimax('jumlah',1)
@@ -753,6 +761,7 @@
 
   function add_data() {
       state = 'add';
+      $('.box-upload').removeClass('invisible');
       $('#form-data')[0].reset();
       $('#img-preview').remove();
       $('#select-provinsi').val('10'); //set to Jawa Tengah
@@ -763,6 +772,7 @@
 
   function edit_data() {
       id = table.cell( idx, 1).data();
+      $('.box-upload').addClass('invisible');
       if (idx == -1) {
           return false;
       }
@@ -794,6 +804,7 @@
   }
 
   function savedata() {
+      $('.add-btn').prop('disabled',true);
       $('[name="mask-provinsi"]').val($('[name="provinsi"]  option:selected').html());
       $('[name="mask-city"]').val($('[name="city"]  option:selected').html());
       $('[name="mask-provinsito"]').val($('[name="provinsito"]  option:selected').html());
@@ -819,6 +830,7 @@
                   $('#modal-data').modal('hide');
                   refresh();
                   state == 'add' ? showNotif('Sukses', 'Data Berhasil Ditambahkan', 'success') : showNotif('Sukses', 'Data Berhasil Diubah', 'success')
+                  $('.add-btn').prop('disabled',false);
               } else if (data.sukses == 'fail') {
                   $('#modal-data').modal('hide');
                   refresh();

@@ -3,8 +3,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Sj extends CI_Controller {
     
     public $table       = 'xsuratjalan';
-    public $foldername  = 'spk';
-    public $indexpage   = 'qc/v_qc';
+    public $foldername  = 'sj';
+    public $indexpage   = 'sj/v_sj';
     function __construct() {
         parent::__construct();
         include(APPPATH.'libraries/sessionakses.php');
@@ -15,18 +15,20 @@ class Sj extends CI_Controller {
     }
 
     public function getall(){
-        $q = "SELECT 
-                xprocorder.id,
-                xprocorder.kode,
-                xprocorder.tgl,
-                xprocorder.ref_brg,
-                xprocorder.ref_order,
-                xprocorder.status,
-                mbarang.nama mbarang_nama
-            FROM 
-                xprocorder
-            LEFT JOIN mbarang ON mbarang.kode = xprocorder.ref_brg
-            LEFT JOIN xorder ON xorder.kode = xprocorder.ref_order";
+        $q = "SELECT
+                xsuratjalan.id,
+                xsuratjalan.kode,
+                xsuratjalan.tgl,
+                xsuratjalan.tglkirim,
+                xsuratjalan.kirim,
+                xsuratjalan.biayakirim,
+                xsuratjalan.ref_cust,
+                xsuratjalan.ket,
+                mcustomer.nama mcustomer_nama
+            FROM
+                xsuratjalan
+            LEFT JOIN mcustomer ON mcustomer.kode = xsuratjalan.ref_cust
+            WHERE xsuratjalan.void IS NOT TRUE";
         $result     = $this->db->query($q)->result();
         $list       = [];
         foreach ($result as $i => $r) {
@@ -34,15 +36,17 @@ class Sj extends CI_Controller {
             $row['id']              = $r->id;
             $row['kode']            = $r->kode;
             $row['tgl']             = $r->tgl;
-            $row['mbarang_nama']    = $r->mbarang_nama;
-            $row['status']          = $r->status;
+            $row['tglkirim']        = $r->tglkirim;
+            $row['biayakirim']      = $r->biayakirim;
+            $row['mcustomer_nama']  = $r->mcustomer_nama;
+            $row['ket']             = $r->ket;
 
             $list[] = $row;
         }   
         echo json_encode(array('data' => $list));
     }
 
-    public function getorder(){
+    public function getproc(){
         $q = "SELECT
                 xorder.id,
                 xorder.kode,
@@ -82,16 +86,80 @@ class Sj extends CI_Controller {
         echo json_encode(array('data' => $list));
     }
 
+    public function getdetail()
+    {
+        $kodesj = $this->input->post('kodesj');
+        $q = "SELECT
+                mbarang.id,
+                mbarang.kode,
+                mbarang.nama,
+                mbarang.ket,
+                msatbrg.id idsatbarang,
+                msatbrg.konv,
+                msatbrg.ket ketsat,
+                msatbrg.harga,
+                msatbrg.ref_brg,
+                msatbrg.ref_sat,
+                msatuan.nama satuan,
+                mgudang.nama gudang,
+                xsuratjaland.jumlah xsuratjaland_jumlah
+            FROM
+                xsuratjaland
+            LEFT JOIN mbarang ON mbarang.kode = xsuratjaland.ref_brg
+            LEFT JOIN msatbrg ON msatbrg.kode = xsuratjaland.ref_satbrg
+            LEFT JOIN msatuan ON msatuan.kode = msatbrg.ref_sat
+            LEFT JOIN mgudang ON mgudang.kode = msatbrg.ref_gud
+            WHERE xsuratjaland.ref_xsuratjaland = '$kodesj'";
+        $result     = $this->db->query($q)->result();
+        $str        = '<table class="table">
+                        <tr>
+                            <th>Produk</th>
+                            <th>Jumlah</th>
+                            <th>Satuan</th>
+                            <th>Harga</th>
+                        </tr>';
+        foreach ($result as $r) {
+            $str    .= '<tr>
+                            <td>'.$r->nama.'</td>
+                            <td>'.$r->xsuratjaland_jumlah.'</td>
+                            <td>'.$r->namasatuan.'</td>
+                            <td>'.$r->harga.'</td>
+                        </tr>';
+        }
+
+        $str        .= '</table>';
+        echo $str;
+    }
+
     public function savedata()
     {   
         $this->db->trans_begin();
-        $d['useri']     = $this->session->userdata('username');
-        $d['ref_cust']  = $this->input->post('ref_cust');
-        $d['tgl']       = date('Y-m-d', strtotime($this->input->post('tgl')));
-        $d['ref_order'] = $this->input->post('ref_order');
-        $d['ref_brg']   = $this->input->post('ref_brg');
+        $a['useri']     = $this->session->userdata('username');
+        $a['ref_cust']  = $this->input->post('ref_cust');
+        $a['tgl']       = date('Y-m-d', strtotime($this->input->post('tgl')));
+        $a['ref_cust']  = $this->input->post('ref_cust');
+        $a['kirim']     = $this->input->post('kirim');
+        $a['tglkirim']  = $this->input->post('tglkirim');
+        $a['ket']       = $this->input->post('ket');
+        $a['biayakirim']= $this->input->post('biayakirim');
+        $a['pic']       = $this->input->post('pic');
 
-        $result = $this->db->insert('xprocorder',$d);
+        $this->db->insert('xsuratjalan',$d);
+        $kodeorder = $this->input->post('ref_order');
+        $idsj = $this->db->insert_id();
+        $kodesj = $this->db->get_where('xsuratjalan',array('id' => $idOrder))->row()->kode;
+        $dataOrderd = $this->db->get_where('xorderd',array('ref_order' => $kodeorder))->result();
+        foreach ($dataOrderd as $r) {
+            $row    = array(
+                "useri"     => $this->session->userdata('username'),
+                "ref_suratjalan" => $kodesj,
+                "ref_brg"   => $r->ref_brg,
+                "jumlah"    => $r->jumlah,
+                "ref_satbrg"=> $r->ref_satbrg,
+            );
+            $b[] = $row;
+        }
+        $this->db->insert_batch('xsuratjaland',$b);
         if ($this->db->trans_status() === FALSE)
         {
             $this->db->trans_rollback();

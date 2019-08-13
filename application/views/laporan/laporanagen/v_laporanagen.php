@@ -20,7 +20,7 @@
                 <div class="box-body">
                   <form target="_blank" method="post" action="<?php echo current_url() ?>/cetak">
                     <div class="row">
-                    <?php if (isset($filter_date)) { ?>
+                    <?php if (isset($filter_date) && $filter_date != '') { ?>
                       <div class="col-md-3">
                         <div class="form-group">
                           <label>Awal</label>
@@ -33,13 +33,26 @@
                           <input type="text" class="form-control datepicker" name="akhir">
                         </div>
                       </div>
-                    <?php }  ?> 
-                    <div class="col-md-2">
-                        <div class="form-group">
-                          <label style="color: #ffffff">zzzz</label>
-                          <button @Click="refreshList" class="btn btn-success btn-flat btn-block"><i class="fa fa-print"></i> Cetak Laporan</button>
-                        </div>
+                    <?php }  ?>
+                    <?php if (isset($gb) && $gb != '') { ?> 
+                    <div class="col-md-3">
+                      <div class="form-group">
+                        <label>Group By</label>
+                        <select class="form-control select2" name="gb">
+                          <option value="">-</option>
+                          <?php foreach ($gb as $i => $v): ?>
+                            <option value="<?php echo $v->val ?>"><?php echo $v->label; ?></option>
+                          <?php endforeach ?>
+                        </select>
                       </div>
+                    </div>
+                    <?php } ?>
+                    <div class="col-md-2">
+                      <div class="form-group">
+                        <label style="color: #ffffff">zzzz</label>
+                        <button @Click="refreshList" class="btn btn-success btn-flat btn-block"><i class="fa fa-print"></i> Cetak Laporan</button>
+                      </div>
+                    </div>
                     </div>
                   </form>
                 </div>
@@ -58,6 +71,7 @@
 
   $(document).ready(function() {
       getAkses(title);
+      select2();
       activemenux('reports', title.replace(/ /g, "").toLowerCase());
       setMonth('awal',30);
       setMonth('akhir',0);

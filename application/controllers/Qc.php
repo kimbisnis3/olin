@@ -11,7 +11,7 @@ class Qc extends CI_Controller {
     }
     function index(){
         $data['jenisbayar'] = $this->db->get('mjenbayar')->result();
-        $this->load->view($this->indexpage,$data);  
+        $this->load->view($this->indexpage,$data);
     }
 
     public function getall(){
@@ -39,6 +39,7 @@ class Qc extends CI_Controller {
             AND
                 xprocorder.tgl 
             BETWEEN '$filterawal' AND '$filterakhir'";
+        $q .= " ORDER BY xprocorder.id DESC"
         $result     = $this->db->query($q)->result();
         // $list       = [];
         // foreach ($result as $i => $r) {

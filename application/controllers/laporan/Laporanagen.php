@@ -11,15 +11,22 @@ class Laporanagen extends CI_Controller {
     }
     function index()
     {
-        $data['title']      = 'Laporan Data Agen';
-        $data['filter_date']= 1;
-        $this->load->view($this->indexpage,$data);  
+        $setGb ='[
+            {"val":"mjencust_nama","label":"Jenis Agen"},
+            {"val":"nama","label":"Nama"},
+            {"val":"alamat","label":"Alamat"}
+        ]';
+        $data['gb']     = json_decode($setGb); 
+        $data['title']  = 'Laporan Data Agen';
+        $this->load->view($this->indexpage,$data);
+          
     }
 
     function cetak()
     {
         $st   = date('Y-m-d', strtotime($this->input->post('awal')));
         $en   = date('Y-m-d', strtotime($this->input->post('akhir')));
+        $gb = $this->input->post('gb');
         $q     = "SELECT
                 mcustomer.nama,
                 mcustomer.alamat,
@@ -37,7 +44,7 @@ class Laporanagen extends CI_Controller {
         $data['header'] = ['Nama','Alamat','Telp','Email','Alamat'];
         $data['body']   = ['nama','alamat','telp','email','ket'];
         $data['title']  = 'Laporan Data Agen';
-        $data['gb']     = 'mjencust_nama';
+        $data['gb']     = $this->input->post('gb');
         $data['result'] = $res;
         $this->load->view($this->printpage,$data);
     }

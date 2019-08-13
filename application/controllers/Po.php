@@ -211,6 +211,7 @@ class Po extends CI_Controller {
         $a['ket']       = $this->input->post('ket');
         $a['ref_kirim'] = $this->input->post('ref_kirim');
         $a['ref_layanan'] = $this->input->post('ref_layanan');
+        $a['kirimke']   = $this->input->post('kirimke');
         if ($this->input->post('ref_kirim') == 'GX0002') {    
             $a['kodeprovfrom']  = $this->input->post('provinsi');
             $a['kodeprovto']    = $this->input->post('provinsito');
@@ -296,6 +297,7 @@ class Po extends CI_Controller {
         $a['ket']       = $this->input->post('ket');
         $a['ref_kirim'] = $this->input->post('ref_kirim');
         $a['ref_layanan'] = $this->input->post('ref_layanan');
+        $a['kirimke']   = $this->input->post('kirimke');
         if ($this->input->post('ref_kirim') == 'GX0002') {
             $a['kodeprovfrom']  = $this->input->post('provinsi');
             $a['kodeprovto'] = $this->input->post('provinsito');
@@ -353,8 +355,8 @@ class Po extends CI_Controller {
         if ($this->db->trans_status() === FALSE)
         {
             $this->db->trans_rollback();
-            $this->libre->delFile($upcorel);
-            $this->libre->delFile($upimage);
+            @unlink(".".$upcorel);
+            @unlink(".".$upimage);
             $r = array(
                 'sukses' => 'fail', 
             );
