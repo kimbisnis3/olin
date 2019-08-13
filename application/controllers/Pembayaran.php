@@ -15,6 +15,8 @@ class Pembayaran extends CI_Controller {
     }
 
     public function getall(){
+        $filterawal = date('Y-m-d', strtotime($this->input->post('filterawal')));
+        $filterakhir = date('Y-m-d', strtotime($this->input->post('filterakhir')));
         $q = "SELECT 
                 xpelunasan.id,
                 xpelunasan.kode,
@@ -33,7 +35,10 @@ class Pembayaran extends CI_Controller {
             LEFT JOIN mcustomer ON mcustomer.kode = xpelunasan.ref_cust
             LEFT JOIN mgudang ON mgudang.kode = xpelunasan.ref_gud
             LEFT JOIN mjenbayar ON mjenbayar.kode = xpelunasan.ref_jenbayar
-            WHERE xpelunasan.void IS NOT TRUE";
+            WHERE xpelunasan.void IS NOT TRUE
+            AND
+                xpelunasan.tgl 
+            BETWEEN '$filterawal' AND '$filterakhir'";
         $result     = $this->db->query($q)->result();
         $list       = [];
         foreach ($result as $i => $r) {

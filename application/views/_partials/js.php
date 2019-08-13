@@ -12,6 +12,7 @@
 <script src="<?php echo base_url()?>assets/lte/plugins/ckeditor/ckeditor.js"></script>
 <script src="<?php echo base_url()?>assets/lte/plugins/pace/pace.js"></script>
 <script src="<?php echo base_url()?>assets/numeral.min.js"></script>
+<script src="<?php echo base_url()?>assets/lte/plugins/moment/moment.js"></script>
 <script type="text/javascript">
 
 	var php_base_url = '<?php echo base_url() ?>';
@@ -20,8 +21,18 @@
 	var id_action ;
 
 	$(document).ready(function() {
-	    
+      // activemenux(grupmenu.toLowerCase(), title.replace(/ /g, "").toLowerCase());
 	})
+
+	function setMonth(name, days, tipe = '') {
+		if ((tipe == 'min') || ( tipe == '')) {
+			let date = moment().subtract(days, 'days').format("DD MMM YYYY");
+			$('[name="'+name+'"]').val(date)
+		} else if(tipe == 'plus') {
+			let date = moment().add(days, 'days').format("DD MMM YYYY");
+			$('[name="'+name+'"]').val(date)
+		}
+	}
 
 	function nilaimax(id, max) {
 	    $('#' + id).keyup(function() {

@@ -14,23 +14,23 @@
           </ol>
         </section>
         <div id="modal-konfirmasi" class="modal fade" role="dialog">
-              <div class="modal-dialog modal-sm">
-                <div class="modal-content">
-                  <div class="modal-body">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <center><h4 class="modal-title">QC Data ?</h4></center>
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-warning btn-flat" data-dismiss="modal">Tidak</button>
-                    <button @click="do_qc" type="button" id="btnHapus" class="btn btn-danger btn-flat">Ya</button>
-                  </div>
-                </div>
+          <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+              <div class="modal-body">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <center><h4 class="modal-title">QC Data ?</h4></center>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-warning btn-flat" data-dismiss="modal">Tidak</button>
+                <button @click="do_qc" type="button" id="btnHapus" class="btn btn-danger btn-flat">Ya</button>
               </div>
             </div>
+          </div>
+        </div>
           <section class="content">
           <div class="row">
             <div class="col-xs-12">
-              <div class="row">
+              <!-- <div class="row">
                 <div class="col-xs-12">
                   <div class="box box-info">
                     <div class="box-body">
@@ -38,13 +38,13 @@
                         <div class="col-md-3">
                           <div class="form-group">
                             <label>Awal</label>
-                            <input type="text" class="form-control datepicker" name="awal" v-model="tglAwal">
+                            <input type="text" class="form-control datepicker" v-model="tglAwal">
                           </div>
                         </div>
                         <div class="col-md-3">
                           <div class="form-group">
                             <label>Akhir</label>
-                            <input type="text" class="form-control datepicker" name="akhir"  v-model="tglAkhir">
+                            <input type="text" class="form-control datepicker" v-model="tglAkhir">
                           </div>
                         </div>
                         <div class="col-md-2">
@@ -57,7 +57,7 @@
                     </div>
                   </div>
                 </div>
-              </div>
+              </div> -->
                 <div class="row">
                   <div class="col-md-3" v-for="item in maindata">
                     <div class="box box-widget widget-user-2">
@@ -70,15 +70,15 @@
                       </div>
                       <div class="box-footer no-padding">
                         <ul class="nav nav-stacked">
-                          <li><a href="#">Proses 1 <span  class="pull-right badge" :class="item.a ==  'T' ? 'bg-green' : 'bg-red'">{{ item.a == 'T' ? 'Selesai' : 'Belum Selesai' }}</span></a>
+                          <li><a href="#">Antri Produksi <span  class="pull-right badge" :class="item.a ==  'T' ? 'bg-green' : 'bg-red'">{{ item.a == 'T' ? selesai : noselesai }}</span></a>
                           </li>
-                          <li><a href="#">Proses 2 <span  class="pull-right badge" :class="item.b ==  'T' ? 'bg-green' : 'bg-red'">{{ item.b == 'T' ? 'Selesai' : 'Belum Selesai' }}</span></a>
+                          <li><a href="#">Sudah Print <span  class="pull-right badge" :class="item.b ==  'T' ? 'bg-green' : 'bg-red'">{{ item.b == 'T' ? selesai : noselesai }}</span></a>
                           </li>
-                          <li><a href="#">Proses 3 <span  class="pull-right badge" :class="item.c ==  'T' ? 'bg-green' : 'bg-red'">{{ item.c == 'T' ? 'Selesai' : 'Belum Selesai' }}</span></a>
+                          <li><a href="#">---- <span  class="pull-right badge" :class="item.c ==  'T' ? 'bg-green' : 'bg-red'">{{ item.c == 'T' ? selesai : noselesai }}</span></a>
                           </li>
-                          <li><a href="#">Proses 4 <span  class="pull-right badge" :class="item.d ==  'T' ? 'bg-green' : 'bg-red'">{{ item.d == 'T' ? 'Selesai' : 'Belum Selesai' }}</span></a>
+                          <li><a href="#">Sudah Jahit <span  class="pull-right badge" :class="item.d ==  'T' ? 'bg-green' : 'bg-red'">{{ item.d == 'T' ? selesai : noselesai }}</span></a>
                           </li>
-                          <li><a href="#">Proses 5 <span  class="pull-right badge" :class="item.e ==  'T' ? 'bg-green' : 'bg-red'">{{ item.e == 'T' ? 'Selesai' : 'Belum Selesai' }}</span></a>
+                          <li><a href="#">Siap Kirim<span  class="pull-right badge" :class="item.e ==  'T' ? 'bg-green' : 'bg-red'">{{ item.e == 'T' ? selesai : noselesai }}</span></a>
                           </li>
                         </ul>
                       </div>
@@ -87,7 +87,6 @@
                       </div>
                     </div>
                   </div>
-
                 </div>
               </div>
             </div>
@@ -114,6 +113,8 @@
       select2();
       activemenux('transaksi', 'qualitycontrol');
       dpicker();
+      // setMonth('filterawal',30);
+      // setMonth('filterakhir',0);
   });
 
   var app = new Vue({
@@ -122,13 +123,15 @@
           input: {},
           maindata: [],
           state: 'view',
+          selesai : 'OK',
+          noselesai : 'WAIT',
           id_qc:'',
-          tglAwal:'',
-          tglAkhir:''
+          // tglAwal:'',
+          // tglAkhir: ''
       },
       methods: {
           getall: function() {
-              axios.get(`${apiurl}/getall`)
+              axios.get(`${apiurl}/getall?awal=${this.tglAwal}&akhir=${this.tglAkhir}`)
                   .then(res => {
                       this.maindata = res.data.data
                   })
@@ -170,11 +173,10 @@
           },
           refreshList : function() {
             this.getall();
-            // showNotif('Sukses', 'Refresh List', 'success');
           }
       },
       created() {
-          this.getall();
+          this.refreshList();
       }
   })
 

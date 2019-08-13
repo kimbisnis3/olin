@@ -20,10 +20,10 @@
 		<?php foreach ($body as $i => $v) {  ?>
 			<tr>
 				<td><?php echo $i + 1; ?>. </td>
-				<td><?php echo $v->kode; ?> </td>
-				<td><?php echo $v->nama; ?> </td>
-				<td><?php echo $v->colorc; ?> </td>
-				<td><?php echo $v->ket; ?> </td>
+				<td><?php echo $v['kode']; ?> </td>
+				<td><?php echo $v['nama']; ?> </td>
+				<td><?php echo $v['colorc']; ?> </td>
+				<td><?php echo $v['ket']; ?> </td>
 			</tr>
 		<?php } ?>
 		</tbody>

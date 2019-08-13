@@ -80,7 +80,7 @@ class Masterwarna extends CI_Controller {
       $useGroupBy = 1;
       $header = ['No','Kode','Nama','Kode Warna','Keterangan'];
       $q      = "SELECT * FROM mwarna";
-      $body   = $this->db->query($q)->result();
+      $body   = $this->db->query($q)->result_array();
       $data['title']    = 'Laporan Warna';
       $data['periodestart'] = '@tanggal';
       $data['periodeend']   = '@tanggal';

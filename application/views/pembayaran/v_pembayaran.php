@@ -1,20 +1,6 @@
 <!DOCTYPE html>
 <html>
   <?php $this->load->view('_partials/head'); ?>
-  <style type="text/css">
-    .uni-green {
-      background-color: #66BB6A !important;
-      color : #ffffff;
-    }
-    .uni-red {
-        background-color: #ef5350 !important;
-        color : #ffffff;
-    }
-    .selected {
-        background-color: #008B8B !important;
-        color: #ffffff !important;
-    }
-  </style>
   <body class="hold-transition skin-blue sidebar-mini">
     <div class="wrapper" id="app">
       <?php $this->load->view('_partials/topbar'); ?>
@@ -60,7 +46,7 @@
                               <select class="form-control select2" name="ref_jenbayar">
                                 <option> - </option>
                                 <?php foreach ($jenisbayar as $i => $v): ?>
-                                  <option value="<?php echo $v->kode ?>"><?php echo $v->nama; ?></option>
+                                <option value="<?php echo $v->kode ?>"><?php echo $v->nama; ?></option>
                                 <?php endforeach ?>
                               </select>
                             </div>
@@ -102,107 +88,138 @@
           </div>
           </div>  <!-- END MODAL INPUT-->
           <div class="modal fade" id="modal-order" role="dialog" data-backdrop="static">
-              <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Daftar Order</h4>
-                  </div>
-                  <div class="modal-body">
-                    <div class="box">
-                      <div class="box-header">
+            <div class="modal-dialog modal-lg">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                  <h4 class="modal-title">Daftar Order</h4>
+                </div>
+                <div class="modal-body">
+                  <div class="box">
+                    <div class="box-header">
+                    </div>
+                    <div class="box-body pad">
+                      <div class="table-responsive mailbox-messages">
+                        <table id="table-order" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                          <thead>
+                            <tr>
+                              <th width="5%">No</th>
+                              <th>ID</th>
+                              <th>Kode</th>
+                              <th>Ref Cust</th>
+                              <th>Agen</th>
+                              <th>Tanggal</th>
+                              <th>Total</th>
+                              <th>Keterangan</th>
+                              <th>Opsi</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                          </tbody>
+                        </table>
                       </div>
-                      <div class="box-body pad">
-                        <div class="table-responsive mailbox-messages">
-                          <table id="table-order" class="table table-striped table-bordered" cellspacing="0" width="100%">
-                            <thead>
-                              <tr>
-                                <th width="5%">No</th>
-                                <th>ID</th>
-                                <th>Kode</th>
-                                <th>Ref Cust</th>
-                                <th>Agen</th>
-                                <th>Tanggal</th>
-                                <th>Total</th>
-                                <th>Keterangan</th>
-                                <th>Opsi</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                          </table>
+                    </div>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-warning btn-flat" data-dismiss="modal">Tutup</button>
+                </div>
+              </div>
+            </div>
+            </div>  <!-- END MODAL ORDER-->
+            <div id="modal-konfirmasi" class="modal fade" role="dialog">
+              <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                  <div class="modal-body">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <center><h4 class="modal-title"></h4></center>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-warning btn-flat" data-dismiss="modal">Tidak</button>
+                    <button type="button" id="btnHapus" class="btn btn-danger btn-flat">Ya</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <section class="content">
+              <div class="row">
+                <div class="col-xs-12">
+                  <div class="box box-info">
+                    <div class="box-header bg">
+                      <div class="pull-right box-tools">
+                        <button class="btn btn-default btn-sm pull-right" data-widget="collapse" data-toggle="tooltip" title="Collapse" style="margin-right: 5px;"><i class="fa fa-minus"></i></button>
+                      </div>
+                      <i class="fa fa-search"></i>
+                      <h3 class="box-title">
+                      Filter Data
+                      </h3>
+                    </div>
+                    <div class="box-body">
+                      <div class="row">
+                        <div class="col-md-3">
+                          <div class="form-group">
+                            <label>Tanggal Awal</label>
+                            <input type="text" class="form-control datepicker" name="filterawal">
+                          </div>
+                        </div>
+                        <div class="col-md-3">
+                          <div class="form-group">
+                            <label>Tanggal Akhir</label>
+                            <input type="text" class="form-control datepicker" name="filterakhir">
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-warning btn-flat" data-dismiss="modal">Tutup</button>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xs-12">
+                  <div class="box box-info">
+                    <div class="box-header">
+                      <div class="pull-left">
+                        <button class="btn btn-success btn-flat refresh-btn" onclick="refresh()"><i class="fa fa-refresh"></i> Refresh</button>
+                        <button class="btn btn-primary btn-flat add-btn invisible" onclick="add_data()" ><i class="fa fa-plus"></i> Tambah</button>
+                      </div>
+                      <div class="pull-right">
+                        <button class="btn btn-warning btn-flat edit-btn invisible" onclick="edit_data()"><i class="fa fa-pencil"></i> Ubah</button>
+                        <button class="btn btn-success btn-flat option-btn invisible" onclick="valid_data()"><i class="fa fa-check"></i> Validasi</button>
+                        <button class="btn btn-danger btn-flat delete-btn invisible" onclick="void_data()" ><i class="fa fa-trash"></i> Void</button>
+                      </div>
+                    </div>
+                    <div class="box-body">
+                      <div class="table-responsive mailbox-messages">
+                        <table id="table" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                          <thead>
+                            <tr>
+                              <th></th>
+                              <th width="5%">No</th>
+                              <th>ID</th>
+                              <th>Kode</th>
+                              <th>Posted</th>
+                              <th>Tanggal</th>
+                              <th>Agen</th>
+                              <th>Kode PO</th>
+                              <th>Jenis Bayar</th>
+                              <th>Total</th>
+                              <th>Bayar</th>
+                              <th>Keterangan</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
-              </div>  <!-- END MODAL ORDER-->
-          <div id="modal-konfirmasi" class="modal fade" role="dialog">
-            <div class="modal-dialog modal-sm">
-              <div class="modal-content">
-                <div class="modal-body">
-                  <button type="button" class="close" data-dismiss="modal">&times;</button>
-                  <center><h4 class="modal-title"></h4></center>
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-warning btn-flat" data-dismiss="modal">Tidak</button>
-                  <button type="button" id="btnHapus" class="btn btn-danger btn-flat">Ya</button>
-                </div>
-              </div>
-            </div>
+            </section>
+            </div><!-- /.content-wrapper -->
+            <?php $this->load->view('_partials/foot'); ?>
           </div>
-          <section class="content">
-            <div class="row">
-              <div class="col-xs-12">
-                <div class="box box-info">
-                  <div class="box-header">
-                    <div class="pull-left">
-                      <button class="btn btn-success btn-flat refresh-btn" onclick="refresh()"><i class="fa fa-refresh"></i> Refresh</button>
-                      <button class="btn btn-primary btn-flat add-btn invisible" onclick="add_data()" ><i class="fa fa-plus"></i> Tambah</button>
-                    </div>
-                    <div class="pull-right">
-                      <button class="btn btn-warning btn-flat edit-btn invisible" onclick="edit_data()"><i class="fa fa-pencil"></i> Ubah</button>
-                      <button class="btn btn-success btn-flat option-btn invisible" onclick="valid_data()"><i class="fa fa-check"></i> Validasi</button>
-                      <button class="btn btn-danger btn-flat delete-btn invisible" onclick="void_data()" ><i class="fa fa-trash"></i> Void</button>
-                    </div>
-                  </div>
-                  <div class="box-body">
-                    <div class="table-responsive mailbox-messages">
-                      <table id="table" class="table table-striped table-bordered" cellspacing="0" width="100%">
-                        <thead>
-                          <tr>
-                            <th></th>
-                            <th width="5%">No</th>
-                            <th>ID</th>
-                            <th>Kode</th>
-                            <th>Posted</th>
-                            <th>Tanggal</th>
-                            <th>Agen</th>
-                            <th>Kode PO</th>
-                            <th>Jenis Bayar</th>
-                            <th>Total</th>
-                            <th>Bayar</th>
-                            <th>Keterangan</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-          </div><!-- /.content-wrapper -->
-          <?php $this->load->view('_partials/foot'); ?>
-        </div>
-      </body>
-    </html>
+        </body>
+      </html>
   <?php $this->load->view('_partials/js'); ?>
   <script type="text/javascript">
   var path = 'pembayaran';
@@ -218,6 +235,8 @@
       select2();
       activemenux('transaksi', 'pembayaran');
       dpicker();
+      setMonth('filterawal',30);
+      setMonth('filterakhir',0);
 
       table = $('#table').DataTable({
           "processing": true,
@@ -232,7 +251,10 @@
           "ajax": {
               "url": `${apiurl}/getall`,
               "type": "POST",
-              "data": {},
+              "data": {
+                filterawal  : function() { return $('[name="filterawal"]').val() },
+                filterakhir : function() { return $('[name="filterakhir"').val() },
+              },
           },
           "columns": [{ 
               "className": 'details-control',

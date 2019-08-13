@@ -27,7 +27,7 @@
                         <div class="col-md-6">
                           <div class="form-group">
                             <label>Agen</label>
-                            <input type="hidden" name="id">
+                            <input type="hidden" name="kode">
                             <div class="input-group">
                               <input type="hidden" class="form-control" name="ref_cust">
                               <input type="text" class="form-control" name="namacust" readonly="true">
@@ -341,16 +341,16 @@
                         <div class="col-md-6">
                           <div class="form-group">
                             <label>File Corel * </label>
-                            <input type="text" name="editkodefile">
+                            <input type="hidden" name="editkodefile">
                             <input type="file" class="form-control" name="editcorel" id="editcorel">
-                            <input type="text" name="editpathcorel">
+                            <input type="hidden" name="editpathcorel">
                           </div>
                         </div>
                         <div class="col-md-6">
                           <div class="form-group">
                             <label>Gambar</label>
                             <input type="file" class="form-control" name="editimage" id="editimage">
-                            <input type="text" name="editpathimage">
+                            <input type="hidden" name="editpathimage">
                           </div>
                         </div>
                       </div>
@@ -359,7 +359,7 @@
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-warning btn-flat" data-dismiss="modal">Batal</button>
-                  <button type="button" id="btnSave" onclick="savefile()" class="btn btn-primary btn-flat">Simpan</button>
+                  <button type="button" id="btnSave" onclick="updatefile()" class="btn btn-primary btn-flat">Simpan</button>
                 </div>
               </div>
             </div>
@@ -379,6 +379,37 @@
               </div>
             </div>
             <section class="content">
+              <div class="row">
+                <div class="col-xs-12">
+                  <div class="box box-info">
+                    <div class="box-header bg">
+                      <div class="pull-right box-tools">
+                        <button class="btn btn-default btn-sm pull-right" data-widget="collapse" data-toggle="tooltip" title="Collapse" style="margin-right: 5px;"><i class="fa fa-minus"></i></button>
+                      </div>
+                      <i class="fa fa-search"></i>
+                      <h3 class="box-title">
+                      Filter Data
+                      </h3>
+                    </div>
+                    <div class="box-body">
+                      <div class="row">
+                        <div class="col-md-3">
+                          <div class="form-group">
+                            <label>Tanggal Awal</label>
+                            <input type="text" class="form-control datepicker" name="filterawal">
+                          </div>
+                        </div>
+                        <div class="col-md-3">
+                          <div class="form-group">
+                            <label>Tanggal Akhir</label>
+                            <input type="text" class="form-control datepicker" name="filterakhir">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
               <div class="row">
                 <div class="col-xs-12">
                   <div class="box box-info">
@@ -402,6 +433,7 @@
                               <th>ID</th>
                               <th>Kode</th>
                               <th>Agen</th>
+                              <th>Pengiriman</th>
                               <th>Berat(kg)</th>
                               <th>Biaya Kirim</th>
                               <th>Kurir</th>
@@ -436,6 +468,8 @@
   $(document).ready(function() {
       $('.add-btn, .edit-btn, .delete-btn').prop('disabled',true);
       getAkses(title);
+      setMonth('filterawal',30);
+      setMonth('filterakhir',0);
       select2();
       activemenux('transaksi', 'purchaseorder');
       dpicker();
@@ -454,7 +488,10 @@
           "ajax": {
               "url": `${apiurl}/getall`,
               "type": "POST",
-              "data": {},
+              "data": {
+                filterawal  : function() { return $('[name="filterawal"]').val() },
+                filterakhir : function() { return $('[name="filterakhir"').val() },
+              },
           },
           "columns": [{ 
               "className": 'details-control',
@@ -466,6 +503,7 @@
           { "data": "id" , "visible" : false},
           { "data": "kode" },
           { "data": "namacust" },
+          { "data": "mkirim_nama" },
           { "data": "kgkirim" },
           { "data": "bykirim" },
           { "data": "kurir" },
@@ -553,6 +591,11 @@
 
   function refresh() {
       table.ajax.reload(null, false);
+      idx = -1;
+  }
+
+  function refreshfile() {
+      tablefile.ajax.reload(null, false);
       idx = -1;
   }
 
@@ -678,9 +721,9 @@
 
   }
 
-  function savefile() {
+  function updatefile() {
       var formfile = new FormData($('#form-file')[0]);
-      url = "<?php echo base_url() ?>po/savefile"
+      url = "<?php echo base_url() ?>po/updatefile"
       $.ajax({
           url: url,
           type: "POST",
@@ -693,11 +736,11 @@
           success: function(data) {
               if (data.sukses == 'success') {
                   $('#modal-input-file').modal('hide');
-                  // refresh();
+                  refreshfile();
                   showNotif('Sukses', 'Data Berhasil Diubah', 'success')
               } else if (data.sukses == 'fail') {
                   $('#modal-input-file').modal('hide');
-                  // refresh();
+                  refreshfile();
                   showNotif('Sukses', 'Tidak Ada Perubahan', 'success')
               }
 

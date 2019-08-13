@@ -15,6 +15,8 @@ class Qc extends CI_Controller {
     }
 
     public function getall(){
+        $filterawal = date('Y-m-d', strtotime($this->input->get('filterawal')));
+        $filterakhir = date('Y-m-d', strtotime($this->input->get('filterakhir')));
         $q = "SELECT 
                 xprocorder.id,
                 xprocorder.kode,
@@ -33,7 +35,10 @@ class Qc extends CI_Controller {
             FROM 
                 xprocorder
             LEFT JOIN mbarang ON mbarang.kode = xprocorder.ref_brg
-            LEFT JOIN xorder ON xorder.kode = xprocorder.ref_order";
+            LEFT JOIN xorder ON xorder.kode = xprocorder.ref_order
+            AND
+                xprocorder.tgl 
+            BETWEEN '$filterawal' AND '$filterakhir'";
         $result     = $this->db->query($q)->result();
         // $list       = [];
         // foreach ($result as $i => $r) {

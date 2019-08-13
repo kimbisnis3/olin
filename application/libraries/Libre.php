@@ -25,22 +25,8 @@ class libre
     public function goUploadUpdate($field,$filename,$dir,$oldpath)
     {
         $ci=& get_instance();
-        $config['upload_path'] = $dir;
-        if (!is_dir($config['upload_path'])) {
-            mkdir($config['upload_path'], 0777, TRUE);
-        }
-        $config['allowed_types'] = '*';
-        $config['file_name'] = $filename;
-        $path =  substr($config['upload_path'],1);
-        $ci->upload->initialize($config);
-        $pathfile   = $oldpath;
-        $ext        = substr($pathfile, -3);
-        if ($ci->upload->do_upload($field)) {
-            @unlink("$pathfile");
-            return $path.'/'.$ci->upload->data('file_name');
-        } else {
-            return $oldpath;
-        }
+        $this->goUpload($field,$filename,$dir);
+        @unlink(".".$oldpath);
         
     }
 

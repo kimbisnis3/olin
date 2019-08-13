@@ -14,7 +14,10 @@ class Spk extends CI_Controller {
         $this->load->view($this->indexpage,$data);  
     }
 
-    public function getall(){
+    public function getall()
+    {
+        $filterawal = date('Y-m-d', strtotime($this->input->post('filterawal')));
+        $filterakhir = date('Y-m-d', strtotime($this->input->post('filterakhir')));
         $q = "SELECT 
                 xprocorder.id,
                 xprocorder.kode,
@@ -28,7 +31,10 @@ class Spk extends CI_Controller {
                 xprocorder
             LEFT JOIN mbarang ON mbarang.kode = xprocorder.ref_brg
             LEFT JOIN xorder ON xorder.kode = xprocorder.ref_order
-            WHERE xprocorder.void IS NOT TRUE";
+            WHERE xprocorder.void IS NOT TRUE
+            AND
+                xprocorder.tgl 
+            BETWEEN '$filterawal' AND '$filterakhir'";
         $result     = $this->db->query($q)->result();
         $list       = [];
         foreach ($result as $i => $r) {

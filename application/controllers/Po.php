@@ -17,6 +17,8 @@ class Po extends CI_Controller {
     }
 
     public function getall(){
+        $filterawal = date('Y-m-d', strtotime($this->input->post('filterawal')));
+        $filterakhir = date('Y-m-d', strtotime($this->input->post('filterakhir')));
         $q = "SELECT
                 xorder.id,
                 xorder.kode,
@@ -31,11 +33,16 @@ class Po extends CI_Controller {
                 xorder.lokasike,
                 xorder.pathcorel,
                 xorder.pathimage,
-                mcustomer.nama namacust
+                mcustomer.nama namacust,
+                mkirim.nama mkirim_nama
             FROM
                 xorder
             LEFT JOIN mcustomer ON mcustomer.kode = xorder.ref_cust
-            WHERE xorder.void IS NOT TRUE";
+            LEFT JOIN mkirim ON mkirim.kode = xorder.ref_kirim
+            WHERE xorder.void IS NOT TRUE
+            AND
+                xorder.tgl 
+            BETWEEN '$filterawal' AND '$filterakhir'";
         $result     = $this->db->query($q)->result();
         $list       = [];
         foreach ($result as $i => $r) {
@@ -45,6 +52,7 @@ class Po extends CI_Controller {
             $row['namacust']    = $r->namacust;
             $row['kgkirim']     = $r->kgkirim;
             $row['bykirim']     = number_format($r->bykirim);
+            $row['mkirim_nama'] = $r->mkirim_nama;
             $row['kurir']       = $r->kurir;
             $row['lokasidari']  = $r->lokasidari;
             $row['lokasike']    = $r->lokasike;
@@ -98,7 +106,7 @@ class Po extends CI_Controller {
             LEFT JOIN xorder ON xorder.kode = xorderd.ref_order
             WHERE xorder.kode = '$xorderkode'";
         $spek    = $this->db->query($p)->result();
-        $tabs   = '<div class="nav-tabs-custom">
+        $tabs   = '<div class="nav-tabs-custom fadeIn animated">
                   <ul class="nav nav-tabs">
                     <li class="active"><a href="#tab_1" data-toggle="tab">Data Produk</a></li>
                     <li><a href="#tab_2" data-toggle="tab">Data Spesifikasi</a></li>
@@ -200,10 +208,14 @@ class Po extends CI_Controller {
         $a['ref_cust']  = $this->input->post('ref_cust');
         $a['tgl']       = date('Y-m-d', strtotime($this->input->post('tgl')));
         $a['ref_gud']   = $this->input->post('ref_gud');
-        if ($this->input->post('ref_kirim') == 'GX0002') {
-            $a['ref_kirim'] = $this->input->post('ref_kirim');
-            $a['ref_layanan'] = $this->input->post('ref_layanan');
-            $a['ket']       = $this->input->post('ket');
+        $a['ket']       = $this->input->post('ket');
+        $a['ref_kirim'] = $this->input->post('ref_kirim');
+        $a['ref_layanan'] = $this->input->post('ref_layanan');
+        if ($this->input->post('ref_kirim') == 'GX0002') {    
+            $a['kodeprovfrom']  = $this->input->post('provinsi');
+            $a['kodeprovto']    = $this->input->post('provinsito');
+            $a['kodecityfrom']  = $this->input->post('city');
+            $a['kodecityto']    = $this->input->post('cityto');
             $a['lokasidari']= $this->input->post('mask-provinsi').' - '.$this->input->post('mask-city');
             $a['lokasike']  = $this->input->post('mask-provinsito').' - '.$this->input->post('mask-cityto');
             $a['kgkirim']   = $this->input->post('berat');
@@ -274,7 +286,114 @@ class Po extends CI_Controller {
 
     public function updatedata() 
     {
-        
+        $this->db->trans_begin();
+        $kodeorder      = $this->input->post('kode');
+        $a['useru']     = $this->session->userdata('username');
+        $a['dateu']     = 'now()';
+        $a['ref_cust']  = $this->input->post('ref_cust');
+        $a['tgl']       = date('Y-m-d', strtotime($this->input->post('tgl')));
+        $a['ref_gud']   = $this->input->post('ref_gud');
+        $a['ket']       = $this->input->post('ket');
+        $a['ref_kirim'] = $this->input->post('ref_kirim');
+        $a['ref_layanan'] = $this->input->post('ref_layanan');
+        if ($this->input->post('ref_kirim') == 'GX0002') {
+            $a['kodeprovfrom']  = $this->input->post('provinsi');
+            $a['kodeprovto'] = $this->input->post('provinsito');
+            $a['kodecityfrom']  = $this->input->post('city');
+            $a['kodecityto']    = $this->input->post('cityto');
+            $a['lokasidari']= $this->input->post('mask-provinsi').' - '.$this->input->post('mask-city');
+            $a['lokasike']  = $this->input->post('mask-provinsito').' - '.$this->input->post('mask-cityto');
+            $a['kgkirim']   = $this->input->post('berat');
+            $a['bykirim']   = $this->input->post('biaya');
+            $a['kurir']     = $this->input->post('kodekurir');
+        }
+        $this->db->update('xorder',$a,array('kode' => $kodeorder));
+        $kodebrg = $this->input->post('kodebrg');
+        $Brg = $this->db->query("
+            SELECT 
+                msatbrg.kode msatbrg_kode,
+                msatbrg.ref_brg msatbrg_ref_brg,
+                msatbrg.harga msatbrg_harga,
+                msatbrg.ref_gud msatbrg_ref_gud,
+                msatbrg.ket msatbrg_ket
+            FROM 
+                mbarang 
+            LEFT JOIN msatbrg ON msatbrg.ref_brg = mbarang.kode 
+            WHERE 
+                msatbrg.def = 't' 
+            AND mbarang.kode = '$kodebrg'")->row();
+        $b['useru']     = $this->session->userdata('username');
+        $b['dateu']     = 'now()';
+        $b['ref_order'] = $kodeOrder;
+        $b['ref_brg']   = $Brg->msatbrg_ref_brg;
+        $b['jumlah']    = $this->input->post('jumlah');
+        $b['ref_satbrg']= $Brg->msatbrg_kode;
+        $b['harga']     = $Brg->msatbrg_harga;
+        $b['ref_gud']   = $Brg->msatbrg_ref_gud;
+        $b['ket']       = $Brg->msatbrg_ket;
+        $this->db->update('xorderd',$b,array('ref_order' => $kodeorder));
+        //get orderd id first
+        $idOrderd = $this->db->get('xorderd',array('ref_order' => $kodeorder)) ;
+        $design = $this->db->get_where('mbarangs',array('ref_brg' => $kodebrg))->result();
+        foreach ($design as $r) {
+            $row    = array(
+                "useri"         => $this->session->userdata('username'),
+                "ref_orderd"    => $idOrderd,
+                "ref_modesign"  => $r->model,
+                "ref_warna"     => $r->warna,
+                "ket"           => $r->ket
+            );
+            $c[] = $row;
+        }
+        if (count($design) > 0) {
+            $this->db->delete('xorderds',array('ref_orderd' => $idOrderd));
+            $this->db->insert_batch('xorderds',$c);
+        }
+
+        if ($this->db->trans_status() === FALSE)
+        {
+            $this->db->trans_rollback();
+            $this->libre->delFile($upcorel);
+            $this->libre->delFile($upimage);
+            $r = array(
+                'sukses' => 'fail', 
+            );
+        }
+        else
+        {
+            $this->db->trans_commit();
+            $r = array(
+                'sukses' => 'success'
+                );
+        }
+        echo json_encode($r);
+    }
+
+
+
+    function updatefile()
+    {
+        if (!empty($_FILES['editcorel']['name'])) {
+            $upcorel    = $this->libre->goUpload('editcorel','corel-'.time(),$this->foldername);
+            $a['pathcorel'] = $upcorel;
+            $oldpath = $this->input->post('editpathcorel');
+            @unlink(".".$oldpath);
+        } else {
+            $a['pathcorel'] = $this->input->post('editpathcorel');
+        }
+
+        if (!empty($_FILES['editimage']['name'])) {
+            $upcorel    = $this->libre->goUpload('editimage','image-'.time(),$this->foldername);
+            $a['pathimage'] = $upcorel;
+            $oldpath = $this->input->post('editpathimage');
+            @unlink(".".$oldpath);
+        } else {
+            $a['pathimage'] = $this->input->post('editpathimage');
+        }
+
+        $result = $this->db->update('xorder',$a,array('kode' => $this->input->post('editkodefile')));
+        $r['sukses']    = $result ? 'success' : 'fail' ;
+        echo json_encode($r);
     }
 
     function loadcustomer(){
@@ -370,19 +489,6 @@ class Po extends CI_Controller {
         $result = $this->db->update($this->table,$d,$w);
         $r['sukses'] = $result ? 'success' : 'fail' ;
         echo json_encode($r);
-    }
-
-    function savefile(){
-        // $d['pathcorel']  = $this->libre->goUploadUpdate('editcorel','corel-'.time(),$this->foldername,$this->input->post('editcorel'));
-        // $d['pathimage']  = $this->libre->goUploadUpdate('editimage','img-'.time(),$this->foldername,$this->input->post('editimage'));
-        // $w['kode'] = $this->input->post('editkodefile');
-        // $result = $this->db->update('xorder',$d,$w);
-        // $r['sukses'] = $result ? 'success' : 'fail' ;
-        // echo json_encode($r);
-
-        // $t = $this->input->file('editcorel');
-        $t = !empty($_FILES['editcorel']['name']);
-        echo json_encode($t);
     }
 
     function request_province() {
