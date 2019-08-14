@@ -425,8 +425,8 @@
                       </div>
                       <div class="pull-right">
                         <button class="btn btn-act btn-warning btn-flat edit-btn invisible" onclick="edit_data()"><i class="fa fa-pencil"></i> Ubah</button>
-                        <button class="btn btn-act btn-success btn-flat file-btn" onclick="open_file()"><i class="fa fa-file"></i> File</button>
-                        <button class="btn btn-act btn-danger btn-flat delete-btn invisible" onclick="hapus_data()" ><i class="fa fa-trash"></i> Hapus</button>
+                        <button class="btn btn-act bg-navy btn-flat file-btn" onclick="open_file()"><i class="fa fa-file"></i> File</button>
+                        <button class="btn btn-act btn-danger btn-flat delete-btn invisible" onclick="hapus_data()" ><i class="fa fa-trash"></i> Void</button>
                       </div>
                     </div>
                     <div class="box-body">
@@ -440,6 +440,7 @@
                               <th>Kode</th>
                               <th>Agen</th>
                               <th>Pengiriman</th>
+                              <th>Penerima</th>
                               <th>Berat(kg)</th>
                               <th>Biaya Kirim</th>
                               <th>Kurir</th>
@@ -507,6 +508,7 @@
           { "data": "kode" },
           { "data": "namacust" },
           { "data": "mkirim_nama" },
+          { "data": "kirimke" },
           { "data": "kgkirim" },
           { "data": "bykirim" },
           { "data": "kurir" },
@@ -785,7 +787,7 @@
           dataType: "JSON",
           success: function(data) {
               $('[name="kode"]').val(data.kode);
-              $('[name="kode"]').val(data.kode);
+              $('[name="kodebrg"]').val(data.kodebrg);
               $('[name="tgl"]').val(data.tgl);
               $('[name="ref_kirim"]').val(data.ref_kirim);
               $('[name="ref_cust"]').val(data.ref_cust);
@@ -793,7 +795,6 @@
               $('[name="namabarang"]').val(data.mbarang_nama);
               $('[name="ref_layanan"]').val(data.ref_layanan);
               $('[name="kirimke"]').val(data.kirimke);
-              $('[name="kirimke"]').val(data.kodekurir);
               $('[name="ket"]').val(data.ket);
               $('[name="jumlah"]').val(data.jumlah);
               $('[name="harga"]').val(data.harga);
@@ -816,6 +817,7 @@
               console.log($('[name="cityto"]').val());
               $('.select2').trigger('change');
               $('#modal-data').modal('show');
+              notifLoading();
               $('.modal-title').text('Edit Data');
           },
           error: function(jqXHR, textStatus, errorThrown) {
@@ -829,7 +831,9 @@
       if (ceknull('namabarang')) { return false }
       if (ceknull('tgl')) { return false }
       if (ceknull('jumlah')) { return false }
-      if (ceknull('corel')) { return false }
+      if (state == 'add') {
+        if (ceknull('corel')) { return false }
+      }
       if (ceknull('ref_kirim')) { return false }
       if (ceknull('kirimke')) { return false }
       if (ceknull('ref_layanan')) { return false }
@@ -873,11 +877,11 @@
   }
 
   function hapus_data() {
-      id = table.cell( idx, 1).data();
+      id = table.cell( idx, 2).data();
       if (idx == -1) {
           return false;
       }
-      $('.modal-title').text('Yakin Hapus Data ?');
+      $('.modal-title').text('Yakin Void Data ?');
       $('#modal-konfirmasi').modal('show');
       $('#btnHapus').attr('onclick', 'delete_data(' + id + ')');
   }

@@ -88,6 +88,25 @@
 	    }, );
 	};
 
+	function notifLoading() {
+	    $.notify({
+	        title: '<strong> Sedang Memuat Data</strong>',
+	        message: '',
+	        icon: 'fa fa-circle-o-notch fa-spin',
+	    }, {
+	        type: 'warning',
+	        placement: {
+	            align: 'center'
+	        },
+	        z_index: 2000,
+	        allow_dismiss: 'false',
+	        animate: {
+	            enter: 'animated fadeIn',
+	            exit: 'animated fadeOut'
+	        },
+	    }, );
+	}
+
 	function getSelect(d, u) {
 	    $.ajax({
 	        url: `${apiurl}/${u}`,

@@ -26,6 +26,7 @@ class Po extends CI_Controller {
                 xorder.ket,
                 xorder.pic,
                 xorder.kgkirim,
+                xorder.kirimke,
                 xorder.bykirim,
                 xorder.ref_layanan,
                 xorder.kurir,
@@ -59,6 +60,7 @@ class Po extends CI_Controller {
             $row['ket']         = $r->ket;
             $row['pathcorel']   = $r->pathcorel;
             $row['pathimage']   = $r->pathimage;
+            $row['kirimke']     = $r->kirimke;
             $list[] = $row;
         }   
         echo json_encode(array('data' => $list));
@@ -250,6 +252,7 @@ class Po extends CI_Controller {
         $b['harga']     = $Brg->msatbrg_harga;
         $b['ref_gud']   = $Brg->msatbrg_ref_gud;
         $b['ket']       = $Brg->msatbrg_ket;
+        $this->db->delete('xorderd',array('ref_order' => $kodeOrder));
         $this->db->insert('xorderd',$b);
         $idOrderd = $this->db->insert_id();
         $design = $this->db->get_where('mbarangs',array('ref_brg' => $kodebrg))->result();
@@ -314,7 +317,8 @@ class Po extends CI_Controller {
                 xorderd.harga,
                 xorderd.ref_brg,
                 mcustomer.nama mcustomer_nama,
-                mbarang.nama mbarang_nama
+                mbarang.nama mbarang_nama,
+                mbarang.kode kodebrg
             FROM 
                 xorder
             LEFT JOIN xorderd ON xorderd.ref_order = xorder.kode
@@ -367,16 +371,16 @@ class Po extends CI_Controller {
             AND mbarang.kode = '$kodebrg'")->row();
         $b['useru']     = $this->session->userdata('username');
         $b['dateu']     = 'now()';
-        $b['ref_order'] = $kodeOrder;
+        $b['ref_order'] = $kodeorder;
         $b['ref_brg']   = $Brg->msatbrg_ref_brg;
         $b['jumlah']    = $this->input->post('jumlah');
         $b['ref_satbrg']= $Brg->msatbrg_kode;
         $b['harga']     = $Brg->msatbrg_harga;
-        $b['ref_gud']   = $Brg->msatbrg_ref_gud;
+        $b['ref_gud']   = $this->libre->gud_def();
         $b['ket']       = $Brg->msatbrg_ket;
         $this->db->update('xorderd',$b,array('ref_order' => $kodeorder));
         //get orderd id first
-        $idOrderd = $this->db->get('xorderd',array('ref_order' => $kodeorder)) ;
+        $idOrderd = $this->db->get('xorderd',array('ref_order' => $kodeorder))->row()->id ;
         $design = $this->db->get_where('mbarangs',array('ref_brg' => $kodebrg))->result();
         foreach ($design as $r) {
             $row    = array(
@@ -396,8 +400,6 @@ class Po extends CI_Controller {
         if ($this->db->trans_status() === FALSE)
         {
             $this->db->trans_rollback();
-            @unlink(".".$upcorel);
-            @unlink(".".$upimage);
             $r = array(
                 'sukses' => 'fail', 
             );
@@ -535,72 +537,59 @@ class Po extends CI_Controller {
         echo json_encode($r);
     }
 
+    // function request_province() {
+    //     $curl = curl_init();
+
+    //     curl_setopt_array($curl, array(
+    //       CURLOPT_URL => "https://api.rajaongkir.com/starter/province",
+    //       CURLOPT_RETURNTRANSFER => true,
+    //       CURLOPT_ENCODING => "",
+    //       CURLOPT_MAXREDIRS => 10,
+    //       CURLOPT_TIMEOUT => 30,
+    //       CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+    //       CURLOPT_CUSTOMREQUEST => "GET",
+    //       CURLOPT_HTTPHEADER => array(
+    //         "key: 5c8590c12ef6879e2b829c4ab6aa955e"
+    //       ),
+    //     ));
+
+    //     $response = curl_exec($curl);
+    //     $err = curl_error($curl);
+
+    //     curl_close($curl);
+
+    //     if ($err) {
+    //       echo "cURL Error #:" . $err;
+    //     } else {
+    //           $data = json_decode($response, true); 
+    //           $op = "<option value=''>-</option>";
+    //           for ($i=0; $i < count($data['rajaongkir']['results']); $i++) {  
+    //             $op .="<option value='".$data['rajaongkir']['results'][$i]['province_id']."'>".$data['rajaongkir']['results'][$i]['province']."</option>";
+    //           }  
+    //             echo $op; 
+    //     }
+    // }
+
     function request_province() {
-        $curl = curl_init();
-
-        curl_setopt_array($curl, array(
-          CURLOPT_URL => "https://api.rajaongkir.com/starter/province",
-          CURLOPT_RETURNTRANSFER => true,
-          CURLOPT_ENCODING => "",
-          CURLOPT_MAXREDIRS => 10,
-          CURLOPT_TIMEOUT => 30,
-          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-          CURLOPT_CUSTOMREQUEST => "GET",
-          CURLOPT_HTTPHEADER => array(
-            "key: 5c8590c12ef6879e2b829c4ab6aa955e"
-          ),
-        ));
-
-        $response = curl_exec($curl);
-        $err = curl_error($curl);
-
-        curl_close($curl);
-
-        if ($err) {
-          echo "cURL Error #:" . $err;
-        } else {
-              $data = json_decode($response, true); 
-              $op = "<option value=''>-</option>";
-              for ($i=0; $i < count($data['rajaongkir']['results']); $i++) {  
+        $response = $this->libre->get_province_ro();
+        $data = json_decode($response, true); 
+        $op = "<option value=''>-</option>";
+            for ($i=0; $i < count($data['rajaongkir']['results']); $i++) {  
                 $op .="<option value='".$data['rajaongkir']['results'][$i]['province_id']."'>".$data['rajaongkir']['results'][$i]['province']."</option>";
               }  
-                echo $op; 
-        }
+        echo $op; 
+
     }
 
     function request_city() {
-        $province = $this->input->get('province');
-        $curl = curl_init();
-
-        curl_setopt_array($curl, array(
-          CURLOPT_URL => "https://api.rajaongkir.com/starter/city?province={$province}",
-          CURLOPT_RETURNTRANSFER => true,
-          CURLOPT_ENCODING => "",
-          CURLOPT_MAXREDIRS => 10,
-          CURLOPT_TIMEOUT => 30,
-          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-          CURLOPT_CUSTOMREQUEST => "GET",
-          CURLOPT_HTTPHEADER => array(
-            "key: 5c8590c12ef6879e2b829c4ab6aa955e"
-          ),
-        ));
-
-        $response = curl_exec($curl);
-        $err = curl_error($curl);
-
-        curl_close($curl);
-
-        if ($err) {
-          echo "cURL Error #:" . $err;
-        } else {
-          $data = json_decode($response, true); 
-          $op = "<option value=''>-</option>";
-              for ($i=0; $i < count($data['rajaongkir']['results']); $i++) { 
+        $response = $this->libre->get_city_ro();
+        $data = json_decode($response, true); 
+        $op = "<option value=''>-</option>";
+            for ($i=0; $i < count($data['rajaongkir']['results']); $i++) { 
               $op .=  "<option value='".$data['rajaongkir']['results'][$i]['city_id']."'>".$data['rajaongkir']['results'][$i]['city_name']."</option>"; 
               }  
-                  echo $op;
+        echo $op;
 
-        }
     }
 
     function request_ongkir() {
