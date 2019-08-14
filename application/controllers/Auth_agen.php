@@ -44,6 +44,7 @@ class Auth extends CI_Controller{
                     'id'        => $result->id_user,
                     'nama'      => $result->nama,
                     'user'      => $result->user,
+                    'kodecust'  => $result->kode,
                     'mjencust_nama'=> $result->mjencust_nama,
                 );
                 $this->session->set_userdata($d);

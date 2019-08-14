@@ -1,10 +1,10 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-class Po extends CI_Controller {
+class Po_agen extends CI_Controller {
     
     public $table       = 'xorder';
     public $foldername  = 'po';
-    public $indexpage   = 'po/v_po';
+    public $indexpage   = 'po_agen/v_po_agen';
 
     function __construct() {
         parent::__construct();
@@ -19,6 +19,7 @@ class Po extends CI_Controller {
     public function getall(){
         $filterawal = date('Y-m-d', strtotime($this->input->post('filterawal')));
         $filterakhir = date('Y-m-d', strtotime($this->input->post('filterakhir')));
+        $kodecust = $this->session->userdata('kodecust');
         $q = "SELECT
                 xorder.id,
                 xorder.kode,
@@ -40,8 +41,9 @@ class Po extends CI_Controller {
                 xorder
             LEFT JOIN mcustomer ON mcustomer.kode = xorder.ref_cust
             LEFT JOIN mkirim ON mkirim.kode = xorder.ref_kirim
-            WHERE xorder.void IS NOT TRUE
-            AND
+            WHERE xorder.void IS NOT TRUE";
+        $q .=" AND xorder.ref_cust = $kodecust";
+        $q .=" AND
                 xorder.tgl 
             BETWEEN '$filterawal' AND '$filterakhir'";
         $result     = $this->db->query($q)->result();
@@ -207,7 +209,7 @@ class Po extends CI_Controller {
         $a['pathcorel'] = $upcorel;
         $a['pathimage'] = $upimage;
         $a['useri']     = $this->session->userdata('username');
-        $a['ref_cust']  = $this->input->post('ref_cust');
+        $a['ref_cust']  = $this->session->userdata('kodecust');
         $a['tgl']       = date('Y-m-d', strtotime($this->input->post('tgl')));
         $a['ref_gud']   = $this->libre->gud_def();
         $a['ket']       = $this->input->post('ket');
@@ -289,189 +291,6 @@ class Po extends CI_Controller {
         echo json_encode($r);
     }
 
-    public function edit()
-    {
-        $q = "SELECT 
-                xorder.*,
-                xorder.id,
-                xorder.kode,
-                to_char(xorder.tgl, 'DD Mon YYYY') tgl,
-                xorder.ref_cust,
-                xorder.ref_gud,
-                xorder.ket,
-                xorder.total,
-                xorder.pic,
-                xorder.ref_kirim,
-                xorder.kgkirim,
-                xorder.bykirim,
-                xorder.ref_layanan,
-                xorder.kurir,
-                xorder.lokasidari,
-                xorder.lokasike,
-                xorder.kodeprovfrom,
-                xorder.kodeprovto,
-                xorder.kodecityfrom,
-                xorder.kodecityto,
-                xorder.kirimke,
-                xorderd.jumlah,
-                xorderd.harga,
-                xorderd.ref_brg,
-                mcustomer.nama mcustomer_nama,
-                mbarang.nama mbarang_nama,
-                mbarang.kode kodebrg
-            FROM 
-                xorder
-            LEFT JOIN xorderd ON xorderd.ref_order = xorder.kode
-            LEFT JOIN mcustomer ON mcustomer.kode = xorder.ref_cust
-            LEFT JOIN mbarang ON mbarang.kode = xorderd.ref_brg
-            WHERE xorder.kode = '{$this->input->post('kode')}'";
-        $data   = $this->db->query($q)->row();
-        echo json_encode($data);
-    }
-
-    public function updatedata() 
-    {
-        $this->db->trans_begin();
-        $kodeorder      = $this->input->post('kode');
-        $a['useru']     = $this->session->userdata('username');
-        $a['dateu']     = 'now()';
-        $a['ref_cust']  = $this->input->post('ref_cust');
-        $a['tgl']       = date('Y-m-d', strtotime($this->input->post('tgl')));
-        $a['ref_gud']   = $this->libre->gud_def();
-        $a['ket']       = $this->input->post('ket');
-        $a['ref_kirim'] = $this->input->post('ref_kirim');
-        $a['ref_layanan'] = $this->input->post('ref_layanan');
-        $a['kirimke']   = $this->input->post('kirimke');
-        if ($this->input->post('ref_kirim') == 'GX0002') {
-            $a['kodeprovfrom']  = $this->input->post('provinsi');
-            $a['kodeprovto'] = $this->input->post('provinsito');
-            $a['kodecityfrom']  = $this->input->post('city');
-            $a['kodecityto']    = $this->input->post('cityto');
-            $a['lokasidari']= $this->input->post('mask-provinsi').' - '.$this->input->post('mask-city');
-            $a['lokasike']  = $this->input->post('mask-provinsito').' - '.$this->input->post('mask-cityto');
-            $a['kgkirim']   = $this->input->post('berat');
-            $a['bykirim']   = $this->input->post('biaya');
-            $a['kodekurir'] = $this->input->post('kodekurir');
-            $a['kurir']     = $this->input->post('kurir');
-        }
-        $this->db->update('xorder',$a,array('kode' => $kodeorder));
-        $kodebrg = $this->input->post('kodebrg');
-        $Brg = $this->db->query("
-            SELECT 
-                msatbrg.kode msatbrg_kode,
-                msatbrg.ref_brg msatbrg_ref_brg,
-                msatbrg.harga msatbrg_harga,
-                msatbrg.ref_gud msatbrg_ref_gud,
-                msatbrg.ket msatbrg_ket
-            FROM 
-                mbarang 
-            LEFT JOIN msatbrg ON msatbrg.ref_brg = mbarang.kode 
-            WHERE 
-                msatbrg.def = 't' 
-            AND mbarang.kode = '$kodebrg'")->row();
-        $b['useru']     = $this->session->userdata('username');
-        $b['dateu']     = 'now()';
-        $b['ref_order'] = $kodeorder;
-        $b['ref_brg']   = $Brg->msatbrg_ref_brg;
-        $b['jumlah']    = $this->input->post('jumlah');
-        $b['ref_satbrg']= $Brg->msatbrg_kode;
-        $b['harga']     = $Brg->msatbrg_harga;
-        $b['ref_gud']   = $this->libre->gud_def();
-        $b['ket']       = $Brg->msatbrg_ket;
-        $this->db->update('xorderd',$b,array('ref_order' => $kodeorder));
-        //get orderd id first
-        $idOrderd = $this->db->get('xorderd',array('ref_order' => $kodeorder))->row()->id ;
-        $design = $this->db->get_where('mbarangs',array('ref_brg' => $kodebrg))->result();
-        foreach ($design as $r) {
-            $row    = array(
-                "useri"         => $this->session->userdata('username'),
-                "ref_orderd"    => $idOrderd,
-                "ref_modesign"  => $r->model,
-                "ref_warna"     => $r->warna,
-                "ket"           => $r->ket
-            );
-            $c[] = $row;
-        }
-        if (count($design) > 0) {
-            $this->db->delete('xorderds',array('ref_orderd' => $idOrderd));
-            $this->db->insert_batch('xorderds',$c);
-        }
-
-        if ($this->db->trans_status() === FALSE)
-        {
-            $this->db->trans_rollback();
-            $r = array(
-                'sukses' => 'fail', 
-            );
-        }
-        else
-        {
-            $this->db->trans_commit();
-            $r = array(
-                'sukses' => 'success'
-                );
-        }
-        echo json_encode($r);
-    }
-
-
-
-    function updatefile()
-    {
-        if (!empty($_FILES['editcorel']['name'])) {
-            $upcorel    = $this->libre->goUpload('editcorel','corel-'.time(),$this->foldername);
-            $a['pathcorel'] = $upcorel;
-            $oldpath = $this->input->post('editpathcorel');
-            @unlink(".".$oldpath);
-        } else {
-            $a['pathcorel'] = $this->input->post('editpathcorel');
-        }
-
-        if (!empty($_FILES['editimage']['name'])) {
-            $upcorel    = $this->libre->goUpload('editimage','image-'.time(),$this->foldername);
-            $a['pathimage'] = $upcorel;
-            $oldpath = $this->input->post('editpathimage');
-            @unlink(".".$oldpath);
-        } else {
-            $a['pathimage'] = $this->input->post('editpathimage');
-        }
-
-        $result = $this->db->update('xorder',$a,array('kode' => $this->input->post('editkodefile')));
-        $r['sukses']    = $result ? 'success' : 'fail' ;
-        echo json_encode($r);
-    }
-
-    function loadcustomer(){
-        $q = "SELECT
-                mcustomer.id,
-                mcustomer.kode,
-                mcustomer.nama,
-                mcustomer.alamat,
-                mcustomer.telp,
-                mcustomer.fax,
-                mcustomer.email,
-                mcustomer.pic,
-                mcustomer.ket,
-                mcustomer.aktif
-            FROM
-                mcustomer
-            WHERE aktif = 't'";
-        $result     = $this->db->query($q)->result();
-        $list       = [];
-        foreach ($result as $i => $r) {
-            $row['id']      = $r->id;
-            $row['no']      = $i + 1;
-            $row['kode']    = $r->kode;
-            $row['nama']    = $r->nama;
-            $row['alamat']  = $r->alamat;
-            $row['telp']    = $r->telp;
-            $row['email']   = $r->email;
-
-            $list[] = $row;
-        }   
-        echo json_encode(array('data' => $list));
-    }
-
     function loadbrg() {
         $q = "SELECT
                 mbarang. ID,
@@ -526,49 +345,6 @@ class Po extends CI_Controller {
         }   
         echo json_encode(array('data' => $list));
     }
-
-    public function deletedata()
-    {
-        $d['void'] = 't';
-        $d['tglvoid'] = 'now()';
-        $w['id'] = $this->input->post('id');
-        $result = $this->db->update($this->table,$d,$w);
-        $r['sukses'] = $result ? 'success' : 'fail' ;
-        echo json_encode($r);
-    }
-
-    // function request_province() {
-    //     $curl = curl_init();
-
-    //     curl_setopt_array($curl, array(
-    //       CURLOPT_URL => "https://api.rajaongkir.com/starter/province",
-    //       CURLOPT_RETURNTRANSFER => true,
-    //       CURLOPT_ENCODING => "",
-    //       CURLOPT_MAXREDIRS => 10,
-    //       CURLOPT_TIMEOUT => 30,
-    //       CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-    //       CURLOPT_CUSTOMREQUEST => "GET",
-    //       CURLOPT_HTTPHEADER => array(
-    //         "key: 5c8590c12ef6879e2b829c4ab6aa955e"
-    //       ),
-    //     ));
-
-    //     $response = curl_exec($curl);
-    //     $err = curl_error($curl);
-
-    //     curl_close($curl);
-
-    //     if ($err) {
-    //       echo "cURL Error #:" . $err;
-    //     } else {
-    //           $data = json_decode($response, true); 
-    //           $op = "<option value=''>-</option>";
-    //           for ($i=0; $i < count($data['rajaongkir']['results']); $i++) {  
-    //             $op .="<option value='".$data['rajaongkir']['results'][$i]['province_id']."'>".$data['rajaongkir']['results'][$i]['province']."</option>";
-    //           }  
-    //             echo $op; 
-    //     }
-    // }
 
     function request_province() {
         $response = $this->libre->get_province_ro();

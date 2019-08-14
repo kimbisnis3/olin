@@ -33,18 +33,24 @@
                               <input type="text" name="nama_action" class="form-control">
                             </div>
                           </div>
-                          <div class="col-md-3">
+                          <div class="col-md-6">
+                            <div class="form-group">
+                              <label>Url</label>
+                              <input type="text" name="url" class="form-control">
+                            </div>
+                          </div>
+                          <!-- <div class="col-md-3">
                             <div class="form-group">
                               <label>Kategori</label>
                               <input type="text" name="kategori_menu" class="form-control">
                             </div>
-                          </div>
-                          <div class="col-md-3">
+                          </div> -->
+                          <!-- <div class="col-md-3">
                             <div class="form-group">
                               <label>Handle</label>
                               <input type="text" name="application_handle" class="form-control">
                             </div>
-                          </div>
+                          </div> -->
                         </div>
                         <div class="row panel panel-success">
                           <div class="col-md-4">
@@ -72,12 +78,7 @@
                           </div>
                         </div>
                         <div class="row panel panel-success">
-                          <div class="col-md-4">
-                            <div class="form-group">
-                              <label>Url</label>
-                              <input type="text" name="url" class="form-control">
-                            </div>
-                          </div>
+                          
                         </div>
                       </div>
                     </div>
@@ -177,8 +178,8 @@
           { "data": "no" }, 
           { "data": "id" , "visible" : false},
           { "data": "nama_action" },
-          { "data": "kategori_menu" },
-          { "data": "application_handle" },
+          { "data": "kategori_menu" , "visible" : false },
+          { "data": "application_handle" , "visible" : false },
           { "data": "id" },
           { "data": "group_action" },
           { "data": "icon_action" },

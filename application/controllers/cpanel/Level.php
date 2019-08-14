@@ -10,7 +10,21 @@ class Level extends CI_Controller {
         include(APPPATH.'libraries/sessionsuper.php');
     }
     function index(){
-        $this->load->view($this->indexpage);  
+        $level    = "SELECT * FROM taccess WHERE taccess.issuper_access != 1";
+        $fitur    = "SELECT * FROM taction
+        LEFT JOIN topsi ON taction.id_action = topsi.ref_action_opsi
+        WHERE
+            taction.id_action NOT IN (
+                SELECT
+                    topsi.ref_action_opsi
+                FROM
+                    topsi
+                WHERE
+                    ref_access_opsi = '{$this->session->userdata('access')}'
+            )";
+        $data['level'] = $this->db->query($level)->result();
+        $data['fitur'] = $this->db->query($fitur)->result();
+        $this->load->view($this->indexpage,$data);  
     }
 
     public function getall(){

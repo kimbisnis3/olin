@@ -30,16 +30,22 @@
                             <div class="form-group">
                               <input type="hidden" name="id_opsi" >
                               <label>Nama Level</label>
-                              <select class="form-control select2 input-level" name="access" id="access">
+                              <select class="form-control select2" name="access" id="access">
                                 <option value="">--</option>
+                                <?php foreach ($level as $i => $v): ?>
+                                  <option value="<?php echo $v->id_access ?>"><?php echo $v->nama_access ?></option>
+                                <?php endforeach ?>
                               </select>
                             </div>
                           </div>
                           <div class="col-md-6">
                             <div class="form-group">
                               <label>Fitur Aplikasi</label>
-                              <select class="form-control select2 input-fitur" name="action" id="action">
+                              <select class="form-control select2" name="action" id="action">
                                 <option value="">--</option>
+                                <?php foreach ($fitur as $i => $v): ?>
+                                  <option value="<?php echo $v->id_action ?>"><?php echo $v->nama_action ?></option>
+                                <?php endforeach ?>
                               </select>
                             </div>
                           </div>
@@ -114,8 +120,11 @@
                       <div class="col-md-3">
                         <div class="form-group">
                           <label>User</label>
-                          <select class="form-control select2 input-level" name="filter-user" id="filter-level" onchange="filterAksesChange()">
+                          <select class="form-control select2" name="filter-user" id="filter-level" onchange="filterAksesChange()">
                                 <option value="">--</option>
+                                <?php foreach ($level as $i => $v): ?>
+                                  <option value="<?php echo $v->id_access ?>"><?php echo $v->nama_access ?></option>
+                                <?php endforeach ?>
                               </select>
                         </div>
                       </div>
@@ -326,39 +335,39 @@
       });
   }
 
-  function getAllUser() {
-      $.ajax({
-          url: '<?php echo base_url() ?>universe/getAllLevel',
-          type: "POST",
-          dataType: "JSON",
-          success: function(data) {
-              for (var i = 0; i < data.length; i++) {
-                  $(".input-level").append('<option value=' + data[i].id_access + '>' + data[i].nama_access + '</option>');
-              }
-          },
-          error: function(jqXHR, textStatus, errorThrown) {
-              alert('Error on process');
-          }
-      });
+  // function getAllUser() {
+  //     $.ajax({
+  //         url: '<?php echo base_url() ?>universe/getAllLevel',
+  //         type: "POST",
+  //         dataType: "JSON",
+  //         success: function(data) {
+  //             for (var i = 0; i < data.length; i++) {
+  //                 $(".input-level").append('<option value=' + data[i].id_access + '>' + data[i].nama_access + '</option>');
+  //             }
+  //         },
+  //         error: function(jqXHR, textStatus, errorThrown) {
+  //             alert('Error on process');
+  //         }
+  //     });
 
-  }
+  // }
 
-  function getAllFitur() {
-      $.ajax({
-          url: '<?php echo base_url() ?>universe/getAllFiturByUser',
-          type: "POST",
-          dataType: "JSON",
-          success: function(data) {
-              for (var i = 0; i < data.length; i++) {
-                  $(".input-fitur").append('<option value=' + data[i].id_action + '>' + data[i].nama_action + '</option>');
-              }
-          },
-          error: function(jqXHR, textStatus, errorThrown) {
-              alert('Error on process');
-          }
-      });
+  // function getAllFitur() {
+  //     $.ajax({
+  //         url: '<?php echo base_url() ?>universe/getAllFiturByUser',
+  //         type: "POST",
+  //         dataType: "JSON",
+  //         success: function(data) {
+  //             for (var i = 0; i < data.length; i++) {
+  //                 $(".input-fitur").append('<option value=' + data[i].id_action + '>' + data[i].nama_action + '</option>');
+  //             }
+  //         },
+  //         error: function(jqXHR, textStatus, errorThrown) {
+  //             alert('Error on process');
+  //         }
+  //     });
 
-  }
+  // }
 
   </script>
 </body>
