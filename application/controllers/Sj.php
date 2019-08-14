@@ -15,13 +15,13 @@ class Sj extends CI_Controller {
     }
 
     public function getall(){
-        $filterawal = date('Y-m-d', strtotime($this->input->get('filterawal')));
-        $filterakhir = date('Y-m-d', strtotime($this->input->get('filterakhir')));
+        $filterawal = date('Y-m-d', strtotime($this->input->post('filterawal')));
+        $filterakhir = date('Y-m-d', strtotime($this->input->post('filterakhir')));
         $q = "SELECT
                 xsuratjalan.id,
                 xsuratjalan.kode,
-                xsuratjalan.tgl,
-                xsuratjalan.tglkirim,
+                to_char(xsuratjalan.tgl, 'DD Mon YYYY') tgl,
+                to_char(xsuratjalan.tglkirim, 'DD Mon YYYY') tglkirim,
                 xsuratjalan.kirim,
                 xsuratjalan.biayakirim,
                 xsuratjalan.ref_cust,
@@ -31,24 +31,10 @@ class Sj extends CI_Controller {
             FROM
                 xsuratjalan
             LEFT JOIN mcustomer ON mcustomer.kode = xsuratjalan.ref_cust
-            WHERE xsuratjalan.void IS NOT TRUE";
-        $result     = $this->db->query($q)->result();
-        $list       = [];
-        foreach ($result as $i => $r) {
-            $row['no']              = $i + 1;
-            $row['id']              = $r->id;
-            $row['kode']            = $r->kode;
-            $row['tgl']             = id_date($r->tgl);
-            $row['tglkirim']        = id_date($r->tglkirim);
-            $row['biayakirim']      = $r->biayakirim;
-            $row['mcustomer_nama']  = $r->mcustomer_nama;
-            $row['ket']             = $r->ket;
-            $row['kirim']           = $r->kirim;
-            $row['posted']          = $r->posted;
-
-            $list[] = $row;
-        }   
-        echo json_encode(array('data' => $list));
+            WHERE xsuratjalan.void IS NOT TRUE
+            AND xsuratjalan.tgl BETWEEN '$filterawal' AND '$filterakhir'";
+        $result     = $this->db->query($q)->result();   
+        echo json_encode(array('data' => $result));
     }
 
     public function getdetail()
@@ -78,13 +64,15 @@ class Sj extends CI_Controller {
         $result     = $this->db->query($q)->result();
         $str        = '<table class="table fadeIn animated">
                         <tr>
+                            <th>No.</th>
                             <th>Produk</th>
                             <th>Jumlah</th>
                             <th>Satuan</th>
                             <th>Harga</th>
                         </tr>';
-        foreach ($result as $r) {
+        foreach ($result as $i => $r) {
             $str    .= '<tr>
+                            <td>'.($i + 1).'.</td>
                             <td>'.$r->nama.'</td>
                             <td>'.$r->xsuratjaland_jumlah.'</td>
                             <td>'.$r->satuan.'</td>
@@ -100,7 +88,7 @@ class Sj extends CI_Controller {
         $q = "SELECT
                 xprocorder.id,
                 xprocorder.kode,
-                xprocorder.tgl,
+                to_char(xprocorder.tgl, 'DD Mon YYYY') tgl,
                 xprocorder.ref_brg,
                 xprocorder.ref_order,
                 xprocorder.status,
@@ -118,24 +106,8 @@ class Sj extends CI_Controller {
             LEFT JOIN mcustomer ON mcustomer.kode = xorder.ref_cust
             WHERE xprocorder.status >= '4'
             AND xprocorder.void IS NOT TRUE";
-        $result     = $this->db->query($q)->result();
-        $list       = [];
-        foreach ($result as $i => $r) {
-            $row['no']              = $i + 1;
-            $row['id']              = $r->id;
-            $row['kode']            = $r->kode;
-            $row['tgl']             = id_date($r->tgl);
-            $row['mcustomer_nama']  = $r->mcustomer_nama;
-            $row['bykirim']         = $r->bykirim;
-            $row['status']          = $r->status;
-            $row['ket']             = $r->ket;
-            $row['mbarang_nama']    = $r->mbarang_nama;
-            $row['ref_cust']        = $r->ref_cust;
-            $row['kirimke']         = $r->kirimke;
-
-            $list[] = $row;
-        }   
-        echo json_encode(array('data' => $list));
+        $result     = $this->db->query($q)->result();   
+        echo json_encode(array('data' => $result));
     }
 
     public function savedata()
@@ -149,7 +121,8 @@ class Sj extends CI_Controller {
         $a['ket']       = $this->input->post('ket');
         $a['biayakirim']= $this->input->post('biayakirim');
         $a['pic']       = $this->input->post('pic');
-        $a['ref_gud']    = $this->libre->gud_def();
+        $a['ref_order'] = $this->input->post('ref_order');
+        $a['ref_gud']   = $this->libre->gud_def();
 
         $this->db->insert('xsuratjalan',$a);
         $kodeorder = $this->input->post('ref_order');
@@ -198,6 +171,7 @@ class Sj extends CI_Controller {
                 xsuratjalan.ket,
                 xsuratjalan.posted,
                 xsuratjalan.pic,
+                xsuratjalan.ref_order,
                 mcustomer.nama mcustomer_nama
             FROM
                 xsuratjalan
@@ -210,15 +184,35 @@ class Sj extends CI_Controller {
     function updatedata()
     {
         $this->db->trans_begin();
-        $d['useru']     = $this->session->userdata('username');
-        $d['dateu']     = 'now()';
-        $d['useri']     = $this->session->userdata('username');
-        $d['ref_cust']  = $this->input->post('ref_cust');
-        $d['tgl']       = date('Y-m-d', strtotime($this->input->post('tgl')));
-        $d['ref_order'] = $this->input->post('ref_order');
-        $d['ref_brg']   = $this->input->post('ref_brg');
-        $w['id'] = $this->input->post('id');
-        $result = $this->db->update('xprocorder',$d,$w);
+        $a['useru']     = $this->session->userdata('username');
+        $a['dateu']     = 'now()';
+        $a['ref_cust']  = $this->input->post('ref_cust');
+        $a['tgl']       = date('Y-m-d', strtotime($this->input->post('tgl')));
+        $a['kirim']     = $this->input->post('kirim');
+        $a['tglkirim']  = date('Y-m-d', strtotime($this->input->post('tglkirim')));
+        $a['ket']       = $this->input->post('ket');
+        $a['biayakirim']= $this->input->post('biayakirim');
+        $a['pic']       = $this->input->post('pic');
+        $a['ref_order'] = $this->input->post('ref_order');
+        $a['ref_gud']   = $this->libre->gud_def();
+        $kodesj         = $this->input->post('kode');
+        $w['kode']      = $kodesj;
+        $result = $this->db->update('xsuratjalan',$a,$w);
+        $this->db->delete('xsuratjaland',array('ref_suratjalan' =>  $kodesj));
+        $kodeorder = $this->input->post('ref_order');
+        $dataOrderd = $this->db->get_where('xorderd',array('ref_order' => $kodeorder))->result();
+        foreach ($dataOrderd as $r) {
+            $row    = array(
+                "useri"     => $this->session->userdata('username'),
+                "ref_suratjalan" => $kodesj,
+                "ref_brg"   => $r->ref_brg,
+                "jumlah"    => $r->jumlah,
+                "ref_satbrg"=> $r->ref_satbrg,
+                "ref_gud"   => $this->libre->gud_def(),
+            );
+            $b[] = $row;
+        }
+        $this->db->insert_batch('xsuratjaland',$b);
         if ($this->db->trans_status() === FALSE)
         {
             $this->db->trans_rollback();

@@ -207,7 +207,7 @@ class Po extends CI_Controller {
         $a['useri']     = $this->session->userdata('username');
         $a['ref_cust']  = $this->input->post('ref_cust');
         $a['tgl']       = date('Y-m-d', strtotime($this->input->post('tgl')));
-        $a['ref_gud']   = $this->input->post('ref_gud');
+        $a['ref_gud']   = $this->libre->gud_def();
         $a['ket']       = $this->input->post('ket');
         $a['ref_kirim'] = $this->input->post('ref_kirim');
         $a['ref_layanan'] = $this->input->post('ref_layanan');

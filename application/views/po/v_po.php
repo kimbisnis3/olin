@@ -209,7 +209,7 @@
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-warning btn-flat" data-dismiss="modal">Batal</button>
-                  <button type="button" id="btnSave" onclick="savedata()" class="btn btn-primary btn-flat">Simpan</button>
+                  <button type="button" id="btnSave" onclick="savedata()" class="btn btn-primary btn-flat btn-save">Simpan</button>
                 </div>
               </div>
             </div>
@@ -420,13 +420,13 @@
                   <div class="box box-info">
                     <div class="box-header">
                       <div class="pull-left">
-                        <button class="btn btn-success btn-flat refresh-btn" onclick="refresh()"><i class="fa fa-refresh"></i> Refresh</button>
-                        <button class="btn btn-primary btn-flat add-btn invisible" onclick="add_data()" ><i class="fa fa-plus"></i> Tambah</button>
+                        <button class="btn btn-act btn-success btn-flat refresh-btn" onclick="refresh()"><i class="fa fa-refresh"></i> Refresh</button>
+                        <button class="btn btn-act btn-primary btn-flat add-btn invisible" onclick="add_data()" ><i class="fa fa-plus"></i> Tambah</button>
                       </div>
                       <div class="pull-right">
-                        <button class="btn btn-warning btn-flat edit-btn invisible" onclick="edit_data()"><i class="fa fa-pencil"></i> Ubah</button>
-                        <button class="btn btn-success btn-flat file-btn" onclick="open_file()"><i class="fa fa-file"></i> File</button>
-                        <button class="btn btn-danger btn-flat delete-btn invisible" onclick="hapus_data()" ><i class="fa fa-trash"></i> Hapus</button>
+                        <button class="btn btn-act btn-warning btn-flat edit-btn invisible" onclick="edit_data()"><i class="fa fa-pencil"></i> Ubah</button>
+                        <button class="btn btn-act btn-success btn-flat file-btn" onclick="open_file()"><i class="fa fa-file"></i> File</button>
+                        <button class="btn btn-act btn-danger btn-flat delete-btn invisible" onclick="hapus_data()" ><i class="fa fa-trash"></i> Hapus</button>
                       </div>
                     </div>
                     <div class="box-body">
@@ -472,8 +472,6 @@
   var table ;
 
   $(document).ready(function() {
-      $('.add-btn, .edit-btn, .delete-btn, .file-btn').prop('disabled',true);
-      $('.fa-refresh').addClass('fa-spin');
       getAkses(title);
       setMonth('filterawal',30);
       setMonth('filterakhir',0);
@@ -484,10 +482,7 @@
       $('#select-city').select2({ disabled: true });
       $('#select-city-to').select2({ disabled: true });
       $('#select-service').select2({ disabled: true });
-      Pace.on('done', function() {
-          $('.add-btn, .edit-btn, .delete-btn, .file-btn').prop('disabled',false);
-          $('.fa-refresh').removeClass('fa-spin');
-      });
+      
       nilaimax('berat',30)
       nilaimax('jumlah',1)
 
@@ -761,6 +756,7 @@
 
   function add_data() {
       state = 'add';
+      clearForm();
       $('.box-upload').removeClass('invisible');
       $('#form-data')[0].reset();
       $('#img-preview').remove();
@@ -804,44 +800,51 @@
   }
 
   function savedata() {
-      $('.add-btn').prop('disabled',true);
-      $('[name="mask-provinsi"]').val($('[name="provinsi"]  option:selected').html());
-      $('[name="mask-city"]').val($('[name="city"]  option:selected').html());
-      $('[name="mask-provinsito"]').val($('[name="provinsito"]  option:selected').html());
-      $('[name="mask-cityto"]').val($('[name="cityto"] option:selected').html());
-      var url;
-      if (state == 'add') {
-          url = `${apiurl}/savedata`;
-      } else {
-          url = `${apiurl}/updatedata`;
-      }
-      var formData = new FormData($('#form-data')[0]);
-      $.ajax({
-          url: url,
-          type: "POST",
-          data: formData,
-          dataType: "JSON",
-          mimeType: "multipart/form-data",
-          contentType: false,
-          cache: false,
-          processData: false,
-          success: function(data) {
-              if (data.sukses == 'success') {
-                  $('#modal-data').modal('hide');
-                  refresh();
-                  state == 'add' ? showNotif('Sukses', 'Data Berhasil Ditambahkan', 'success') : showNotif('Sukses', 'Data Berhasil Diubah', 'success')
-                  $('.add-btn').prop('disabled',false);
-              } else if (data.sukses == 'fail') {
-                  $('#modal-data').modal('hide');
-                  refresh();
-                  showNotif('Sukses', 'Tidak Ada Perubahan', 'success')
-              }
+      if (ceknull('namacust')) { return false }
+      if (ceknull('namabarang')) { return false }
+      if (ceknull('tgl')) { return false }
+      if (ceknull('jumlah')) { return false }
+      if (ceknull('corel')) { return false }
+      if (ceknull('ref_kirim')) { return false }
+      if (ceknull('kirimke')) { return false }
+      if (ceknull('ref_layanan')) { return false }
+      // $('[name="mask-provinsi"]').val($('[name="provinsi"]  option:selected').html());
+      // $('[name="mask-city"]').val($('[name="city"]  option:selected').html());
+      // $('[name="mask-provinsito"]').val($('[name="provinsito"]  option:selected').html());
+      // $('[name="mask-cityto"]').val($('[name="cityto"] option:selected').html());
+      // var url;
+      // if (state == 'add') {
+      //     url = `${apiurl}/savedata`;
+      // } else {
+      //     url = `${apiurl}/updatedata`;
+      // }
+      // var formData = new FormData($('#form-data')[0]);
+      // $.ajax({
+      //     url: url,
+      //     type: "POST",
+      //     data: formData,
+      //     dataType: "JSON",
+      //     mimeType: "multipart/form-data",
+      //     contentType: false,
+      //     cache: false,
+      //     processData: false,
+      //     success: function(data) {
+      //         if (data.sukses == 'success') {
+      //             $('#modal-data').modal('hide');
+      //             refresh();
+      //             state == 'add' ? showNotif('Sukses', 'Data Berhasil Ditambahkan', 'success') : showNotif('Sukses', 'Data Berhasil Diubah', 'success')
+      //             $('.btn-save').prop('disabled',false);
+      //         } else if (data.sukses == 'fail') {
+      //             $('#modal-data').modal('hide');
+      //             refresh();
+      //             showNotif('Sukses', 'Tidak Ada Perubahan', 'success')
+      //         }
 
-          },
-          error: function(jqXHR, textStatus, errorThrown) {
-              showNotif('Fail', 'Internal Error', 'danger')
-          }
-      });
+      //     },
+      //     error: function(jqXHR, textStatus, errorThrown) {
+      //         showNotif('Fail', 'Internal Error', 'danger')
+      //     }
+      // });
   }
 
   function hapus_data() {

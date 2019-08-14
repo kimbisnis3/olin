@@ -22,6 +22,12 @@
 
 	$(document).ready(function() {
       // activemenux(grupmenu.toLowerCase(), title.replace(/ /g, "").toLowerCase());
+      $('.fa-refresh').addClass('fa-spin');
+      $('.btn-act').prop('disabled',true);
+      Pace.on('done', function() {
+          $('.btn-act').prop('disabled',false);
+          $('.fa-refresh').removeClass('fa-spin');
+      });
 	})
 
 	function setMonth(name, days, tipe = '') {
@@ -154,12 +160,24 @@
 	}
 
 
-  function formValid(name,cap) {
-      if ($('[name="' + name + '"]').val() == '' || $('[name="' + name + '"]').val() == null) {
-          // $('[name="' + name + '"]').focus();
-          showNotif('','Kolom '+ cap+' Wajib Diisi', 'danger');
-          return false;
-      }
-  }
+	function ceknull(x) {
+	    if ($('[name="' + x + '"]').val() == '' || $('[name="' + x + '"]').val() == null) {
+	        showNotif('', 'Kolom Wajib Diisi', 'danger');
+	        $('[name="' + x + '"]').focus()
+	        formInvalid(x);
+	        return true
+			$('.btn-save').prop('disabled',false);
+	    } else {
+	        return false
+	    }
+	}
+
+	function formInvalid(a){
+		$('[name="' + a + '"]').addClass('pulse animated');
+	}
+
+	function clearForm(){
+		$('input').removeClass('pulse animated');
+	}
 
 </script>

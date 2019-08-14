@@ -36,20 +36,7 @@ class Spk extends CI_Controller {
                 xprocorder.tgl 
             BETWEEN '$filterawal' AND '$filterakhir'";
         $result     = $this->db->query($q)->result();
-        $list       = [];
-        foreach ($result as $i => $r) {
-            $row['no']              = $i + 1;
-            $row['id']              = $r->id;
-            $row['kode']            = $r->kode;
-            $row['ref_order']       = $r->ref_order;
-            $row['tgl']             = $r->tgl;
-            $row['mbarang_nama']    = $r->mbarang_nama;
-            $row['status']          = $r->status;
-            $row['ket']             = $r->ket;
-
-            $list[] = $row;
-        }   
-        echo json_encode(array('data' => $list));
+        echo json_encode(array('data' => $result));
     }
 
     public function getorder(){
@@ -77,25 +64,10 @@ class Spk extends CI_Controller {
                     ref_order
                 FROM
                     xprocorder
+                WHERE xprocorder.void IS NOT TRUE
             )";
         $result     = $this->db->query($q)->result();
-        $list       = [];
-        foreach ($result as $i => $r) {
-            $row['no']              = $i + 1;
-            $row['id']              = $r->id;
-            $row['id']              = $r->id;
-            $row['ref_order']       = $r->ref_order;
-            $row['ref_brg']         = $r->ref_brg;
-            $row['ref_satbrg']      = $r->ref_satbrg;
-            $row['xorder_tgl']      = $r->xorder_tgl;
-            $row['mcustomer_nama']  = $r->mcustomer_nama;
-            $row['xpelunasan_bayar']= $r->xpelunasan_bayar;
-            $row['mbarang_nama']    = $r->mbarang_nama;
-            $row['jumlah']          = $r->jumlah;
-
-            $list[] = $row;
-        }   
-        echo json_encode(array('data' => $list));
+        echo json_encode(array('data' => $result));
     }
 
     public function savedata()

@@ -233,7 +233,7 @@
               },
           },
           "columns": [
-          { "data": "no" }, 
+          { "data": "id" , "note" : "num" }, 
           { "data": "id" , "visible" : false},
           { "data": "kode" , "visible" : false},
           { "data": "ref_order" }, 
@@ -242,6 +242,12 @@
           { "data": "ket" },
           ]
       });
+
+    table.on( 'order.dt search.dt', function () {
+        table.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            cell.innerHTML = i+1;
+        } );
+    } ).draw();
 
     $('#table tbody').on('click', '.odd', function() {
         if ($(this).hasClass('selected')) {
@@ -268,36 +274,7 @@
             }
         }
     });
-
-    $('#table tbody').on('click', 'td.details-control', function() {
-        var tr = $(this).closest('tr');
-        var row = table.row(tr);
-
-        if (row.child.isShown()) {
-            row.child.hide();
-            tr.removeClass('shown');
-        } else {
-            format(row.child, row.data());
-            tr.addClass('shown');
-        }
-    });
   });
-
-  function format(callback, data) {
-      $.ajax({
-          url: `${apiurl}/getdetail`,
-          type: "POST",
-          data: {
-              kodepelunasan: data.kode
-          },
-          success: function(response) {
-              callback($(response)).show();
-          },
-          error: function() {
-              $('#output').html('Bummer: there was an error!');
-          }
-      });
-  }
 
   function open_order() {
       $('#modal-order').modal('show');
@@ -315,7 +292,7 @@
               "defaultContent": "<button id='pilih-order' class='btn btn-sm btn-success btn-flat'><i class='fa fa-check'></i></button>"
           }],
           "columns": [
-            { "data": "no" }, 
+            { "data": "id" , "note" : "num" }, 
             { "data": "id" , "visible" : false},
             { "data": "ref_brg" , "visible" : false},
             { "data": "ref_satbrg" , "visible" : false},
@@ -329,6 +306,12 @@
           ]
 
       });
+
+      tableorder.on( 'order.dt search.dt', function () {
+        tableorder.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            cell.innerHTML = i+1;
+        } );
+    } ).draw();
 
       $('#table-order tbody').on('click', '#pilih-order', function() {
           var data = tableorder.row($(this).parents('tr')).data();

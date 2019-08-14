@@ -178,12 +178,12 @@
                   <div class="box box-info">
                     <div class="box-header">
                       <div class="pull-left">
-                        <button class="btn btn-success btn-flat refresh-btn" onclick="refresh()"><i class="fa fa-refresh"></i> Refresh</button>
-                        <button class="btn btn-primary btn-flat add-btn invisible" onclick="add_data()" ><i class="fa fa-plus"></i> Tambah</button>
+                        <button class="btn btn-act btn-success btn-flat refresh-btn" onclick="refresh()"><i class="fa fa-refresh"></i> Refresh</button>
+                        <button class="btn btn-act btn-primary btn-flat add-btn invisible" onclick="add_data()" ><i class="fa fa-plus"></i> Tambah</button>
                       </div>
                       <div class="pull-right">
-                        <button class="btn btn-warning btn-flat edit-btn invisible" onclick="edit_data()"><i class="fa fa-pencil"></i> Ubah</button>
-                        <button class="btn btn-success btn-flat option-btn invisible" onclick="valid_data()"><i class="fa fa-check"></i> Validasi</button>
+                        <button class="btn btn-act btn-warning btn-flat edit-btn invisible" onclick="edit_data()"><i class="fa fa-pencil"></i> Ubah</button>
+                        <button class="btn btn-act btn-success btn-flat option-btn invisible" onclick="valid_data()"><i class="fa fa-check"></i> Validasi</button>
                         <button class="btn btn-danger btn-flat delete-btn invisible" onclick="void_data()" ><i class="fa fa-trash"></i> Void</button>
                       </div>
                     </div>
@@ -262,7 +262,7 @@
               "data": null,
               "defaultContent": ''
           },
-          { "data": "no" }, 
+          { "data": "id", "note" : "numbers" }, 
           { "data": "id" , "visible" : false},
           { "data": "kode" , "visible" : false},
           { "data": "posted" , "visible" : false},
@@ -275,6 +275,12 @@
           { "data": "ket" },
           ]
       });
+
+    table.on( 'order.dt search.dt', function () {
+        table.column(1, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            cell.innerHTML = i+1;
+        } );
+    } ).draw();
 
     $('#table tbody').on('click', '.odd', function() {
         if ($(this).hasClass('selected')) {

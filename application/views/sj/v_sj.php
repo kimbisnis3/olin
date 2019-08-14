@@ -28,8 +28,8 @@
                         <div class="row">
                           <div class="col-md-6">
                             <div class="form-group">
-                              <label>Pesanan</label>
                               <input type="hidden" name="kode">
+                              <label>Pesanan</label>
                               <div class="input-group">
                                 <input type="text" class="form-control" name="ref_order" readonly="true">
                                 <div class="input-group-btn">
@@ -176,13 +176,13 @@
                   <div class="box box-info">
                     <div class="box-header">
                       <div class="pull-left">
-                        <button class="btn btn-success btn-flat refresh-btn" onclick="refresh()"><i class="fa fa-refresh"></i> Refresh</button>
-                        <button class="btn btn-primary btn-flat add-btn invisible" onclick="add_data()" ><i class="fa fa-plus"></i> Tambah</button>
+                        <button class="btn btn-act btn-success btn-flat refresh-btn" onclick="refresh()"><i class="fa fa-refresh"></i> Refresh</button>
+                        <button class="btn btn-act btn-primary btn-flat add-btn invisible" onclick="add_data()" ><i class="fa fa-plus"></i> Tambah</button>
                       </div>
                       <div class="pull-right">
-                        <button class="btn btn-warning btn-flat edit-btn invisible" onclick="edit_data()"><i class="fa fa-pencil"></i> Ubah</button>
-                        <button class="btn btn-success btn-flat option-btn invisible" onclick="valid_data()"><i class="fa fa-check"></i> Validasi</button>
-                        <button class="btn btn-danger btn-flat delete-btn invisible" onclick="void_data()" ><i class="fa fa-trash"></i> Void</button>
+                        <button class="btn btn-act btn-warning btn-flat edit-btn invisible" onclick="edit_data()"><i class="fa fa-pencil"></i> Ubah</button>
+                        <button class="btn btn-act btn-success btn-flat option-btn invisible" onclick="valid_data()"><i class="fa fa-check"></i> Validasi</button>
+                        <button class="btn btn-act btn-danger btn-flat delete-btn invisible" onclick="void_data()" ><i class="fa fa-trash"></i> Void</button>
                       </div>
                     </div>
                     <div class="box-body">
@@ -259,7 +259,7 @@
               "data": null,
               "defaultContent": ''
           },
-          { "data": "no" }, 
+          { "data": "id" , "note" : "num" }, 
           { "data": "id" , "visible" : false},
           { "data": "kode" , "visible" : false},
           { "data": "posted" , "visible" : false},
@@ -271,6 +271,12 @@
           { "data": "ket" },
           ]
       });
+
+    table.on( 'order.dt search.dt', function () {
+        table.column(1, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            cell.innerHTML = i+1;
+        } );
+    } ).draw();
 
     $('#table tbody').on('click', '.odd', function() {
         if ($(this).hasClass('selected')) {
@@ -344,7 +350,7 @@
               "defaultContent": "<button id='pilih-data' class='btn btn-sm btn-success btn-flat'><i class='fa fa-check'></i></button>"
           }],
           "columns": [
-            { "data": "no" }, 
+            { "data": "id" }, 
             { "data": "id" , "visible" : false},
             { "data": "kode" , "visible" : false},
             { "data": "ref_cust" , "visible" : false},
@@ -360,12 +366,17 @@
 
       });
 
+      tableproc.on( 'order.dt search.dt', function () {
+          tableproc.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+              cell.innerHTML = i+1;
+          } );
+      } ).draw();
+
       $('#table-proc tbody').on('click', '#pilih-data', function() {
           var data = tableproc.row($(this).parents('tr')).data();
           $('[name="ref_cust"]').val(data.ref_cust);
           $('[name="mcustomer_nama"]').val(data.mcustomer_nama);
           $('[name="ref_order"]').val(data.kode);
-          // $('[name="biayakirim"]').val(data.bykirim);
           $('[name="kirim"]').val(data.kirimke);
           $('#modal-proc').modal('hide');
       });
@@ -379,10 +390,10 @@
 
   function add_data() {
       state = 'add';
+      clearForm();
       $('#form-data')[0].reset();
       $('.select2').trigger('change');
       $('#modal-data').modal('show');
-      $('.select2').trigger('change');
       $('.modal-title').text('Tambah Data');
   }
 
@@ -408,6 +419,7 @@
           success: function(data) {
               $('[name="kode"]').val(data.kode);
               $('[name="ref_cust"]').val(data.ref_cust);
+              $('[name="ref_order"]').val(data.ref_order);
               $('[name="mcustomer_nama"]').val(data.mcustomer_nama);
               $('[name="tgl"]').val(data.tgl);
               $('[name="tglkirim"]').val(data.tglkirim);
@@ -426,6 +438,13 @@
   }
 
   function savedata() {
+      if (ceknull('ref_order')) { return false }
+      if (ceknull('kirim')) { return false }
+      if (ceknull('biayakirim')) { return false }
+      if (ceknull('tgl')) { return false }
+      if (ceknull('tglkirim')) { return false }
+      if (ceknull('pic')) { return false }
+
       var url;
       if (state == 'add') {
           url = `${apiurl}/savedata`;
