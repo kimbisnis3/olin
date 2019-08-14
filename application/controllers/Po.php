@@ -221,7 +221,8 @@ class Po extends CI_Controller {
             $a['lokasike']  = $this->input->post('mask-provinsito').' - '.$this->input->post('mask-cityto');
             $a['kgkirim']   = $this->input->post('berat');
             $a['bykirim']   = $this->input->post('biaya');
-            $a['kurir']     = $this->input->post('kodekurir');
+            $a['kodekurir'] = $this->input->post('kodekurir');
+            $a['kurir']     = $this->input->post('kurir');
         }
         $this->db->insert('xorder',$a);
 
@@ -285,6 +286,45 @@ class Po extends CI_Controller {
         echo json_encode($r);
     }
 
+    public function edit()
+    {
+        $q = "SELECT 
+                xorder.*,
+                xorder.id,
+                xorder.kode,
+                to_char(xorder.tgl, 'DD Mon YYYY') tgl,
+                xorder.ref_cust,
+                xorder.ref_gud,
+                xorder.ket,
+                xorder.total,
+                xorder.pic,
+                xorder.ref_kirim,
+                xorder.kgkirim,
+                xorder.bykirim,
+                xorder.ref_layanan,
+                xorder.kurir,
+                xorder.lokasidari,
+                xorder.lokasike,
+                xorder.kodeprovfrom,
+                xorder.kodeprovto,
+                xorder.kodecityfrom,
+                xorder.kodecityto,
+                xorder.kirimke,
+                xorderd.jumlah,
+                xorderd.harga,
+                xorderd.ref_brg,
+                mcustomer.nama mcustomer_nama,
+                mbarang.nama mbarang_nama
+            FROM 
+                xorder
+            LEFT JOIN xorderd ON xorderd.ref_order = xorder.kode
+            LEFT JOIN mcustomer ON mcustomer.kode = xorder.ref_cust
+            LEFT JOIN mbarang ON mbarang.kode = xorderd.ref_brg
+            WHERE xorder.kode = '{$this->input->post('kode')}'";
+        $data   = $this->db->query($q)->row();
+        echo json_encode($data);
+    }
+
     public function updatedata() 
     {
         $this->db->trans_begin();
@@ -307,7 +347,8 @@ class Po extends CI_Controller {
             $a['lokasike']  = $this->input->post('mask-provinsito').' - '.$this->input->post('mask-cityto');
             $a['kgkirim']   = $this->input->post('berat');
             $a['bykirim']   = $this->input->post('biaya');
-            $a['kurir']     = $this->input->post('kodekurir');
+            $a['kodekurir'] = $this->input->post('kodekurir');
+            $a['kurir']     = $this->input->post('kurir');
         }
         $this->db->update('xorder',$a,array('kode' => $kodeorder));
         $kodebrg = $this->input->post('kodebrg');

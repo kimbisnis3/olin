@@ -39,19 +39,8 @@ class Qc extends CI_Controller {
             AND
                 xprocorder.tgl 
             BETWEEN '$filterawal' AND '$filterakhir'";
-        $q .= " ORDER BY xprocorder.id DESC"
+        $q .= " ORDER BY xprocorder.id DESC";
         $result     = $this->db->query($q)->result();
-        // $list       = [];
-        // foreach ($result as $i => $r) {
-        //     $row['no']              = $i + 1;
-        //     $row['id']              = $r->id;
-        //     $row['kode']            = $r->kode;
-        //     $row['tgl']             = $r->tgl;
-        //     $row['mbarang_nama']    = $r->mbarang_nama;
-        //     $row['status']          = $r->status;
-
-        //     $list[] = $row;
-        // }   
         echo json_encode(array('data' => $result));
     }
 
@@ -59,7 +48,6 @@ class Qc extends CI_Controller {
         $sql = "SELECT status FROM xprocorder WHERE id = {$this->input->get('id')}";
         $s = $this->db->query($sql)->row()->status;
         $d['status'] = $s + 1;
-        // $w['id']     = $js['id'];
         $w['id']    = $this->input->get('id');   
         $result     = $this->db->update('xprocorder',$d,$w);
         $r['sukses'] = $result > 0 ? 'success' : 'fail' ;

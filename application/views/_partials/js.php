@@ -176,7 +176,7 @@
 		$('[name="' + a + '"]').addClass('pulse animated');
 	}
 
-	function clearForm(){
+	function clearform(){
 		$('input').removeClass('pulse animated');
 	}
 

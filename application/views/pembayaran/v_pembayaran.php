@@ -386,6 +386,7 @@
   function add_data() {
       state = 'add';
       $('#form-data')[0].reset();
+      clearform();
       $('.select2').trigger('change');
       $('#modal-data').modal('show');
       $('.select2').trigger('change');
@@ -432,6 +433,11 @@
   }
 
   function savedata() {
+      if (ceknull('ref_order')) { return false }
+      if (ceknull('mcustomer_nama')) { return false }
+      if (ceknull('tgl')) { return false }
+      if (ceknull('ref_jenbayar')) { return false }
+      if (ceknull('bayar')) { return false }
       var url;
       if (state == 'add') {
           url = `${apiurl}/savedata`;

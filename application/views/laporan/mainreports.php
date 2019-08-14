@@ -7,7 +7,7 @@
   <body onload="window.print()">
   <!-- <body> -->
   <h2 class="judul"><?php echo (isset($title) ? $title : '') ?></h2>
-  <h4><?php echo (isset($periodestart) ? 'Periode : '.$periodestart : ''); ?> <?php echo (isset($periodeend) ? 'Sampai : '.$periodeend : ''); ?></h4>
+  <h4><?php echo (isset($periodestart) ? 'Periode : '.$periodestart : ''); ?> <?php echo (isset($periodeend) ? 'Sampai '.$periodeend : ''); ?></h4>
   <h4><?php echo (isset($filter) ? $filter : ''); ?></h4>
 
 <?php if (isset($gb) && $gb != '' && $gb != null){ ?>
@@ -38,7 +38,7 @@ foreach ($result as $index => $t) {
        <tr>
          <td width="2%"><?php echo $index + 1 ?></td>
          <?php foreach ($body as $i => $v) { ?>
-         <td><?php echo $t[$v]; ?></td>
+         <td><?php echo is_numeric($t[$v]) ? number_format($t[$v]) : $t[$v]; ?></td>
          <?php } ?>
        </tr>
 
@@ -63,7 +63,7 @@ echo '</table>';
       <tr>
         <td><?php echo $i + 1; ?>. </td>
         <?php foreach ($body as $i => $v) { ?>
-         <td><?php echo $t[$v]; ?></td>
+         <td><?php echo is_numeric($t[$v]) ? number_format($t[$v]) : $t[$v]; ?></td>
         <?php } ?>
       </tr>
     <?php } ?>

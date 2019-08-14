@@ -209,7 +209,7 @@
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-warning btn-flat" data-dismiss="modal">Batal</button>
-                  <button type="button" id="btnSave" onclick="savedata()" class="btn btn-primary btn-flat btn-save">Simpan</button>
+                  <button type="button" id="btnSimpan" onclick="savedata()" class="btn btn-primary btn-flat btn-save">Simpan</button>
                 </div>
               </div>
             </div>
@@ -756,7 +756,7 @@
 
   function add_data() {
       state = 'add';
-      clearForm();
+      clearform();
       $('.box-upload').removeClass('invisible');
       $('#form-data')[0].reset();
       $('#img-preview').remove();
@@ -767,7 +767,8 @@
   }
 
   function edit_data() {
-      id = table.cell( idx, 1).data();
+      $('#btnSimpan').prop('disabled',true);
+      kode = table.cell( idx, 3).data();
       $('.box-upload').addClass('invisible');
       if (idx == -1) {
           return false;
@@ -779,16 +780,40 @@
           url: `${apiurl}/edit`,
           type: "POST",
           data: {
-              id: id,
+              kode: kode,
           },
           dataType: "JSON",
           success: function(data) {
-              $('[name="id"]').val(data.id);
-              $('[name="nama"]').val(data.nama);
+              $('[name="kode"]').val(data.kode);
+              $('[name="kode"]').val(data.kode);
+              $('[name="tgl"]').val(data.tgl);
+              $('[name="ref_kirim"]').val(data.ref_kirim);
+              $('[name="ref_cust"]').val(data.ref_cust);
+              $('[name="namacust"]').val(data.mcustomer_nama);
+              $('[name="namabarang"]').val(data.mbarang_nama);
+              $('[name="ref_layanan"]').val(data.ref_layanan);
+              $('[name="kirimke"]').val(data.kirimke);
+              $('[name="kirimke"]').val(data.kodekurir);
               $('[name="ket"]').val(data.ket);
-              $('[name="ref_model"]').val(data.ref_model);
-              $('[name="path"]').val('.' + data.path);
-              $('#image-preview').append('<img id="img-preview" src="<?php echo base_url() ?>'+data.path+'"/>');
+              $('[name="jumlah"]').val(data.jumlah);
+              $('[name="harga"]').val(data.harga);
+              $('[name="berat"]').val(data.kgkirim);
+              $('[name="provinsi"]').val(data.kodeprovfrom);
+              $('[name="provinsito"]').val(data.kodeprovto);
+              $('[name="city"]').val(data.kodecityfrom);
+              setTimeout(function(){ 
+                $('[name="cityto"]').val(data.kodecityto);
+                $('[name="kurir"]').val(data.kurir);
+                $('[name="kurir"]').trigger('change'); 
+                $('[name="cityto"]').trigger('change'); 
+              }, 4000);
+              setTimeout(function(){ 
+                $('[name="biaya"]').val(data.bykirim);
+                $('[name="kodekurir"]').val(data.kodekurir);
+                $('[name="biaya"], [name="kodekurir"]').trigger('change');
+                $('#btnSimpan').prop('disabled',false); 
+              }, 5000);
+              console.log($('[name="cityto"]').val());
               $('.select2').trigger('change');
               $('#modal-data').modal('show');
               $('.modal-title').text('Edit Data');
@@ -808,43 +833,43 @@
       if (ceknull('ref_kirim')) { return false }
       if (ceknull('kirimke')) { return false }
       if (ceknull('ref_layanan')) { return false }
-      // $('[name="mask-provinsi"]').val($('[name="provinsi"]  option:selected').html());
-      // $('[name="mask-city"]').val($('[name="city"]  option:selected').html());
-      // $('[name="mask-provinsito"]').val($('[name="provinsito"]  option:selected').html());
-      // $('[name="mask-cityto"]').val($('[name="cityto"] option:selected').html());
-      // var url;
-      // if (state == 'add') {
-      //     url = `${apiurl}/savedata`;
-      // } else {
-      //     url = `${apiurl}/updatedata`;
-      // }
-      // var formData = new FormData($('#form-data')[0]);
-      // $.ajax({
-      //     url: url,
-      //     type: "POST",
-      //     data: formData,
-      //     dataType: "JSON",
-      //     mimeType: "multipart/form-data",
-      //     contentType: false,
-      //     cache: false,
-      //     processData: false,
-      //     success: function(data) {
-      //         if (data.sukses == 'success') {
-      //             $('#modal-data').modal('hide');
-      //             refresh();
-      //             state == 'add' ? showNotif('Sukses', 'Data Berhasil Ditambahkan', 'success') : showNotif('Sukses', 'Data Berhasil Diubah', 'success')
-      //             $('.btn-save').prop('disabled',false);
-      //         } else if (data.sukses == 'fail') {
-      //             $('#modal-data').modal('hide');
-      //             refresh();
-      //             showNotif('Sukses', 'Tidak Ada Perubahan', 'success')
-      //         }
+      $('[name="mask-provinsi"]').val($('[name="provinsi"]  option:selected').html());
+      $('[name="mask-city"]').val($('[name="city"]  option:selected').html());
+      $('[name="mask-provinsito"]').val($('[name="provinsito"]  option:selected').html());
+      $('[name="mask-cityto"]').val($('[name="cityto"] option:selected').html());
+      var url;
+      if (state == 'add') {
+          url = `${apiurl}/savedata`;
+      } else {
+          url = `${apiurl}/updatedata`;
+      }
+      var formData = new FormData($('#form-data')[0]);
+      $.ajax({
+          url: url,
+          type: "POST",
+          data: formData,
+          dataType: "JSON",
+          mimeType: "multipart/form-data",
+          contentType: false,
+          cache: false,
+          processData: false,
+          success: function(data) {
+              if (data.sukses == 'success') {
+                  $('#modal-data').modal('hide');
+                  refresh();
+                  state == 'add' ? showNotif('Sukses', 'Data Berhasil Ditambahkan', 'success') : showNotif('Sukses', 'Data Berhasil Diubah', 'success')
+                  $('.btn-save').prop('disabled',false);
+              } else if (data.sukses == 'fail') {
+                  $('#modal-data').modal('hide');
+                  refresh();
+                  showNotif('Sukses', 'Tidak Ada Perubahan', 'success')
+              }
 
-      //     },
-      //     error: function(jqXHR, textStatus, errorThrown) {
-      //         showNotif('Fail', 'Internal Error', 'danger')
-      //     }
-      // });
+          },
+          error: function(jqXHR, textStatus, errorThrown) {
+              showNotif('Fail', 'Internal Error', 'danger')
+          }
+      });
   }
 
   function hapus_data() {

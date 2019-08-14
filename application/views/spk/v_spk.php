@@ -333,6 +333,7 @@
 
   function add_data() {
       state = 'add';
+      clearform();
       $('#form-data')[0].reset();
       $('.select2').trigger('change');
       $('#modal-data').modal('show');
@@ -374,6 +375,8 @@
   }
 
   function savedata() {
+      if (ceknull('ref_order')) { return false }
+      if (ceknull('tgl')) { return false }
       var url;
       if (state == 'add') {
           url = `${apiurl}/savedata`;

@@ -14,9 +14,8 @@ class Laporanproduksi extends CI_Controller {
     function index()
     {
         $setGb ='[
-            {"val":"mjencust_nama","label":"Jenis Agen"},
-            {"val":"nama","label":"Nama"},
-            {"val":"alamat","label":"Alamat"}
+            {"val":"mbarang_nama","label":"Produk"},
+            {"val":"tgl","label":"Tanggal"}
         ]';
         $data['gb']             = json_decode($setGb); 
         $data['filter_date']    = 1; 
@@ -28,23 +27,31 @@ class Laporanproduksi extends CI_Controller {
     {
         $st   = date('Y-m-d', strtotime($this->input->post('awal')));
         $en   = date('Y-m-d', strtotime($this->input->post('akhir')));
-        $q     = "SELECT
-                mcustomer.nama,
-                mcustomer.alamat,
-                mcustomer.telp,
-                mcustomer.email,
-                mcustomer.pic,
-                mcustomer.ket,
-                mjencust.nama mjencust_nama
-            FROM
-                mcustomer
-            LEFT JOIN mjencust ON mjencust.kode = mcustomer.ref_jenc";
+        $q     = "SELECT 
+                    xprocorder.id,
+                    xprocorder.kode,
+                    to_char(xprocorder.tgl, 'DD Mon YYYY') tgl,
+                    xprocorder.ref_brg,
+                    xprocorder.ref_order,
+                    xprocorder.status,
+                    xprocorder.ket,
+                    mbarang.nama mbarang_nama
+                FROM 
+                    xprocorder
+                LEFT JOIN mbarang ON mbarang.kode = xprocorder.ref_brg
+                LEFT JOIN xorder ON xorder.kode = xprocorder.ref_order
+                WHERE xprocorder.void IS NOT TRUE";
+        if ($st || $en) {
+            $q  .=" AND
+                    xprocorder.tgl 
+                BETWEEN '$st' AND '$en'";
+        }
         $data['result']   = $this->db->query($q)->result_array();
         $data['periodestart'] = $this->input->post('awal');
         $data['periodeend']   = $this->input->post('akhir');
-        $data['header'] = ['Nama','Alamat','Telp','Email','Alamat'];
-        $data['body']   = ['nama','alamat','telp','email','ket'];
-        $data['title']  = $this->titlepage;;
+        $data['header'] = ['Tanggal','Produk','Kode PO','Status','Keterangan'];
+        $data['body']   = ['tgl','mbarang_nama','ref_order','status','ket'];
+        $data['title']  = $this->titlepage;
         $data['gb']     = $this->input->post('gb');
         $this->load->view($this->printpage,$data);
     }

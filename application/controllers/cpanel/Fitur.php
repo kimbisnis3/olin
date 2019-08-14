@@ -10,7 +10,8 @@ class Fitur extends CI_Controller {
         include(APPPATH.'libraries/sessionsuper.php');
     }
     function index(){
-        $this->load->view($this->indexpage);  
+        $data['grup'] = $this->db->get('taction_group')->result();
+        $this->load->view($this->indexpage,$data);  
     }
 
     public function getall(){

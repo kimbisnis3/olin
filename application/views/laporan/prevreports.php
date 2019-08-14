@@ -73,9 +73,10 @@
       getAkses(title);
       select2();
       activemenux('reports', title.replace(/ /g, "").toLowerCase());
+      dpicker();
       setMonth('awal',30);
       setMonth('akhir',0);
-      console.log();
+      $('[name="gb"]').val()
   });
 
 

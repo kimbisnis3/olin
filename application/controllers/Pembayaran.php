@@ -40,23 +40,6 @@ class Pembayaran extends CI_Controller {
                 xpelunasan.tgl 
             BETWEEN '$filterawal' AND '$filterakhir'";
         $result     = $this->db->query($q)->result();
-        // $list       = [];
-        // foreach ($result as $i => $r) {
-        //     $row['no']              = $i + 1;
-        //     $row['id']              = $r->id;
-        //     $row['kode']            = $r->kode;
-        //     $row['tgl']             = $r->tgl;
-        //     $row['mcustomer_nama']  = $r->mcustomer_nama;
-        //     $row['mgudang_nama']    = $r->mgudang_nama;
-        //     $row['mjenbayar_nama']  = $r->mjenbayar_nama;
-        //     $row['total']           = $r->total;
-        //     $row['bayar']           = $r->bayar;
-        //     $row['ket']             = $r->ket;
-        //     $row['posted']          = $r->posted;
-        //     $row['ref_jual']          = $r->ref_jual;
-
-        //     $list[] = $row;
-        // }   
         echo json_encode(array('data' => $result));
     }
 

@@ -50,8 +50,11 @@
                           <div class="col-md-4">
                             <div class="form-group">
                               <label>Group</label>
-                              <select class="form-control" name="group_action" id="groupMenu">
+                              <select class="form-control select2" name="group_action" id="groupMenu">
                                 <option value="">--</option>
+                                <?php foreach ($grup as $i => $v): ?>
+                                  <option value="<?php echo $v->kode ?>"><?php echo $v->group_action ?></option>
+                                <?php endforeach ?>
                               </select>
                             </div>
                           </div>
