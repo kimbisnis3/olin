@@ -39,9 +39,28 @@ class Pembayaran_agen extends CI_Controller {
             AND
                 xpelunasan.tgl 
             BETWEEN '$filterawal' AND '$filterakhir'";
-        $q .=" AND xpelunasan.ref_cust = $kodecust";
+        if ($this->session->userdata('issuper') != 1) {
+            $q .=" AND xpelunasan.ref_cust = $kodecust";
+        }
         $result     = $this->db->query($q)->result();
-        echo json_encode(array('data' => $result));
+        $list       = [];
+        foreach ($result as $i => $r) {
+            $row['no']              = $i + 1;
+            $row['id']              = $r->id;
+            $row['kode']            = $r->kode;
+            $row['tgl']             = $r->tgl;
+            $row['mcustomer_nama']  = $r->mcustomer_nama;
+            $row['mgudang_nama']    = $r->mgudang_nama;
+            $row['mjenbayar_nama']  = $r->mjenbayar_nama;
+            $row['total']           = number_format($r->total);
+            $row['bayar']           = number_format($r->bayar);
+            $row['ket']             = $r->ket;
+            $row['posted']          = $r->posted;
+            $row['ref_jual']          = $r->ref_jual;
+
+            $list[] = $row;
+        }
+        echo json_encode(array('data' => $list));
     }
 
     public function getdetail()

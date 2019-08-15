@@ -191,7 +191,7 @@ class Po extends CI_Controller {
             $row['id']          = $r->id;
             $row['kode']        = $r->kode;
             $row['elempathcorel']   = btndownload($r->pathcorel);
-            $row['elempathimage']   = showimage($r->pathimage);
+            $row['elempathimage']   = dlimage($r->pathimage);
             $row['pathcorel']   = $r->pathcorel;
             $row['pathimage']   = $r->pathimage;
             $list[] = $row;

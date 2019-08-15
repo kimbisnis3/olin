@@ -40,7 +40,24 @@ class Pembayaran extends CI_Controller {
                 xpelunasan.tgl 
             BETWEEN '$filterawal' AND '$filterakhir'";
         $result     = $this->db->query($q)->result();
-        echo json_encode(array('data' => $result));
+        $list       = [];
+        foreach ($result as $i => $r) {
+            $row['no']              = $i + 1;
+            $row['id']              = $r->id;
+            $row['kode']            = $r->kode;
+            $row['tgl']             = $r->tgl;
+            $row['mcustomer_nama']  = $r->mcustomer_nama;
+            $row['mgudang_nama']    = $r->mgudang_nama;
+            $row['mjenbayar_nama']  = $r->mjenbayar_nama;
+            $row['total']           = number_format($r->total);
+            $row['bayar']           = number_format($r->bayar);
+            $row['ket']             = $r->ket;
+            $row['posted']          = $r->posted;
+            $row['ref_jual']          = $r->ref_jual;
+
+            $list[] = $row;
+        }
+        echo json_encode(array('data' => $list));
     }
 
     public function getdetail()
@@ -123,7 +140,7 @@ class Pembayaran extends CI_Controller {
             $row['ref_cust']        = $r->ref_cust;
             $row['mcustomer_nama']  = $r->mcustomer_nama;
             $row['tgl']             = $r->tgl;
-            $row['total']           = $r->total;
+            $row['total']           = number_format($r->total);
             $row['ket']             = $r->ket;
 
             $list[] = $row;
@@ -157,7 +174,7 @@ class Pembayaran extends CI_Controller {
                 "jumlah"    => $r->jumlah,
                 "ref_satbrg"=> $r->ref_satbrg,
                 "ket"       => $r->ket,
-                "harga"     => $r->harga,
+                "harga"     => number_format($r->harga),
             );
             $b[] = $row;
         }

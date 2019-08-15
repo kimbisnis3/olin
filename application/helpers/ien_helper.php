@@ -62,5 +62,17 @@ if (!function_exists('status')) {
         return $i;
     }
 
+    function dlimage($i){
+         
+        if ($i == NULL){
+            $i = "(Noimage)";
+        } else {
+            $img = base_url().''.$i;
+            $i = '<a href="'.$img.'" title="ImageName"  download="img_'.time().'" ><img style="max-width : 60px;" src="'.$img.'" alt="ImageName"></a>';
+        }
+
+        return $i;
+    }
+
     // <a href='javascript:void(0)' class='btn btn-sm btn-info' data-toggle='tooltip' data-placement='top' title='Unduh' onclick='unduh_data(".$r->id.")'><i class='glyphicon glyphicon-download-alt'></i></a>
 }
