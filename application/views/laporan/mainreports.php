@@ -7,7 +7,7 @@
   <body onload="window.print()">
   <!-- <body> -->
   <h2 class="judul"><?php echo (isset($title) ? $title : '') ?></h2>
-  <h4><?php echo (isset($periodestart) ? 'Periode : '.$periodestart : ''); ?> <?php echo (isset($periodeend) ? 'Sampai '.$periodeend : ''); ?></h4>
+  <h4><?php echo (isset($periodestart) ? 'Periode : '.$periodestart : ''); ?> <?php echo (isset($periodeend) ? '- '.$periodeend : ''); ?><?php echo (isset($maskgb) && $maskgb != '' && $maskgb != null ? ' || Group By : '.$maskgb : '') ?></h4>
   <h4><?php echo (isset($filter) ? $filter : ''); ?></h4>
 
 <?php if (isset($gb) && $gb != '' && $gb != null){ ?>

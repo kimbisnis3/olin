@@ -57,6 +57,7 @@ class Laporanbayar extends CI_Controller {
         $data['periodeend']   = $this->input->post('akhir');
         $data['header'] = ['Tanggal','Agen','Bayar','Total','Jenis Bayar'];
         $data['body']   = ['tgl','mcustomer_nama','bayar','total','mjenbayar_nama'];
+        $data['maskgb'] = $this->input->post('mask-gb');
         $data['title']  = $this->titlepage;;
         $data['gb']     = $this->input->post('gb');
         $this->load->view($this->printpage,$data);

@@ -51,6 +51,7 @@ class Laporanproduksi extends CI_Controller {
         $data['periodeend']   = $this->input->post('akhir');
         $data['header'] = ['Tanggal','Produk','Kode PO','Status','Keterangan'];
         $data['body']   = ['tgl','mbarang_nama','ref_order','status','ket'];
+        $data['maskgb'] = $this->input->post('mask-gb');
         $data['title']  = $this->titlepage;
         $data['gb']     = $this->input->post('gb');
         $this->load->view($this->printpage,$data);

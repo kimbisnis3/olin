@@ -74,5 +74,11 @@ if (!function_exists('status')) {
         return $i;
     }
 
-    // <a href='javascript:void(0)' class='btn btn-sm btn-info' data-toggle='tooltip' data-placement='top' title='Unduh' onclick='unduh_data(".$r->id.")'><i class='glyphicon glyphicon-download-alt'></i></a>
+    function query_to_var($query,$filter) {
+        $find       = array_keys($filter);
+        $replace    = array_values($filter);
+        $n          = str_replace($find, $replace, $query);
+        return $n ;
+    }
+
 }

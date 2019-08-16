@@ -64,6 +64,7 @@ class Laporanpo extends CI_Controller {
         $data['periodeend']   = $this->input->post('akhir');
         $data['header'] = ['Tanggal','Agen','Metode','Layanan','Kurir','Lokasi','Kg','Biaya Kirim','Keterangan'];
         $data['body']   = ['tgl','mcustomer_nama','mkirim_nama','layanan_nama','kurir','lokasike','kgkirim','bykirim','ket'];
+        $data['maskgb'] = $this->input->post('mask-gb');
         $data['title']  = $this->titlepage;;
         $data['gb']     = $this->input->post('gb');
         $this->load->view($this->printpage,$data);

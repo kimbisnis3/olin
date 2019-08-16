@@ -43,6 +43,7 @@ class Laporanagen extends CI_Controller {
         // $data['periodeend']   = '@tanggal';
         $data['header'] = ['Nama','Alamat','Telp','Email','Alamat'];
         $data['body']   = ['nama','alamat','telp','email','ket'];
+        $data['maskgb'] = $this->input->post('mask-gb');
         $data['title']  = $this->titlepage;;
         $data['gb']     = $this->input->post('gb');
         $this->load->view($this->printpage,$data);

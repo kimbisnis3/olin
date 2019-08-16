@@ -24,13 +24,15 @@
                       <div class="col-md-3">
                         <div class="form-group">
                           <label>Awal</label>
-                          <input type="text" class="form-control datepicker" name="awal">
+                          <input type="text" class="form-control datepicker" name="awal" onchange="setmask()">
+                          <input type="hidden" class="form-control" name="mask-awal">
                         </div>
                       </div>
                       <div class="col-md-3">
                         <div class="form-group">
                           <label>Akhir</label>
-                          <input type="text" class="form-control datepicker" name="akhir">
+                          <input type="text" class="form-control datepicker" name="akhir" onchange="setmask()">
+                          <input type="hidden" class="form-control" name="mask-akhir">
                         </div>
                       </div>
                     <?php }  ?>
@@ -38,19 +40,20 @@
                     <div class="col-md-3">
                       <div class="form-group">
                         <label>Group By</label>
-                        <select class="form-control select2" name="gb">
-                          <option value="">-</option>
+                        <select class="form-control select2" name="gb" onchange="setmask()">
+                          <option value=""></option>
                           <?php foreach ($gb as $i => $v): ?>
                             <option value="<?php echo $v->val ?>"><?php echo $v->label; ?></option>
                           <?php endforeach ?>
                         </select>
+                        <input type="hidden" class="form-control" name="mask-gb">
                       </div>
                     </div>
                     <?php } ?>
                     <div class="col-md-2">
                       <div class="form-group">
                         <label style="color: #ffffff">zzzz</label>
-                        <button @Click="refreshList" class="btn btn-success btn-flat btn-block"><i class="fa fa-print"></i> Cetak Laporan</button>
+                        <button class="btn btn-success btn-flat btn-block"><i class="fa fa-print"></i> Cetak Laporan</button>
                       </div>
                     </div>
                     </div>
@@ -76,9 +79,14 @@
       dpicker();
       setMonth('awal',30);
       setMonth('akhir',0);
-      $('[name="gb"]').val()
+      setmask();
   });
 
+      function setmask() {
+        $('[name="mask-gb"]').val($('[name="gb"]  option:selected').html());
+        $('[name="mask-awal"]').val($('[name="awal"]').val());
+        $('[name="mask-akhir"]').val($('[name="akhir"]').val());
+      }
 
   </script>
 </body>
