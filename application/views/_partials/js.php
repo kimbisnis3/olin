@@ -28,6 +28,10 @@
           $('.btn-act').prop('disabled',false);
           $('.fa-refresh').removeClass('fa-spin');
       });
+    $("img").on('error', function(){
+   		$(this).prop('src',`${php_base_url}assets/gambar/noimage.png`) 
+	});
+
 	})
 
 	function setMonth(name, days, tipe = '') {

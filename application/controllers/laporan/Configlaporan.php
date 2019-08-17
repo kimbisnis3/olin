@@ -42,6 +42,8 @@ class COnfiglaporan extends CI_Controller {
         //     echo $v;
         // }
         echo $arr ;
+
+        //this work when param_ replacing to some value wich extrated from query_to_var.
     }
     
 }
