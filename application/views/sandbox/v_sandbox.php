@@ -7,7 +7,7 @@
       <?php $this->load->view('_partials/sidebar'); ?>
       <div class="content-wrapper">
         <section class="content-header">
-          <h1 class="title"></h1>
+          <h1 class="title">Sandbox</h1>
           <ol class="breadcrumb">
             <li><a href="<?php echo site_url(); ?>"><i class="fa fa-dashboard"></i> Home</a></li>
             <li class="active title"></li>
@@ -38,7 +38,14 @@
                         <div class="col-md-3">
                           <div class="form-group">
                             <label>Province</label>
-                            <select class="form-control select2" id="sel">
+                            <select class="form-control select2" id="province" onchange="getcity()">
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-md-3">
+                          <div class="form-group">
+                            <label>City</label>
+                            <select class="form-control select2" id="city">
                             </select>
                           </div>
                         </div>
@@ -46,6 +53,22 @@
                           <div class="form-group">
                             <label style="color: #ffffff">zzzz</label>
                             <button onclick="refresh()" class="btn btn-success btn-flat btn-block"><i class="fa fa-refresh"></i> Refresh</button>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-3">
+                          <div class="form-group">
+                            <label>Province To</label>
+                            <select class="form-control select2" id="provinceto" onchange="getcityto()">
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-md-3">
+                          <div class="form-group">
+                            <label>City To</label>
+                            <select class="form-control select2" id="cityto">
+                            </select>
                           </div>
                         </div>
                       </div>
@@ -76,17 +99,34 @@
 
   $(document).ready(function() {
       select2();
-      getsel();
-
+      getprovince();
   });
 
   function refresh() {
-    getsel()
+    getprovince()
   }
 
-  function getsel() {
-    getSelectcustom('sel','sandbox/request_province','optcoba','province_id', 'province');
+  function getprovince() {
+    getSelectcustom('province','sandbox/request_province','optprovince','province_id', 'province');
+    getSelectcustom('provinceto','sandbox/request_province','optprovinceto','province_id', 'province');
   }
+
+  function getcity() {
+      if ($('#province').val() != '' || $('#province').val() != null) {
+          let idprov = $('#province').val();
+          getSelectcustom('city', `sandbox/request_city?province=${idprov}`, 'optcity', 'city_id', 'city_name');
+      }
+  }
+
+  function getcityto() {
+      if ($('#provinceto').val() != '' || $('#provinceto').val() != null) {
+          let idprovto = $('#provinceto').val();
+          getSelectcustom('cityto', `sandbox/request_city?province=${idprovto}`, 'optcityto', 'city_id', 'city_name');
+      }
+  }
+
+  
+
   </script>
 </body>
 </html>
