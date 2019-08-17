@@ -49,7 +49,7 @@
                         </div>
                         <div class="col-md-3">
                           <div class="form-group">
-                            <label>Status</label>
+                            <label>Status Proses</label>
                             <select class="form-control select2" name="filterstatus">
                               <option value=""></option>
                               <option value="0">Antri Produksi</option>

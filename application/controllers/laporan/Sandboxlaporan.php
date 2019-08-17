@@ -1,6 +1,6 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-class COnfiglaporan extends CI_Controller {
+class Sandboxlaporan extends CI_Controller {
     
     public $table       = 'laporanagen';
     public $indexpage   = 'laporan/prevreports';

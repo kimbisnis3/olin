@@ -76,6 +76,13 @@
 	    });
 	}
 
+	function inintSelect2(id) {
+		$(`#${id}`).select2({
+	        placeholder: 'Select an option',
+	        allowClear: true
+	    });
+	}
+
 	function showNotif(title, msg, jenis) {
 	    $.notify({
 	        title: '<strong>' + title + '</strong>',
@@ -111,21 +118,49 @@
 	    }, );
 	}
 
-	function getSelect(d, u) {
+	function getSelect(id, u, classoption, caption) {
+	    $(`#${id}`).after(function() { $(`.${classoption}`).remove() });
+		$(`#${id}`).val('');
+		$(`#${id}`).trigger('change');
 	    $.ajax({
-	        url: `${apiurl}/${u}`,
+	        url: `${php_base_url}${u}`,
 	        type: "POST",
 	        dataType: "JSON",
 	        success: function(data) {
-	            for (var i = 0; i < data.length; i++) {
-	                $("#" + d).append('<option value=' + data[i].id + '>' + data[i].judul + '</option>');
-	            }
+	        	$(`#${id}`).append(`<option class="${classoption}" value=""></option>`);
+	            $.each(data, function(i, v) {
+	            	$(`#${id}`).append(`<option class="${classoption}" value="${v.id}">${v[caption]}</option>`);
+	            })
 	        },
 	        error: function(jqXHR, textStatus, errorThrown) {
-	            alert('Error on process');
+	            console.log('Error on process');
 	        }
 	    });
 
+	}
+
+	function getSelectcustom(id, u, classoption, val, caption) {
+		$(`#${id}`).select2({ disabled: true });
+	    $(`#${id}`).after(function() { $(`.${classoption}`).remove() });
+		$(`#${id}`).val('');
+		$(`#${id}`).trigger('change');
+	    $.ajax({
+	        url: `${php_base_url}${u}`,
+	        type: "GET",
+	        dataType: "JSON",
+	        success: function(data) {
+	            $(`#${id}`).select2({ disabled: false });
+	           	inintSelect2(id);
+	        	$(`#${id}`).append(`<option class="${classoption}" value=""></option>`);
+	            $.each(data, function(i, v) {
+	            	$(`#${id}`).append(`<option class="${classoption}" value="${v[val]}">${v[caption]}</option>`);
+	            })
+	        },
+	        error: function(jqXHR, textStatus, errorThrown) {
+	            console.log('Error on process');
+	            $(`#${id}`).select2({ disabled: false });
+	        }
+	    });
 	}
 
 	function getAkses(m) {
