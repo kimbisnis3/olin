@@ -27,9 +27,9 @@
               </p>
             </li>
             <li class="user-footer">
-              <div class="pull-left">
+              <!-- <div class="pull-left">
                 <a href="<?php echo base_url('user'); ?>" class="btn btn-success btn-flat"><i class="fa fa-user" aria-hidden="true"></i> User</a>
-              </div>
+              </div> -->
               <div class="pull-right">
                 <a href="<?php echo site_url('auth/logout'); ?>" class="btn btn-warning btn-flat"><i class="fa fa-sign-out" aria-hidden="true"></i> Sign out</a>
               </div>
