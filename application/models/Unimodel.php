@@ -21,8 +21,11 @@ class Unimodel extends CI_Model{
         LEFT OUTER JOIN topsi ON taction.id_action = topsi.ref_action_opsi
         LEFT OUTER JOIN taction_group ON taction.group_action = taction_group.kode
         WHERE
-            taction.entity_action = 'web' 
-        ";
+            taction.entity_action = 'web' ";
+
+        //menutup menu untuk agen    
+        $sql .=" AND
+            topsi.ref_access_opsi != 7";
 
         if ($issuper !='1' or $issuper != '1') {
             $sql .= " AND topsi.ref_access_opsi = '$access'";
