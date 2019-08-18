@@ -67,5 +67,11 @@ class Sandbox extends CI_Controller {
             
         );
     }
+
+    function mapdir() {
+      $this->load->helper('directory');
+      $map = directory_map('./uploads');
+      print_r($map);
+    }
     
 }

@@ -5,10 +5,17 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class libre
 {   
     public $roapi = '5c8590c12ef6879e2b829c4ab6aa955e';
+
+    public function pathupload()
+    {
+      //upload diarahkan ke folder agen supaya agen tidak kesulitan menulis file ke folder di atas root webnya
+      return './uploads/';
+    }
+
     public function goUpload($field,$filename,$dir)
     {
         $ci=& get_instance();
-        $config['upload_path'] = './uploads/'.$dir;
+        $config['upload_path'] = $this->pathupload().$dir;
         if (!is_dir($config['upload_path'])) {
             mkdir($config['upload_path'], 0777, TRUE);
         }

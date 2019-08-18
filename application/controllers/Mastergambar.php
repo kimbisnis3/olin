@@ -52,7 +52,7 @@ class Mastergambar extends CI_Controller {
 
     public function savedata()
     {   
-        $config['upload_path'] = './uploads/'.$this->foldername;
+        $config['upload_path'] = $this->libre->pathupload().$this->foldername;
         if (!is_dir($config['upload_path'])) {
             mkdir($config['upload_path'], 0777, TRUE);
         }
@@ -81,7 +81,7 @@ class Mastergambar extends CI_Controller {
     }
 
     function updatedata(){
-        $config['upload_path'] = './uploads/'.$this->foldername;
+        $config['upload_path'] = $this->libre->pathupload().$this->foldername;
         if (!is_dir($config['upload_path'])) {
             mkdir($config['upload_path'], 0777, TRUE);
         }

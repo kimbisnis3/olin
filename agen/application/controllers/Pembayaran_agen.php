@@ -40,9 +40,7 @@ class Pembayaran_agen extends CI_Controller {
             AND
                 xpelunasan.tgl 
             BETWEEN '$filterawal' AND '$filterakhir'";
-        if ($this->session->userdata('issuper') != 1) {
-            $q .=" AND xpelunasan.ref_cust = '$kodecust'";
-        }
+        $q .=" AND xpelunasan.ref_cust = '$kodecust'";
         $result     = $this->db->query($q)->result();
         $list       = [];
         foreach ($result as $i => $r) {

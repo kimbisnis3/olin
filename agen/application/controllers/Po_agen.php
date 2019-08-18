@@ -3,7 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Po_agen extends CI_Controller {
     
     public $table       = 'xorder';
-    public $foldername  = 'po/agen';
+    public $foldername  = 'po';
     public $indexpage   = 'po_agen/v_po_agen';
 
     function __construct() {
@@ -42,9 +42,7 @@ class Po_agen extends CI_Controller {
             LEFT JOIN mcustomer ON mcustomer.kode = xorder.ref_cust
             LEFT JOIN mkirim ON mkirim.kode = xorder.ref_kirim
             WHERE xorder.void IS NOT TRUE";
-        if ($this->session->userdata('issuper') != 1) {
-            $q .=" AND xorder.ref_cust = '$kodecust'";
-        }
+        $q .=" AND xorder.ref_cust = '$kodecust'";
         $q .=" AND
                 xorder.tgl 
             BETWEEN '$filterawal' AND '$filterakhir'";
