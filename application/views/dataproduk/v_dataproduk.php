@@ -135,6 +135,9 @@
                         <button class="btn btn-success btn-flat refresh-btn" onclick="refresh()"><i class="fa fa-refresh"></i> Refresh</button>
                         <button class="btn bg-maroon btn-flat add-btn invisible" onclick="open_spek()" ><i class="fa fa-bars"></i> Spek</button>
                       </div>
+                      <div class="pull-right">
+                        <button class="btn btn-act btn-success btn-flat option-btn invisible" onclick="default_data()"><i class="fa fa-check"></i> Default</button>
+                      </div>
                     </div>
                     <div class="box-body">
                       <div class="table-responsive mailbox-messages">
@@ -151,6 +154,7 @@
                               <th>Nama Satuan</th>
                               <th>Harga</th>
                               <th>Nama Gudang</th>
+                              <th>Default</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -205,6 +209,7 @@
           { "data": "namasatuan" },
           { "data": "harga" },
           { "data": "namagudang" },
+          { "data": "def" },
           ]
       });
 
@@ -383,6 +388,41 @@
       $('.modal-title').text('Yakin Hapus Data ?');
       $('#modal-konfirmasi').modal('show');
       $('#btnHapus').attr('onclick', 'delete_spek(' + id + ')');
+  }
+
+  function default_data() {
+      id = table.cell( idx, 2).data();
+      if (idx == -1) {
+          return false;
+      }
+      $('.modal-title').text('Default Barang ?');
+      $('#modal-konfirmasi').modal('show');
+      $('#btnHapus').attr('onclick', 'do_default_data(' + id + ')');
+  }
+
+  function do_default_data(id) {
+      $.ajax({
+          url: `${apiurl}/default_data`,
+          type: "POST",
+          dataType: "JSON",
+          data: {
+              id: id,
+          },
+          success: function(data) {
+              $('#modal-konfirmasi').modal('hide');
+              if (data.sukses == 'success') {
+                  refresh();
+                  showNotif('Sukses', 'Data Berhasil Diubah', 'success')
+              } else if (data.sukses == 'fail') {
+                  $('#modal-data').modal('hide');
+                  refresh();
+                  showNotif('Gagal', 'Data Gagal Diubah', 'danger')
+              }
+          },
+          error: function(jqXHR, textStatus, errorThrown) {
+              showNotif('Fail', 'Internal Error', 'danger');
+          }
+      });
   }
 
   function delete_spek(id) {

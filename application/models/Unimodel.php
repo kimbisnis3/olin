@@ -24,8 +24,8 @@ class Unimodel extends CI_Model{
             taction.entity_action = 'web' ";
 
         //menutup menu untuk agen    
-        $sql .=" AND
-            topsi.ref_access_opsi != 7";
+        // $sql .=" AND 
+        //     topsi.ref_access_opsi != 7";
 
         if ($issuper !='1' or $issuper != '1') {
             $sql .= " AND topsi.ref_access_opsi = '$access'";

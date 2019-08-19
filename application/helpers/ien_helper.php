@@ -81,4 +81,16 @@ if (!function_exists('status')) {
         return $n ;
     }
 
+    function truefalse($data, $labeltrue, $labelfalse)
+    {
+        if ($data=='0' || $data=='NULL' || $data=='' || $data=='f') {
+            $data = '<span class="label label-danger">'.$labelfalse.'</span>';
+        }
+        else {
+            $data = '<span class="label label-success">'.$labeltrue.'</span>';
+        }
+       
+        return $data;
+    }
+
 }

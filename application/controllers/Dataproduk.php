@@ -21,6 +21,7 @@ class Dataproduk extends CI_Controller {
                 msatbrg.konv,
                 msatbrg.ket,
                 msatbrg.harga,
+                msatbrg.def,
                 mbarang.id idbarang,
                 mbarang.kode kodebarang,
                 mbarang.nama namabarang,
@@ -43,6 +44,7 @@ class Dataproduk extends CI_Controller {
             $row['namabarang']  = $r->namabarang;
             $row['namasatuan']  = $r->namasatuan;
             $row['namagudang']  = $r->namagudang;
+            $row['def']         = truefalse($r->def,'Default','');
 
             $list[] = $row;
         }   
@@ -108,7 +110,7 @@ class Dataproduk extends CI_Controller {
             LEFT JOIN mwarna ON mwarna.kode = mbarangs.warna
             WHERE mbarangs.ref_brg = '$kodebarang'";
         $result     = $this->db->query($q)->result();
-        $str        = '<table class="table">
+        $str        = '<table class="table fadeIn animated">
                         <tr>
                             <th>No. Seri</th>
                             <th>Produk</th>
@@ -150,6 +152,14 @@ class Dataproduk extends CI_Controller {
     {
         $w['id']    = $this->input->post('id');
         $result     = $this->db->delete('mbarangs',$w);
+        $r['sukses'] = $result ? 'success' : 'fail' ;
+        echo json_encode($r);
+    }
+
+    public function default_data() 
+    {
+        $w['id']    = $this->input->post('id');
+        $result     = $this->db->update('msatbrg',array('def' => 't' ),$w);
         $r['sukses'] = $result ? 'success' : 'fail' ;
         echo json_encode($r);
     }
