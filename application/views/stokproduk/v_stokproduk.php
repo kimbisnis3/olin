@@ -39,7 +39,7 @@
                             <div class="form-group">
                               <label>Tanggal</label>
                               <input type="text" class="form-control datepicker" name="tgl">
-                              <input type="hide" class="form-control" name="ref_satbrg" readonly="true">
+                              <input type="hidden" class="form-control" name="ref_satbrg" readonly="true">
                             </div>
                             <div class="form-group">
                               <label>Keterangan</label>

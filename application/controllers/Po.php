@@ -252,7 +252,7 @@ class Po extends CI_Controller {
         $b['harga']     = $Brg->msatbrg_harga;
         $b['ref_gud']   = $Brg->msatbrg_ref_gud;
         $b['ket']       = $Brg->msatbrg_ket;
-        $this->db->delete('xorderdv',array('ref_order' => $kodeOrder));
+        $this->db->delete('xorderd',array('ref_order' => $kodeOrder));
         $this->db->insert('xorderd',$b);
         $idOrderd = $this->db->insert_id();
         $design = $this->db->get_where('mbarangs',array('ref_brg' => $kodebrg))->result();

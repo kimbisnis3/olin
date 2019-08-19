@@ -59,6 +59,8 @@ class Spk extends CI_Controller {
             INNER JOIN xpelunasan ON xpelunasan.ref_jual = xorder.kode
             WHERE
                 xorder.void IS NOT TRUE
+            AND 
+                xpelunasan.posted IS TRUE
             AND xorder.kode NOT IN (
                 SELECT
                     ref_order

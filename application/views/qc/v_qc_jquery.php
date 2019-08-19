@@ -152,7 +152,7 @@
                     <ul class="nav nav-stacked">
                       <li><a href="#">Antri Produksi <span class="pull-right badge ${badge_a}">${label_a}</span></a></li>
                       <li><a href="#">Sudah Print <span class="pull-right badge ${badge_b}">${label_b}</span></a></li>
-                      <li><a href="#">- <span class="pull-right badge ${badge_c}">${label_c}</span></a></li>
+                      <li><a href="#">Sudah Cutting <span class="pull-right badge ${badge_c}">${label_c}</span></a></li>
                       <li><a href="#">Sudah Jahit <span class="pull-right badge ${badge_d}">${label_d}</span></a></li>
                       <li><a href="#">Siap Kirim <span class="pull-right badge ${badge_e}">${label_e}</span></a></li>
                     </ul>

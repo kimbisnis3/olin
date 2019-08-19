@@ -390,7 +390,7 @@
 
   function add_data() {
       state = 'add';
-      clearForm();
+      clearform();
       $('#form-data')[0].reset();
       $('.select2').trigger('change');
       $('#modal-data').modal('show');

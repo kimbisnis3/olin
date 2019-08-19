@@ -140,7 +140,7 @@ class Pembayaran extends CI_Controller {
             $row['ref_cust']        = $r->ref_cust;
             $row['mcustomer_nama']  = $r->mcustomer_nama;
             $row['tgl']             = $r->tgl;
-            $row['total']           = number_format($r->total);
+            $row['total']           = $r->total;
             $row['ket']             = $r->ket;
 
             $list[] = $row;
@@ -174,7 +174,7 @@ class Pembayaran extends CI_Controller {
                 "jumlah"    => $r->jumlah,
                 "ref_satbrg"=> $r->ref_satbrg,
                 "ket"       => $r->ket,
-                "harga"     => number_format($r->harga),
+                "harga"     => $r->harga,
             );
             $b[] = $row;
         }
