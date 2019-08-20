@@ -169,9 +169,56 @@
   function getprice() {
         let origin  = $('#city').val();
         let dest    = $('#cityto').val();
-        let berat   = $('#berat').val() * 1000;
+        let berat   = $('#berat').val();
         let kurir   = $('#kurir').val();
-        getSelectcustom('price', `sandbox/request_ongkir?origin=${origin}&destination=${dest}&weight=${berat}&courier=${kurir}`, 'price', 'city_id', 'city_name');
+        gx('price', `sandbox/request_ongkir?origin=${origin}&destination=${dest}&weight=${berat}&courier=${kurir}`, 'price', 'service', 'service');
+  }
+
+  function gx(id, u, classoption, val, caption) {
+      $(`#${id}`).select2({
+          disabled: true
+      });
+      $(`#${id}`).after(function() {
+          $(`.${classoption}`).remove()
+      });
+      $(`#${id}`).val('');
+      $(`#${id}`).trigger('change');
+      $.ajax({
+          url: `${php_base_url}${u}`,
+          type: "GET",
+          dataType: "JSON",
+          success: function(data) {
+              $(`#${id}`).select2({
+                  disabled: false
+              });
+              inintSelect2(id);
+              $(`#${id}`).append(`<option class="${classoption}" value=""></option>`);
+              $.each(data, function(i, v) {
+                  $(`#${id}`).append(`<option class="${classoption}" value="${v['cost']}">${v[caption]}</option>`);
+              })
+          },
+          error: function(jqXHR, textStatus, errorThrown) {
+              console.log('Error on process');
+              $(`#${id}`).select2({
+                  disabled: false
+              });
+          }
+      });
+  }
+
+  
+
+  function star() {
+      $.get(`sandbox/request_ongkir`, {
+              origin: "64",
+              destination: "402",
+              weight: "1",
+              courier : "jne"
+
+          })
+          .done(function(data) {
+              console.log(JSON.parse(data));
+          });
   }
 
   

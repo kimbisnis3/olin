@@ -43,7 +43,7 @@ class Sandbox extends CI_Controller {
         $courier        = $this->input->get('courier');
         $response = $this->libre->get_ongkir_ro($origin,$destination,$weight,$courier);
         $raw = json_decode($response, true); 
-        $data = $raw['rajaongkir']['results']['costs'];
+        $data = $raw['rajaongkir']['results'][0]['costs'];
         echo json_encode($data);
         
     }
