@@ -214,6 +214,7 @@ class Po extends CI_Controller {
         $a['ref_kirim'] = $this->input->post('ref_kirim');
         $a['ref_layanan'] = $this->input->post('ref_layanan');
         $a['kirimke']   = $this->input->post('kirimke');
+        $a['alamat']    = $this->input->post('alamat');
         if ($this->input->post('ref_kirim') == 'GX0002') {    
             $a['kodeprovfrom']  = $this->input->post('provinsi');
             $a['kodeprovto']    = $this->input->post('provinsito');
@@ -312,6 +313,7 @@ class Po extends CI_Controller {
                 xorder.kodeprovto,
                 xorder.kodecityfrom,
                 xorder.kodecityto,
+                xorder.alamat,
                 xorder.kirimke,
                 xorderd.jumlah,
                 xorderd.harga,
@@ -342,6 +344,7 @@ class Po extends CI_Controller {
         $a['ref_kirim'] = $this->input->post('ref_kirim');
         $a['ref_layanan'] = $this->input->post('ref_layanan');
         $a['kirimke']   = $this->input->post('kirimke');
+        $a['alamat']    = $this->input->post('alamat');
         if ($this->input->post('ref_kirim') == 'GX0002') {
             $a['kodeprovfrom']  = $this->input->post('provinsi');
             $a['kodeprovto'] = $this->input->post('provinsito');

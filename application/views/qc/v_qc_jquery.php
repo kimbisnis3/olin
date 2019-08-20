@@ -18,7 +18,7 @@
             <div class="modal-content">
               <div class="modal-body">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <center><h4 class="modal-title">QC Data ?</h4></center>
+                <center><h4 class="modal-title-konfirmasi"></h4></center>
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-warning btn-flat" data-dismiss="modal">Tidak</button>
@@ -83,8 +83,6 @@
       </body>
     </html>
   <?php $this->load->view('_partials/js'); ?>
-  <!-- <script type="text/javascript" src="<?php echo base_url() ?>assets/vue.min.js"></script>
-  <script type="text/javascript" src="<?php echo base_url() ?>assets/axios.min.js"></script> -->
   <script type="text/javascript">
   var path = 'qc';
   var title = 'Quality Control';
@@ -157,7 +155,7 @@
                       <li><a href="#">Siap Kirim <span class="pull-right badge ${badge_e}">${label_e}</span></a></li>
                     </ul>
                     </div><div class="box-footer no-padding">
-                    <button class="btn btn-success btn-block" ${v.status >= 4 ? "Disabled" : ""} onclick="qc_data(${v.id})">${ v.status >= 4 ? "Selesai" : "QC"}</button>
+                    <button class="btn btn-success btn-block" ${v.status >= 4 ? "Disabled" : ""} onclick="qc_data(${v.id},${v.status})">${ v.status >= 4 ? "Selesai" : "QC"}</button>
                     </div>
                     </div>
                     </div>`)
@@ -169,8 +167,27 @@
       });
   }
 
-  function qc_data(id) {
-      $('.modal-title').text('QC Data ?');
+  function labelstatus(s) {
+      let teks;
+      switch (s) {
+          case 0:
+              teks = "Sudah Print ?";
+              break;
+          case 1:
+              teks = "Sudah Cutting ?";
+              break;
+          case 2:
+              teks = "Sudah Jahit ?";
+              break;
+          case 3:
+              teks = "Siap Kirim ?";
+              break;
+      }
+      return teks;
+  }
+
+  function qc_data(id,status) {
+      $('.modal-title-konfirmasi').text(labelstatus(status));
       $('#modal-konfirmasi').modal('show');
       $('#btnHapus').attr('onclick', 'do_qc(' + id + ')');
   }

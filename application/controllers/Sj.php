@@ -97,6 +97,9 @@ class Sj extends CI_Controller {
                 xorder.ket,
                 xorder.ref_cust,
                 xorder.kirimke,
+                xorder.alamat,
+                xorder.kurir,
+                xorder.kodekurir,
                 mbarang.nama mbarang_nama,
                 mcustomer.nama mcustomer_nama
             FROM

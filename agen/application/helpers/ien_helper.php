@@ -81,4 +81,33 @@ if (!function_exists('status')) {
         return $n ;
     }
 
+    function truefalse($data, $labeltrue, $labelfalse)
+    {
+        if ($data=='0' || $data=='NULL' || $data=='' || $data=='f') {
+            $data = '<span class="label label-danger">'.$labelfalse.'</span>';
+        }
+        else {
+            $data = '<span class="label label-success">'.$labeltrue.'</span>';
+        }
+       
+        return $data;
+    }
+
+    function normal_date($date)
+    {
+        if ($date != NULL) {
+            
+        $indonesian_month = array("Jan", "Feb", "Mar",
+            "Apr", "May", "Jun",
+            "Jul", "Aug", "Sep",
+            "Oct", "Nov", "Dec");
+        $year        = substr($date, 0, 4); // memisahkan format tahun menggunakan substring
+        $month       = substr($date, 5, 2); // memisahkan format bulan menggunakan substring
+        $currentdate = substr($date, 8, 2); // memisahkan format tanggal menggunakan substring
+        $result = $currentdate . " " . $indonesian_month[(int) $month - 1] . " " . $year;
+
+        return $result;
+        }
+    }
+
 }

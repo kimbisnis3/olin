@@ -70,6 +70,22 @@
                             </div>
                           </div>
                         </div>
+                        <div class="row">
+                          <div class="col-md-8">
+                            <div class="form-group">
+                              <label>Alamat</label>
+                              <input type="text" class="form-control" name="alamat">
+                            </div>
+                          </div>
+                          <div class="col-md-2">
+                              <label>Kurir</label>
+                              <input type="text" class="form-control" name="kurir" readonly="true">
+                            </div>
+                            <div class="col-md-2">
+                              <label>Kode</label>
+                              <input type="text" class="form-control" name="kodekurir" readonly="true">
+                            </div>
+                        </div>
                       </div>
                     </div>
                   </form>
@@ -105,6 +121,9 @@
                               <th>Kirim Ke</th>
                               <th>Ref Biaya</th>
                               <th>Kirim Ke</th>
+                              <th>Alamat</th>
+                              <th>Kurir</th>
+                              <th>Kode Kurir</th>
                               <th>Agen</th>
                               <th>Tanggal</th>
                               <th>Status</th>
@@ -357,6 +376,9 @@
             { "data": "ref_cust" , "visible" : false},
             { "data": "bykirim" , "visible" : false},
             { "data": "kirimke" , "visible" : false},
+            { "data": "alamat" , "visible" : false},
+            { "data": "kurir" , "visible" : false},
+            { "data": "kodekurir" , "visible" : false},
             { "data": "mbarang_nama" },
             { "data": "tgl" },
             { "data": "status" },
@@ -377,7 +399,11 @@
           $('[name="ref_cust"]').val(data.ref_cust);
           $('[name="mcustomer_nama"]').val(data.mcustomer_nama);
           $('[name="ref_order"]').val(data.kode);
+          $('[name="biayakirim"]').val(data.bykirim);
           $('[name="kirim"]').val(data.kirimke);
+          $('[name="alamat"]').val(data.alamat);
+          $('[name="kurir"]').val(data.kurir);
+          $('[name="kodekurir"]').val(data.kodekurir);
           $('#modal-proc').modal('hide');
       });
 
@@ -392,6 +418,7 @@
       state = 'add';
       clearform();
       $('#form-data')[0].reset();
+      setMonth('tgl',0);
       $('.select2').trigger('change');
       $('#modal-data').modal('show');
       $('.modal-title').text('Tambah Data');

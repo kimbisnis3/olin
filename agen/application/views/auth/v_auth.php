@@ -4,7 +4,7 @@
 	<?php $this->load->view('_partials/head') ?>
 	<style type="text/css">
 		body {
-			background: #9ad3de !important;
+			background: #aed581 !important;
 		}
 		.hue {
 		    background: #f35626;

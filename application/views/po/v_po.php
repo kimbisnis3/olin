@@ -131,6 +131,14 @@
                           </div>
                         </div>
                       </div>
+                      <div class="row">
+                        <div class="col-md-8">
+                          <div class="form-group">
+                            <label>Alamat Lengkap</label>
+                            <input type="text" class="form-control" name="alamat">
+                          </div>
+                        </div>      
+                      </div>
                     </div>
                     <div class="box-body pad invisible fadeIn animated" id="box-kurir">
                       <div class="row">
@@ -763,6 +771,7 @@
       $('#form-data')[0].reset();
       $('#img-preview').remove();
       $('#select-provinsi').val('10'); //set to Jawa Tengah
+      setMonth('tgl',0);
       $('.select2').trigger('change');
       $('#modal-data').modal('show');
       $('.modal-title').text('Tambah Data');
@@ -796,6 +805,7 @@
               $('[name="ref_layanan"]').val(data.ref_layanan);
               $('[name="kirimke"]').val(data.kirimke);
               $('[name="ket"]').val(data.ket);
+              $('[name="alamat"]').val(data.alamat);
               $('[name="jumlah"]').val(data.jumlah);
               $('[name="harga"]').val(data.harga);
               $('[name="berat"]').val(data.kgkirim);

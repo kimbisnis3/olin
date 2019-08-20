@@ -25,6 +25,7 @@ class Pembayaran_agen extends CI_Controller {
                 to_char(xpelunasan.tgl, 'DD Mon YYYY') tgl,
                 xpelunasan.total,
                 xpelunasan.bayar,
+                xpelunasan.total - xpelunasan.bayar kurang,
                 xpelunasan.posted,
                 xpelunasan.ket,
                 xpelunasan.ref_jual,
@@ -53,6 +54,7 @@ class Pembayaran_agen extends CI_Controller {
             $row['mjenbayar_nama']  = $r->mjenbayar_nama;
             $row['total']           = number_format($r->total);
             $row['bayar']           = number_format($r->bayar);
+            $row['kurang']          = number_format($r->kurang);
             $row['ket']             = $r->ket;
             $row['posted']          = $r->posted;
             $row['ref_jual']          = $r->ref_jual;
@@ -109,10 +111,11 @@ class Pembayaran_agen extends CI_Controller {
     }
 
     public function getorder(){
-        $q = "SELECT
+        $kodecust = $this->session->userdata('kodecust');
+        $q = "SELECT DISTINCT
                 xorder.id,
                 xorder.kode,
-                to_char(xorder.tgl, 'DD Mon YYYY') tgl,
+                xorder.tgl,
                 xorder.ket,
                 xorder.pic,
                 xorder.kgkirim,
@@ -128,11 +131,77 @@ class Pembayaran_agen extends CI_Controller {
                         xorderd
                     WHERE
                         xorderd.ref_order = xorder.kode
-                ) + xorder.bykirim total
+                ) + xorder.bykirim total,
+                COALESCE (
+                    (
+                        SELECT
+                            SUM (xpelunasan.bayar)
+                        FROM
+                            xpelunasan
+                        WHERE
+                            xpelunasan.ref_jual = xorder.kode
+                    ),
+                    0
+                ) dibayar,
+                (
+                    COALESCE (
+                        (
+                            SELECT
+                                SUM (
+                                    xorderd.harga * xorderd.jumlah
+                                )
+                            FROM
+                                xorderd
+                            WHERE
+                                xorderd.ref_order = xorder.kode
+                        ),
+                        0
+                    ) + xorder.bykirim
+                ) - COALESCE (
+                    (
+                        SELECT
+                            SUM (xpelunasan.bayar)
+                        FROM
+                            xpelunasan
+                        WHERE
+                            xpelunasan.ref_jual = xorder.kode
+                    ),
+                    0
+                ) kurang
             FROM
                 xorder
             LEFT JOIN mcustomer ON mcustomer.kode = xorder.ref_cust
-            WHERE xorder.void IS NOT TRUE";
+            LEFT JOIN xpelunasan ON xorder.kode = xpelunasan.ref_jual
+            WHERE
+                xorder.void IS NOT TRUE
+            AND (
+                COALESCE (
+                    (
+                        SELECT
+                            SUM (
+                                xorderd.harga * xorderd.jumlah
+                            )
+                        FROM
+                            xorderd
+                        WHERE
+                            xorderd.ref_order = xorder.kode
+                    ),
+                    0
+                ) + xorder.bykirim
+            ) - COALESCE (
+                (
+                    SELECT
+                        SUM (xpelunasan.bayar)
+                    FROM
+                        xpelunasan
+                    WHERE
+                        xpelunasan.ref_jual = xorder.kode
+                ),
+                0
+            ) != 0 ";
+        $q .=" AND xorder.ref_cust = '$kodecust' 
+            ORDER BY
+                xorder.kode DESC";
         $result     = $this->db->query($q)->result();
         $list       = [];
         foreach ($result as $i => $r) {
@@ -141,8 +210,10 @@ class Pembayaran_agen extends CI_Controller {
             $row['kode']            = $r->kode;
             $row['ref_cust']        = $r->ref_cust;
             $row['mcustomer_nama']  = $r->mcustomer_nama;
-            $row['tgl']             = $r->tgl;
+            $row['tgl']             = normal_date($r->tgl);
             $row['total']           = $r->total;
+            $row['dibayar']         = $r->dibayar;
+            $row['kurang']          = $r->kurang;
             $row['ket']             = $r->ket;
 
             $list[] = $row;

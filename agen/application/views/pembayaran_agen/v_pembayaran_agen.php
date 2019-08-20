@@ -63,7 +63,7 @@
                             </div>
                             <div class="form-group">
                               <label>Bayar</label>
-                              <input type="number" class="form-control" name="bayar">
+                              <input type="number" class="form-control" name="bayar" id="bayar">
                             </div>
                           </div>
                         </div>
@@ -110,6 +110,8 @@
                               <th>Agen</th>
                               <th>Tanggal</th>
                               <th>Total</th>
+                              <th>Dibayar</th>
+                              <th>Kurang</th>
                               <th>Keterangan</th>
                               <th>Opsi</th>
                             </tr>
@@ -203,6 +205,7 @@
                               <th>Jenis Bayar</th>
                               <th>Total</th>
                               <th>Bayar</th>
+                              <th>Kurang</th>
                               <th>Keterangan</th>
                             </tr>
                           </thead>
@@ -272,6 +275,7 @@
           { "data": "mjenbayar_nama" },
           { "data": "total" },
           { "data": "bayar" },
+          { "data": "kurang" },
           { "data": "ket" },
           ]
       });
@@ -356,11 +360,13 @@
           "columns": [
             { "data": "no" }, 
             { "data": "id" , "visible" : false},
-            { "data": "kode" , "visible" : false},
+            { "data": "kode" , "visible" : true},
             { "data": "ref_cust" , "visible" : false},
             { "data": "mcustomer_nama" },
             { "data": "tgl" },
             { "data": "total" },
+            { "data": "dibayar" },
+            { "data": "kurang" },
             { "data": "ket" },
             { "data": "opsi" },
           ]
@@ -373,6 +379,8 @@
           $('[name="mcustomer_nama"]').val(data.mcustomer_nama);
           $('[name="ref_order"]').val(data.kode);
           $('[name="total"]').val(data.total);
+          $('[name="bayar"]').val(parseInt(data.kurang));
+          nilaimax('bayar',data.kurang)
           $('#modal-order').modal('hide');
       });
 
@@ -387,6 +395,7 @@
       state = 'add';
       $('#form-data')[0].reset();
       clearform();
+      setMonth('tgl',0);
       $('.select2').trigger('change');
       $('#modal-data').modal('show');
       $('.select2').trigger('change');

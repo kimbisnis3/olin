@@ -335,6 +335,7 @@
       state = 'add';
       clearform();
       $('#form-data')[0].reset();
+      setMonth('tgl',0);
       $('.select2').trigger('change');
       $('#modal-data').modal('show');
       $('.select2').trigger('change');

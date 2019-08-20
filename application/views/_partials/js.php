@@ -46,7 +46,7 @@
 
 	function nilaimax(id, max) {
 	    $('#' + id).keyup(function() {
-	        if ($('#' + id).val() > max) {
+	        if (parseInt($('#' + id).val()) > max) {
 	            $('#' + id).trigger('contentchanged');
 	        }
 	    });
@@ -225,6 +225,19 @@
 	        formInvalid(x);
 	        return true
 			$('.btn-save').prop('disabled',false);
+	    } else {
+	        return false
+	    }
+	}
+
+	function cekzero(x) {
+	    if ($('[name="' + x + '"]').val() <= '0' || $('[name="' + x + '"]').val() <= 0 || $('[name="' + x + '"]').val() == null) {
+	        showNotif('', 'Kolom Wajib Diisi', 'danger');
+	        $('[name="' + x + '"]').focus()
+	        formInvalid(x);
+	        return true
+			$('.btn-save').prop('disabled',false);
+			clearform();
 	    } else {
 	        return false
 	    }
