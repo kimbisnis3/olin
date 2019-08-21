@@ -27,6 +27,17 @@ class Sandbox extends CI_Controller {
 
     }
 
+    function req_province() {
+        $response = $this->libre->get_province_ro();
+        $raw = json_decode($response, true); 
+        $data = $raw['rajaongkir']['results'];
+        echo json_encode(
+          array(
+            'data'    => $data, 
+            'status'  => 'success'
+        ));
+    }
+
     function request_city() {
         $provincecode = $this->input->get('province');
         $response = $this->libre->get_city_ro($provincecode);

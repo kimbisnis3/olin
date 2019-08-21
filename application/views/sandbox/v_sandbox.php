@@ -46,7 +46,7 @@
                       <div class="row">
                         <div class="col-md-3">
                           <div class="form-group">
-                            <label>Province</label>
+                            <label uni-bind="prov" uni-bind-val="43">Province</label>
                             <select class="form-control select2" id="province" onchange="getcity()">
                             </select>
                           </div>
@@ -137,10 +137,14 @@
   var state;
   var idx     = -1;
   var table ;
+  var $unibind = $('[uni-bind="prov"]');
+  var $price = $('#price');
 
-  $(document).ready(function() {
+  $(function() {
       select2();
       getprovince();
+      console.log($unibind.attr('uni-bind-val'));
+      load_data()
   });
 
   function refresh() {
@@ -194,7 +198,7 @@
               inintSelect2(id);
               $(`#${id}`).append(`<option class="${classoption}" value=""></option>`);
               $.each(data, function(i, v) {
-                  $(`#${id}`).append(`<option class="${classoption}" value="${v['cost']}">${v[caption]}</option>`);
+                  $(`#${id}`).append(`<option class="${classoption}" value="${v[val]}">${v[caption]}</option>`);
               })
           },
           error: function(jqXHR, textStatus, errorThrown) {
@@ -206,7 +210,28 @@
       });
   }
 
+  function load_data() {
+    uniget('sandbox/req_province/', {}, function(res) {
+            console.log(res.data)
+    })
+  }
+
   
+
+  function unipost(u, d, r = function() {}) {
+    $.ajax({
+          url: u,
+          type: "GET",
+          dataType: "JSON",
+          data : d,
+          success: function(data) {
+              r(data);
+          },
+          error: function(jqXHR, textStatus, errorThrown) {
+              console.log('error');
+          }
+      });
+  }
 
   function star() {
       $.get(`sandbox/request_ongkir`, {
@@ -219,6 +244,40 @@
           .done(function(data) {
               console.log(JSON.parse(data));
           });
+  }
+
+  function getIndex(arr, val, key = '') {
+      if (key == '') {
+          var zzz = arr.indexOf(val);
+      } else {
+          var zzz = arr.findIndex(function(s) {
+              return s[key] == val;
+          });
+      }
+      return zzz;
+  }
+
+  function getObject(arr, val, key) {
+      var zzz = arr.findIndex(function(s) {
+          return s[key] == val;
+      });
+      return arr[zzz];
+  }
+
+  function removeObject(arr, val, key) {
+      var zzz = arr.findIndex(function(s) {
+          return s[key] == val;
+      });
+      arr.splice(arr.indexOf(arr[zzz]), 1);
+      return arr;
+  }
+
+  function replaceObject(arr, val, key, newObj) {
+      var zzz = arr.findIndex(function(s) {
+          return s[key] == val;
+      });
+      arr[zzz] = newObj;
+      return arr[zzz];
   }
 
   
