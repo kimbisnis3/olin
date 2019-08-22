@@ -27,7 +27,7 @@
                       <div class="col-md-12">
                         <div class="row">
                           <div class="col-md-6">
-                            <div class="form-group">
+                            <!-- <div class="form-group">
                               <label>Gudang</label>
                               <select class="form-control select2" name="ref_gud">
                                 <option> - </option>
@@ -35,7 +35,7 @@
                                 <option value="<?php echo $v->kode ?>"><?php echo $v->nama; ?></option>
                                 <?php endforeach ?>
                               </select>
-                            </div>
+                            </div> -->
                             <div class="form-group">
                               <label>Tanggal</label>
                               <input type="text" class="form-control datepicker" name="tgl">
@@ -151,7 +151,8 @@
                             <tr>
                               <th width="5%">No</th>
                               <th>ID</th>
-                              <th>Gudang</th>
+                              <th>Kode</th>
+                              <th>Nama Barang</th>
                               <th>Jumlah</th>
                             </tr>
                           </thead>
@@ -196,7 +197,8 @@
           "columns": [
           { "data": "id", "note" : "numbers" }, 
           { "data": "id" , "visible" : false},
-          { "data": "mgudang_nama" },
+          { "data": "kode" },
+          { "data": "nama" },
           { "data": "jumlah" },
           ]
       });

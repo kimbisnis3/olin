@@ -34,8 +34,7 @@ class Jeniskirim extends CI_Controller {
     {   
         $d['useri']     = $this->session->userdata('username');
         $d['nama']      = $this->input->post('nama');
-        $d['jarak']     = ien($this->input->post('jarak'));
-        $d['nominal']   = ien($this->input->post('nominal'));
+        $d['ket']       = $this->input->post('ket');
 
         $result = $this->db->insert($this->table,$d);
         $r['sukses'] = $result ? 'success' : 'fail' ;
@@ -59,8 +58,8 @@ class Jeniskirim extends CI_Controller {
         $d['useru']     = $this->session->userdata('username');
         $d['dateu']     = 'now()';
         $d['nama']      = $this->input->post('nama');
-        $d['jarak']     = ien($this->input->post('jarak'));
-        $d['nominal']   = ien($this->input->post('nominal'));
+        $d['ket']       = $this->input->post('ket');
+        
         $w['id'] = $this->input->post('id');
         $result = $this->db->update($this->table,$d,$w);
         $r['sukses'] = $result ? 'success' : 'fail' ;

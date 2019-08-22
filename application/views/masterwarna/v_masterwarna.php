@@ -210,7 +210,10 @@
           success: function(data) {
               $('[name="id"]').val(data.id);
               $('[name="nama"]').val(data.nama);
-              $('[name="kodewarna"]').val(data.kodewarna);
+              $('[name="kodewarna"]').val(data.colorc);
+              // $('[name="kodewarna"]').trigger('change');
+              $('.colorpicker').colorpicker({color : data.colorc})
+              $('.colorpicker').colorpicker('setValue', data.colorc)
               $('[name="ket"]').val(data.ket);
               $('#modal-data').modal('show');
               $('.modal-title').text('Edit Data');

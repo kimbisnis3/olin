@@ -32,12 +32,8 @@
                           <input type="text" class="form-control" name="nama" >
                         </div>
                         <div class="form-group">
-                          <label>Jarak</label>
-                          <input type="number" class="form-control" name="jarak" >
-                        </div>
-                        <div class="form-group">
-                          <label>Nominal</label>
-                          <input type="number" class="form-control" name="nominal" >
+                          <label>Keterangan</label>
+                          <input type="text" class="form-control" name="ket" >
                         </div>
                       </div>
                     </div>
@@ -87,8 +83,7 @@
                             <th width="5%">No</th>
                             <th>ID</th>
                             <th>Nama</th>
-                            <th>Jarak</th>
-                            <th>Nominal</th>
+                            <th>Keterangan</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -132,8 +127,7 @@
           { "data": "no" }, 
           { "data": "id" , "visible" : false},
           { "data": "nama" }, 
-          { "data": "jarak" }, 
-          { "data": "nominal" }
+          { "data": "ket" }
           ]
       });
 
@@ -181,8 +175,7 @@
           success: function(data) {
               $('[name="id"]').val(data.id);
               $('[name="nama"]').val(data.nama);
-              $('[name="jarak"]').val(data.jarak);
-              $('[name="nominal"]').val(data.nominal);
+              $('[name="ket"]').val(data.ket);
               $('#modal-data').modal('show');
               $('.modal-title').text('Edit Data');
           },

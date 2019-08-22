@@ -105,7 +105,7 @@ class Sj extends CI_Controller {
             FROM
                 xprocorder
             LEFT JOIN mbarang ON mbarang.kode = xprocorder.ref_brg
-            LEFT JOIN xorder ON xorder.kode = xprocorder.ref_order
+            JOIN xorder ON xorder.kode = xprocorder.ref_order
             LEFT JOIN mcustomer ON mcustomer.kode = xorder.ref_cust
             WHERE xprocorder.status >= '4'
             AND xprocorder.void IS NOT TRUE";

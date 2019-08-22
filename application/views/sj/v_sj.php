@@ -466,6 +466,7 @@
 
   function savedata() {
       if (ceknull('ref_order')) { return false }
+      if (ceknull('mcustomer_nama')) { return false }
       if (ceknull('kirim')) { return false }
       if (ceknull('biayakirim')) { return false }
       if (ceknull('tgl')) { return false }

@@ -16,11 +16,12 @@ class Stokproduk extends CI_Controller {
 
     public function getall(){
         $q = "SELECT
-                dinventot.jumlah,
-                mgudang.nama mgudang_nama
+                dinventot.ref_brg,
+                mbarang.nama,
+                dinventot.jumlah
             FROM
                 dinventot
-            LEFT JOIN mgudang ON mgudang.kode = dinventot.ref_gud";
+            LEFT JOIN mbarang ON mbarang.kode = dinventot.ref_brg";
         $result     = $this->db->query($q)->result();
         echo json_encode(array('data' => $result));
     }
@@ -79,7 +80,8 @@ class Stokproduk extends CI_Controller {
     {   
         $this->db->trans_begin();
         $a['useri']     = $this->session->userdata('username');
-        $a['ref_gud']   = $this->input->post('ref_gud');
+        // $a['ref_gud']   = $this->input->post('ref_gud');
+        $a['ref_gud']   = $this->libre->gud_def();
         $a['tgl']       = date('Y-m-d', strtotime($this->input->post('tgl')));
         $a['ket']       = $this->input->post('ket');
         $this->db->insert('xgudangin',$a);
@@ -109,7 +111,8 @@ class Stokproduk extends CI_Controller {
     {   
         $this->db->trans_begin();
         $a['useri']     = $this->session->userdata('username');
-        $a['ref_gud']   = $this->input->post('ref_gud');
+        // $a['ref_gud']   = $this->input->post('ref_gud');
+        $a['ref_gud']   = $this->libre->gud_def();
         $a['tgl']       = date('Y-m-d', strtotime($this->input->post('tgl')));
         $a['ket']       = $this->input->post('ket');
         $this->db->insert('xgudangout',$a);
