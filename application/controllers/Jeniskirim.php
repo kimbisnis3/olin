@@ -20,9 +20,9 @@ class Jeniskirim extends CI_Controller {
         foreach ($result as $r) {
             $row['id']      = $r->id;
             $row['no']      = $no;
+            $row['kode']    = $r->kode;
             $row['nama']    = $r->nama;
-            $row['jarak']   = $r->jarak;
-            $row['nominal'] = $r->nominal;
+            $row['ket']     = $r->ket;
 
             $list[] = $row;
             $no++;

@@ -243,12 +243,46 @@
 	    }
 	}
 
-	function formInvalid(a){
-		$('[name="' + a + '"]').addClass('pulse animated');
+	function formInvalid(a) {
+	    $('[name="' + a + '"]').addClass('pulse animated');
 	}
 
-	function clearform(){
-		$('input').removeClass('pulse animated');
+	function clearform() {
+	    $('input').removeClass('pulse animated');
+	}
+
+	function getIndex(arr, val, key = '') {
+	    if (key == '') {
+	        var zzz = arr.indexOf(val);
+	    } else {
+	        var zzz = arr.findIndex(function(s) {
+	            return s[key] == val;
+	        });
+	    }
+	    return zzz;
+	}
+
+	function getObject(arr, val, key) {
+	    var zzz = arr.findIndex(function(s) {
+	        return s[key] == val;
+	    });
+	    return arr[zzz];
+	}
+
+	function removeObject(arr, val, key) {
+	    var zzz = arr.findIndex(function(s) {
+	        return s[key] == val;
+	    });
+	    arr.splice(arr.indexOf(arr[zzz]), 1);
+	    return arr;
+	}
+
+	function replaceObject(arr, val, key, newObj) {
+	    var zzz = arr.findIndex(function(s) {
+	        return s[key] == val;
+	    });
+	    arr[zzz] = newObj;
+	    return arr[zzz];
 	}
 
 </script>

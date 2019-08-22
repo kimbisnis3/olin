@@ -84,5 +84,5 @@ class Sandbox extends CI_Controller {
       $map = directory_map('./uploads');
       print_r($map);
     }
-    
+
 }

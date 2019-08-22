@@ -82,6 +82,7 @@
                           <tr id="repeat">
                             <th width="5%">No</th>
                             <th>ID</th>
+                            <th>Kode</th>
                             <th>Nama</th>
                             <th>Keterangan</th>
                           </tr>
@@ -126,6 +127,7 @@
           "columns": [
           { "data": "no" }, 
           { "data": "id" , "visible" : false},
+          { "data": "kode" , "visible" : false},
           { "data": "nama" }, 
           { "data": "ket" }
           ]
@@ -143,6 +145,10 @@
             }
         }
     });
+
+    let kode_ = table.cell( idx, 2).data();
+    console.log(kode_)
+
   });
 
   function refresh() {

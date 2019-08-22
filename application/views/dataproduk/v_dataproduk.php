@@ -188,6 +188,7 @@
                             <th>Konv</th>
                             <th>Nama Satuan</th>
                             <th>Harga</th>
+                            <th>Keterangan</th>
                             <th>Nama Gudang</th>
                             <th>Default</th>
                         </thead>
@@ -241,10 +242,11 @@
           { "data": "kode" , "visible" : false},
           { "data": "idbarang" , "visible" : false},
           { "data": "namabarang" },
-          { "data": "konv" },
+          { "data": "konv", "visible" : false },
           { "data": "namasatuan" },
           { "data": "harga" },
-          { "data": "namagudang" },
+          { "data": "ketbarang" },
+          { "data": "namagudang", "visible" : false },
           { "data": "def" },
           ]
       });

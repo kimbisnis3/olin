@@ -25,6 +25,7 @@ class Dataproduk extends CI_Controller {
                 msatbrg.def,
                 mbarang.id idbarang,
                 mbarang.kode kodebarang,
+                mbarang.ket ketbarang,
                 mbarang.nama namabarang,
                 msatuan.nama namasatuan,
                 mgudang.nama namagudang
@@ -44,6 +45,7 @@ class Dataproduk extends CI_Controller {
             $row['konv']        = $r->konv;
             $row['harga']       = number_format($r->harga);
             $row['namabarang']  = $r->namabarang;
+            $row['ketbarang']   = $r->ketbarang;
             $row['namasatuan']  = $r->namasatuan;
             $row['namagudang']  = $r->namagudang;
             $row['def']         = truefalse($r->def,'Default','');
