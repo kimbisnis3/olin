@@ -31,6 +31,7 @@ class Po extends CI_Controller {
                 xorder.bykirim,
                 xorder.ref_layanan,
                 xorder.kurir,
+                xorder.kodekurir,
                 xorder.lokasidari,
                 xorder.lokasike,
                 xorder.pathcorel,
@@ -51,11 +52,11 @@ class Po extends CI_Controller {
             $row['no']      = $i + 1;
             $row['id']          = $r->id;
             $row['kode']        = $r->kode;
+            $row['tgl']         = normal_date($r->tgl);
             $row['namacust']    = $r->namacust;
             $row['kgkirim']     = $r->kgkirim;
             $row['bykirim']     = number_format($r->bykirim);
-            $row['mkirim_nama'] = $r->mkirim_nama;
-            $row['kurir']       = $r->kurir;
+            $row['mkirim_nama'] = $r->mkirim_nama." - ".strtoupper($r->kurir);
             $row['lokasidari']  = $r->lokasidari;
             $row['lokasike']    = $r->lokasike;
             $row['ket']         = $r->ket;
@@ -275,6 +276,8 @@ class Po extends CI_Controller {
         if (count($design) > 0) {
             $this->db->insert_batch('xorderds',$c);
         }
+        $d['total'] = ($this->input->post('jumlah') * $Brg->msatbrg_harga) + $this->input->post('biaya');
+        $this->db->update('xorder',$d,array('kode' => $kodeOrder));
 
         if ($this->db->trans_status() === FALSE)
         {
@@ -404,6 +407,8 @@ class Po extends CI_Controller {
             $this->db->delete('xorderds',array('ref_orderd' => $idOrderd));
             $this->db->insert_batch('xorderds',$c);
         }
+        $d['total'] = ($this->input->post('jumlah') * $Brg->msatbrg_harga) + $this->input->post('biaya');
+        $this->db->update('xorder',$d,array('kode' => $kodeorder));
 
         if ($this->db->trans_status() === FALSE)
         {

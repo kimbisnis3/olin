@@ -515,12 +515,12 @@
           { "data": "no" }, 
           { "data": "id" , "visible" : false},
           { "data": "kode" },
+          { "data": "tgl" },
           { "data": "namacust" },
           { "data": "mkirim_nama" },
           { "data": "kirimke" },
           { "data": "kgkirim" },
           { "data": "bykirim" },
-          { "data": "kurir" },
           { "data": "lokasike" },
           { "data": "ket" }
           ]
