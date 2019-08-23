@@ -5,6 +5,7 @@ class Po extends CI_Controller {
     public $table       = 'xorder';
     public $foldername  = 'po';
     public $indexpage   = 'po/v_po';
+    public $printpage   = 'po/p_po';
 
     function __construct() {
         parent::__construct();
@@ -81,7 +82,9 @@ class Po extends CI_Controller {
                 msatbrg.ref_brg,
                 msatbrg.ref_sat,
                 msatuan.nama satuan,
-                mgudang.nama gudang
+                mgudang.nama gudang,
+                xorderd.jumlah,
+                xorderd.jumlah * xorderd.harga subtotal
             FROM
                 xorderd
             LEFT JOIN mbarang ON mbarang.kode = xorderd.ref_brg
@@ -119,11 +122,12 @@ class Po extends CI_Controller {
                         <thead>
                         <tr>
                             <th>No</th>
+                            <th>Kode</th>
                             <th>Produk</th>
-                            <th>Konv</th>
+                            <th>Jumlah</th>
                             <th>Satuan</th>
                             <th>Harga</th>
-                            <th>Gudang</th>
+                            <th>Subtotal</th>
                             <th>Keterangan</th>
                         </tr>
                         <thead>';
@@ -131,11 +135,12 @@ class Po extends CI_Controller {
             $tabs    .= '<tbody>
                         <tr>
                             <td>'.($i + 1).'.</td>
+                            <td>'.$r->kode.'</td>
                             <td>'.$r->nama.'</td>
-                            <td>'.$r->konv.'</td>
+                            <td>'.$r->jumlah.'</td>
                             <td>'.$r->satuan.'</td>
                             <td>'.number_format($r->harga).'</td>
-                            <td>'.$r->gudang.'</td>
+                            <td>'.number_format($r->subtotal).'</td>
                             <td>'.$r->ket.'</td>
                         </tr>
                         </tbody>';
@@ -577,6 +582,89 @@ class Po extends CI_Controller {
             }
         echo $op; 
         
+    }
+
+
+    function cetak() {
+        $kode = $this->input->get('kode');
+        $order  = "SELECT
+                xorder.id,
+                xorder.kode,
+                xorder.tgl,
+                xorder.ket,
+                xorder.pic,
+                xorder.kgkirim,
+                xorder.kirimke,
+                xorder.bykirim,
+                xorder.ref_layanan,
+                xorder.kurir,
+                xorder.kodekurir,
+                xorder.lokasidari,
+                xorder.lokasike,
+                xorder.pathcorel,
+                xorder.pathimage,
+                xorder.alamat,
+                mcustomer.telp,
+                mcustomer.nama namacust,
+                mkirim.nama mkirim_nama,
+                mlayanan.nama mlayanan_nama
+            FROM
+                xorder
+            LEFT JOIN mcustomer ON mcustomer.kode = xorder.ref_cust
+            LEFT JOIN mkirim ON mkirim.kode = xorder.ref_kirim
+            LEFT JOIN mlayanan ON mlayanan.kode = xorder.ref_layanan
+            WHERE xorder.kode = '$kode'";
+
+        $barang = "SELECT
+                mbarang.id,
+                mbarang.kode,
+                mbarang.nama,
+                mbarang.ket,
+                msatbrg.id idsatbarang,
+                msatbrg.konv,
+                msatbrg.ket ketsat,
+                msatbrg.harga,
+                msatbrg.ref_brg,
+                msatbrg.ref_sat,
+                msatuan.nama satuan,
+                mgudang.nama gudang,
+                xorderd.jumlah,
+                xorderd.jumlah * xorderd.harga subtotal
+            FROM
+                xorderd
+            LEFT JOIN mbarang ON mbarang.kode = xorderd.ref_brg
+            LEFT JOIN msatbrg ON msatbrg.kode = xorderd.ref_satbrg
+            LEFT JOIN msatuan ON msatuan.kode = msatbrg.ref_sat
+            LEFT JOIN mgudang ON mgudang.kode = msatbrg.ref_gud
+            WHERE xorderd.ref_order = '$kode'";
+
+        $spek = "SELECT
+                xorderds.id,
+                xorderds.ket,
+                mbarang.nama,
+                mmodesign.kode mmodesign_kode,
+                mmodesign.nama mmodesign_nama,
+                mmodesign.gambar mmodesign_gambar,
+                mwarna.nama mwarna_nama,
+                mwarna.colorc mwarna_colorc
+            FROM
+                xorderds
+            LEFT JOIN mmodesign ON mmodesign.kode = xorderds.ref_modesign
+            LEFT JOIN mwarna ON mwarna.kode = xorderds.ref_warna
+            LEFT JOIN xorderd ON xorderd. ID = xorderds.ref_orderd
+            LEFT JOIN mbarang ON mbarang.kode = xorderd.ref_brg
+            LEFT JOIN xorder ON xorder.kode = xorderd.ref_order
+            WHERE xorder.kode = '$kode'";
+
+        $resorder   = $this->db->query($order)->row();
+        $resbarang  = $this->db->query($barang)->row();
+        $resspek  = $this->db->query($spek)->row();
+
+        $data['title']  = "Purchase Order";
+        $data['order']  = $resorder;
+        $data['barang'] = $resbarang;
+        $data['spek']   = $resspek;
+        $this->load->view($this->printpage,$data);
     }
     
 }

@@ -1,0 +1,45 @@
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 12px;
+}
+
+.initial-report {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 12px;
+}
+
+td,
+th {
+    border: 1px solid #616161;
+    text-align: left;
+    padding: 7px;
+}
+
+th {
+    background-color: #e8e8e8;
+}
+
+.judul {
+  	text-align: center;
+  	text-decoration: underline !important;
+}
+
+.subjudul {
+    text-align: center !important;
+}
+
+.box-total {
+    border: 1px solid black; 
+    padding: 5px; 
+    margin-top: 80%; 
+    font-weight: bolder; 
+    font-size: 15px;
+}
+
+@media print{
+    @page {size: portrait;}
+}

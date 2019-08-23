@@ -395,10 +395,12 @@
               $('[name="kode"]').val(data.barang.kode);
 
               //spek barang
-              $('[name="sn"]').val(data.spek.sn);
-              $('[name="model"]').val(data.spek.model);
-              $('[name="warna"]').val(data.spek.warna);
-              $('[name="ketspek"]').val(data.spek.ket);
+              if (data.spek) {
+                $('[name="sn"]').val(data.spek.sn);
+                $('[name="model"]').val(data.spek.model);
+                $('[name="warna"]').val(data.spek.warna);
+                $('[name="ketspek"]').val(data.spek.ket); 
+              }
 
               //detail satuan barang
               sat = data.harga;

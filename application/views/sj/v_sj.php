@@ -371,7 +371,7 @@
           "columns": [
             { "data": "id" }, 
             { "data": "id" , "visible" : false},
-            { "data": "kode" , "visible" : false},
+            { "data": "xorder_kode" , "visible" : false},
             { "data": "ref_cust" , "visible" : false},
             { "data": "ref_cust" , "visible" : false},
             { "data": "bykirim" , "visible" : false},
@@ -398,7 +398,7 @@
           var data = tableproc.row($(this).parents('tr')).data();
           $('[name="ref_cust"]').val(data.ref_cust);
           $('[name="mcustomer_nama"]').val(data.mcustomer_nama);
-          $('[name="ref_order"]').val(data.kode);
+          $('[name="ref_order"]').val(data.xorder_kode);
           $('[name="biayakirim"]').val(data.bykirim);
           $('[name="kirim"]').val(data.kirimke);
           $('[name="alamat"]').val(data.alamat);

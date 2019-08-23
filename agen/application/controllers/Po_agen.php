@@ -83,7 +83,9 @@ class Po_agen extends CI_Controller {
                 msatbrg.ref_brg,
                 msatbrg.ref_sat,
                 msatuan.nama satuan,
-                mgudang.nama gudang
+                mgudang.nama gudang,
+                xorderd.jumlah,
+                xorderd.jumlah * xorderd.harga subtotal
             FROM
                 xorderd
             LEFT JOIN mbarang ON mbarang.kode = xorderd.ref_brg
@@ -121,11 +123,12 @@ class Po_agen extends CI_Controller {
                         <thead>
                         <tr>
                             <th>No</th>
+                            <th>Kode</th>
                             <th>Produk</th>
-                            <th>Konv</th>
+                            <th>Jumlah</th>
                             <th>Satuan</th>
                             <th>Harga</th>
-                            <th>Gudang</th>
+                            <th>Subtotal</th>
                             <th>Keterangan</th>
                         </tr>
                         <thead>';
@@ -133,11 +136,12 @@ class Po_agen extends CI_Controller {
             $tabs    .= '<tbody>
                         <tr>
                             <td>'.($i + 1).'.</td>
+                            <td>'.$r->kode.'</td>
                             <td>'.$r->nama.'</td>
-                            <td>'.$r->konv.'</td>
+                            <td>'.$r->jumlah.'</td>
                             <td>'.$r->satuan.'</td>
                             <td>'.number_format($r->harga).'</td>
-                            <td>'.$r->gudang.'</td>
+                            <td>'.number_format($r->subtotal).'</td>
                             <td>'.$r->ket.'</td>
                         </tr>
                         </tbody>';

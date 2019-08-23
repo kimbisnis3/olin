@@ -168,7 +168,7 @@
 	        url: `${php_base_url}/universe/getAkses`,
 	        type: "POST",
 	        data: {
-	            menu: m
+	            menu: $.trim(m)
 	        },
 	        dataType: "JSON",
 	        success: function(data) {

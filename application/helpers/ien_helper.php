@@ -62,6 +62,17 @@ if (!function_exists('status')) {
         return $i;
     }
 
+    function showimagecustom($i,$maxw){
+        if ($i == NULL){
+            $i = "(Noimage)";
+        } else {
+            $img = base_url().''.$i;
+            $i = "<img style='max-width : ".$maxw."px;' src='".$img."'>";
+        }
+
+        return $i;
+    }
+
     function dlimage($i){
          
         if ($i == NULL){

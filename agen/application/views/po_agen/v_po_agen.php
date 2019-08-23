@@ -754,6 +754,7 @@
   function add_data() {
       state = 'add';
       clearform();
+      $('.btn-save').prop('disabled',false);
       $('.box-upload').removeClass('invisible');
       $('#form-data')[0].reset();
       $('#img-preview').remove();
@@ -844,6 +845,7 @@
           url = `${apiurl}/updatedata`;
       }
       var formData = new FormData($('#form-data')[0]);
+      $('.btn-save').prop('disabled',true);
       $.ajax({
           url: url,
           type: "POST",
@@ -863,11 +865,13 @@
                   $('#modal-data').modal('hide');
                   refresh();
                   showNotif('Sukses', 'Tidak Ada Perubahan', 'success')
+                  $('.btn-save').prop('disabled',false);
               }
 
           },
           error: function(jqXHR, textStatus, errorThrown) {
               showNotif('Fail', 'Internal Error', 'danger')
+              $('.btn-save').prop('disabled',false);
           }
       });
   }

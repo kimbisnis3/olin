@@ -435,6 +435,7 @@
                         <button class="btn btn-act btn-warning btn-flat edit-btn invisible" onclick="edit_data()"><i class="fa fa-pencil"></i> Ubah</button>
                         <button class="btn btn-act bg-navy btn-flat file-btn" onclick="open_file()"><i class="fa fa-file"></i> File</button>
                         <button class="btn btn-act btn-danger btn-flat delete-btn invisible" onclick="hapus_data()" ><i class="fa fa-trash"></i> Void</button>
+                        <button class="btn btn-act bg-olive btn-flat" onclick="cetak_data()" ><i class="fa fa-print"></i> Cetak</button>
                       </div>
                     </div>
                     <div class="box-body">
@@ -767,6 +768,7 @@
   function add_data() {
       state = 'add';
       clearform();
+      $('.btn-save').prop('disabled',false);
       $('.box-upload').removeClass('invisible');
       $('#form-data')[0].reset();
       $('#img-preview').remove();
@@ -858,6 +860,7 @@
           url = `${apiurl}/updatedata`;
       }
       var formData = new FormData($('#form-data')[0]);
+      $('.btn-save').prop('disabled',true);
       $.ajax({
           url: url,
           type: "POST",
@@ -877,11 +880,13 @@
                   $('#modal-data').modal('hide');
                   refresh();
                   showNotif('Sukses', 'Tidak Ada Perubahan', 'success')
+                  $('.btn-save').prop('disabled',false);
               }
 
           },
           error: function(jqXHR, textStatus, errorThrown) {
               showNotif('Fail', 'Internal Error', 'danger')
+              $('.btn-save').prop('disabled',false);
           }
       });
   }
@@ -1000,6 +1005,16 @@
       $('[name="kodekurir"]').val(k.toString().replace(/\@/g, ''));
     }
   }
+
+  function cetak_data() {
+      kode = table.cell(idx, 3).data();
+      if (idx == -1) {
+          return false;
+      }
+      window.open(`${apiurl}/cetak?kode=${kode}`);
+  }
+
+
   
   </script>
 </body>

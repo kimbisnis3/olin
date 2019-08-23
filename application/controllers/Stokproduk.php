@@ -86,7 +86,6 @@ class Stokproduk extends CI_Controller {
         $a['ref_gud']   = $this->libre->gud_def();
         $a['tgl']       = date('Y-m-d', strtotime($this->input->post('tgl')));
         $a['ket']       = $this->input->post('ket');
-        $a['posted']    = 't';
         $this->db->insert('xgudangin',$a);
         $id     = $this->db->insert_id();
         $kode   = $this->db->get_where('xgudangin',array('id' => $id))->row()->kode;
@@ -95,6 +94,8 @@ class Stokproduk extends CI_Controller {
         $b['ref_satbrg']= $this->input->post('ref_satbrg');
         $b['jumlah']    = $this->input->post('jumlah');
         $result = $this->db->insert('xgudangind',$b);
+        $c['posted']    = 't';
+        $result = $this->db->update('xgudangin',$c,array('id' => $id));
         if ($this->db->trans_status() === FALSE) {
             $this->db->trans_rollback();
             $r = array(
@@ -118,7 +119,6 @@ class Stokproduk extends CI_Controller {
         $a['ref_gud']   = $this->libre->gud_def();
         $a['tgl']       = date('Y-m-d', strtotime($this->input->post('tgl')));
         $a['ket']       = $this->input->post('ket');
-        $a['posted']    = 't';
         $this->db->insert('xgudangout',$a);
         $id     = $this->db->insert_id();
         $kode   = $this->db->get_where('xgudangout',array('id' => $id))->row()->kode;
@@ -127,6 +127,8 @@ class Stokproduk extends CI_Controller {
         $b['ref_satbrg']= $this->input->post('ref_satbrg');
         $b['jumlah']    = $this->input->post('jumlah');
         $result = $this->db->insert('xgudangoutd',$b);
+        $c['posted']    = 't';
+        $result = $this->db->update('xgudangout',$c,array('id' => $id));
         if ($this->db->trans_status() === FALSE) {
             $this->db->trans_rollback();
             $r = array(
