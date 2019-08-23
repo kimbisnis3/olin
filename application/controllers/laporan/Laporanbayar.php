@@ -51,6 +51,9 @@ class Laporanbayar extends CI_Controller {
                     xpelunasan.tgl 
                 BETWEEN '$st' AND '$en'";
         }
+        if ($this->input->post('gb')) {
+            $q .=" ORDER BY {$this->input->post('gb')}";
+        }
         
         $data['result'] = $this->db->query($q)->result_array();
         $data['periodestart'] = $this->input->post('awal');

@@ -41,6 +41,9 @@ class Laporanagen extends CI_Controller {
         $data['result']  = $this->db->query($q)->result_array();
         // $data['periodestart'] = '@tanggal';
         // $data['periodeend']   = '@tanggal';
+        if ($this->input->post('gb')) {
+            $q .=" ORDER BY {$this->input->post('gb')}";
+        }
         $data['header'] = ['Nama','Alamat','Telp','Email','Alamat'];
         $data['body']   = ['nama','alamat','telp','email','ket'];
         $data['maskgb'] = $this->input->post('mask-gb');

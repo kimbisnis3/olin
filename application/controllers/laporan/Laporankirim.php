@@ -58,6 +58,9 @@ class Laporankirim extends CI_Controller {
                     xsuratjalan.tgl 
                 BETWEEN '$st' AND '$en'";
         }
+        if ($this->input->post('gb')) {
+            $q .=" ORDER BY {$this->input->post('gb')}";
+        }
         $data['result'] = $this->db->query($q)->result_array();
         $data['periodestart'] = $this->input->post('awal');
         $data['periodeend']   = $this->input->post('akhir');
