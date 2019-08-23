@@ -168,7 +168,7 @@
 	        url: `${php_base_url}/universe/getAkses`,
 	        type: "POST",
 	        data: {
-	            menu: m
+	            menu: $.trim(m)
 	        },
 	        dataType: "JSON",
 	        success: function(data) {
@@ -178,7 +178,7 @@
 	        	} else if ((data.super != '1') && (data.akses <= '0')) {
 					showNotif("Forbiden", 'Anda Tidak Memiliki Akses ke Halaman Ini', 'danger');
 	                setTimeout(function() {
-						window.location.replace(`${php_base_url}landingpage`);
+						// window.location.replace(`${php_base_url}landingpage`);
 	                }, 1000);
 	                console.log('!s!a')
 	        	} else if ((data.super != '1') && (data.akses > '0')) {

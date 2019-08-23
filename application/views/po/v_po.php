@@ -493,7 +493,7 @@
       $('#select-service').select2({ disabled: true });
       
       nilaimax('berat',30)
-      nilaimax('jumlah',1)
+      // nilaimax('jumlah',1)
 
       table = $('#table').DataTable({
           "processing": true,

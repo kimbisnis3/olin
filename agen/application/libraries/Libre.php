@@ -15,7 +15,7 @@ class libre
     public function goUpload($field,$filename,$dir)
     {
         $ci=& get_instance();
-        chmod($this->pathupload(),0777);
+        // chmod($this->pathupload(),0777);
         $config['upload_path'] = $this->pathupload().$dir;
         if (!is_dir($config['upload_path'])) {
             mkdir($config['upload_path'], 0777, TRUE);

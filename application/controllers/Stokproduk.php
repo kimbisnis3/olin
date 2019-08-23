@@ -16,8 +16,10 @@ class Stokproduk extends CI_Controller {
 
     public function getall(){
         $q = "SELECT
+                dinventot.id,
                 dinventot.ref_brg,
                 mbarang.nama,
+                mbarang.kode,
                 dinventot.jumlah
             FROM
                 dinventot
@@ -84,6 +86,7 @@ class Stokproduk extends CI_Controller {
         $a['ref_gud']   = $this->libre->gud_def();
         $a['tgl']       = date('Y-m-d', strtotime($this->input->post('tgl')));
         $a['ket']       = $this->input->post('ket');
+        $a['posted']    = 't';
         $this->db->insert('xgudangin',$a);
         $id     = $this->db->insert_id();
         $kode   = $this->db->get_where('xgudangin',array('id' => $id))->row()->kode;
@@ -115,6 +118,7 @@ class Stokproduk extends CI_Controller {
         $a['ref_gud']   = $this->libre->gud_def();
         $a['tgl']       = date('Y-m-d', strtotime($this->input->post('tgl')));
         $a['ket']       = $this->input->post('ket');
+        $a['posted']    = 't';
         $this->db->insert('xgudangout',$a);
         $id     = $this->db->insert_id();
         $kode   = $this->db->get_where('xgudangout',array('id' => $id))->row()->kode;
