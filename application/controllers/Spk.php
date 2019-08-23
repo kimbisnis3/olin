@@ -5,6 +5,8 @@ class Spk extends CI_Controller {
     public $table       = 'xprocorder';
     public $foldername  = 'spk';
     public $indexpage   = 'spk/v_spk';
+    public $printpage   = 'spk/p_spk';
+
     function __construct() {
         parent::__construct();
         include(APPPATH.'libraries/sessionakses.php');
@@ -185,6 +187,68 @@ class Spk extends CI_Controller {
         $result = $this->db->delete($this->table,$w);
         $r['sukses'] = $result ? 'success' : 'fail' ;
         echo json_encode($r);
+    }
+
+    function cetak() {
+        $kode = $this->input->get('kode');
+        $done = "T";
+        $wait = "F";
+
+        $spk  = "SELECT 
+                xprocorder.id,
+                xprocorder.kode,
+                to_char(xprocorder.tgl, 'DD Mon YYYY') tgl,
+                xprocorder.ref_brg,
+                xprocorder.ref_order,
+                xprocorder.status,
+                xprocorder.ket,
+                mbarang.nama mbarang_nama,
+                mlayanan.nama mlayanan_nama
+            FROM 
+                xprocorder
+            LEFT JOIN mbarang ON mbarang.kode = xprocorder.ref_brg
+            LEFT JOIN xorder ON xorder.kode = xprocorder.ref_order
+            LEFT JOIN mlayanan ON mlayanan.kode = xorder.ref_layanan
+            WHERE xprocorder.kode = '$kode'";
+
+        $barang = "SELECT 
+                xprocorder.id,
+                xprocorder.kode,
+                xprocorder.tgl,
+                xprocorder.ref_brg,
+                xprocorder.ref_order,
+                xprocorder.status,
+                xorder.kode xorder_kode,
+                xorder.pathimage,
+                xorderd.jumlah,
+                mbarang.kode mbarang_kode,
+                mbarang.nama mbarang_nama,
+                mmodesign.kode mmodesign_kode,
+                mmodesign.nama mmodesign_nama,
+                mwarna.nama mwarna_nama,
+                CASE WHEN xprocorder.status >= 0 THEN '$done' ELSE '$wait' END a,
+                CASE WHEN xprocorder.status >= 1 THEN '$done' ELSE '$wait' END b,
+                CASE WHEN xprocorder.status >= 2 THEN '$done' ELSE '$wait' END c,
+                CASE WHEN xprocorder.status >= 3 THEN '$done' ELSE '$wait' END d,
+                CASE WHEN xprocorder.status >= 4 THEN '$done' ELSE '$wait' END e
+            FROM 
+                xprocorder
+            LEFT JOIN xorder ON xorder.kode = xprocorder.ref_order
+            LEFT JOIN xorderd ON xorder.kode = xorderd.ref_order
+            LEFT JOIN xorderds ON xorderd.ID = xorderds.ref_orderd
+            LEFT JOIN mbarang ON mbarang.kode = xprocorder.ref_brg
+            LEFT JOIN mmodesign ON mmodesign.kode = xorderds.ref_modesign
+            LEFT JOIN mwarna ON mwarna.kode = xorderds.ref_warna
+            WHERE xprocorder.kode = '$kode'";
+
+        $resspk     = $this->db->query($spk)->row();
+        $resbarang  = $this->db->query($barang)->row();
+
+
+        $data['title']  = "Surat Perintah Kerja / SPK";
+        $data['spk']    = $resspk;
+        $data['barang'] = $resbarang;
+        $this->load->view($this->printpage,$data);
     }
     
 }

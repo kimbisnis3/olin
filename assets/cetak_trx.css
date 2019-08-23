@@ -5,7 +5,7 @@ table {
     font-size: 12px;
 }
 
-.initial-report {
+.initial-report, .main-report {
     font-family: arial, sans-serif;
     border-collapse: collapse;
     width: 100%;
@@ -17,6 +17,7 @@ th {
     border: 1px solid #616161;
     text-align: left;
     padding: 7px;
+    text-align: center;
 }
 
 th {
@@ -38,6 +39,14 @@ th {
     margin-top: 80%; 
     font-weight: bolder; 
     font-size: 15px;
+}
+
+.tr-ttd > td {
+    padding: 50px !important;
+}
+
+.tr-ttd-nama > td {
+    padding: 15px !important;
 }
 
 @media print{

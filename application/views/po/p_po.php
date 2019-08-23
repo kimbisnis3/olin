@@ -150,7 +150,7 @@
                         <p>:</p>
                       </div>
                       <div class="col-xs-5">
-                        <p><?php echo $order->kurir ?> ( <?php echo $order->kodekurir ?> )</p>
+                        <p><?php echo $order->kurir ?>  <?php echo "(". $order->kodekurir ?> )</p>
                         <p><?php echo $order->alamat ?></p>
                         <p><?php echo substr($order->lokasidari, strpos($order->lokasidari, "-") + 1);?></p>
                         <p><?php echo strtok($order->lokasidari, '-') ?></p>
