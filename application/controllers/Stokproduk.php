@@ -16,14 +16,15 @@ class Stokproduk extends CI_Controller {
 
     public function getall(){
         $q = "SELECT
-                dinventot.id,
+                dinventot. ID,
                 dinventot.ref_brg,
                 mbarang.nama,
-                mbarang.kode,
+                mbarangs.sn kode,
                 dinventot.jumlah
             FROM
                 dinventot
-            LEFT JOIN mbarang ON mbarang.kode = dinventot.ref_brg";
+            LEFT JOIN mbarang ON mbarang.kode = dinventot.ref_brg
+            LEFT JOIN mbarangs ON mbarangs.ref_brg = mbarang.kode";
         $result     = $this->db->query($q)->result();
         echo json_encode(array('data' => $result));
     }

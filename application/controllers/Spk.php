@@ -245,7 +245,7 @@ class Spk extends CI_Controller {
         $resbarang  = $this->db->query($barang)->row();
 
 
-        $data['title']  = "Surat Perintah Kerja / SPK";
+        $data['title']  = "Surat Perintah Kerja";
         $data['spk']    = $resspk;
         $data['barang'] = $resbarang;
         $this->load->view($this->printpage,$data);

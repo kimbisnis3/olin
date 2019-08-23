@@ -107,7 +107,7 @@
             <th>Printing</th>
             <th>Cutting</th>
             <th>Sewing</th>
-            <th>------</th>
+            <th>Finishin</th>
           </tr>
         </thead>
         <tbody>

@@ -43,7 +43,7 @@ class Qc extends CI_Controller {
                 xprocorder.tgl 
             BETWEEN '$filterawal' AND '$filterakhir'";
         if ($filterstatus) {
-            $q .=" AND xprocorder.status >= '$filterstatus'";
+            $q .=" AND xprocorder.status <= '$filterstatus'";
         }
         $q .= " ORDER BY xprocorder.id DESC";
         $result     = $this->db->query($q)->result();

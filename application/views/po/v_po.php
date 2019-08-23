@@ -772,6 +772,7 @@
       $('.box-upload').removeClass('invisible');
       $('#form-data')[0].reset();
       $('#img-preview').remove();
+      $('[name="ref_layanan"]').val('2019000002');
       $('#select-provinsi').val('10'); //set to Jawa Tengah
       setMonth('tgl',0);
       $('.select2').trigger('change');
