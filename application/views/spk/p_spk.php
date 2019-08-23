@@ -63,7 +63,7 @@
         </div>
       </div>
     </section>
-    <hr style="background-color: black !important;">
+    <hr>
     <section class="main-report" style="margin-bottom: 40px">
       <div class="row">
         <div class="col-xs-5">

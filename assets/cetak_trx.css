@@ -12,6 +12,13 @@ table {
     font-size: 12px;
 }
 
+.main-report-sj {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 18px;
+}
+
 td,
 th {
     border: 1px solid #616161;
@@ -47,6 +54,10 @@ th {
 
 .tr-ttd-nama > td {
     padding: 15px !important;
+}
+
+hr{ 
+  border: 0.5px solid black; 
 }
 
 @media print{

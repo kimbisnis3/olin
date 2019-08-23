@@ -5,6 +5,8 @@ class Sj extends CI_Controller {
     public $table       = 'xsuratjalan';
     public $foldername  = 'sj';
     public $indexpage   = 'sj/v_sj';
+    public $printpage   = 'sj/p_sj';
+
     function __construct() {
         parent::__construct();
         include(APPPATH.'libraries/sessionakses.php');
@@ -262,6 +264,51 @@ class Sj extends CI_Controller {
         $result = $this->db->delete($this->table,$w);
         $r['sukses'] = $result ? 'success' : 'fail' ;
         echo json_encode($r);
+    }
+
+    function cetak() {
+        $kode = $this->input->get('kode');
+
+        $sj  = "SELECT
+                xsuratjalan.id,
+                xsuratjalan.kode,
+                to_char(xsuratjalan.tgl, 'DD Mon YYYY') tgl,
+                to_char(xsuratjalan.tglkirim, 'DD Mon YYYY') tglkirim,
+                xsuratjalan.kirim,
+                xsuratjalan.biayakirim,
+                xsuratjalan.ref_cust,
+                xsuratjalan.ket,
+                xsuratjalan.posted,
+                mcustomer.nama mcustomer_nama,
+                xorder.ket,
+                xorder.pic,
+                xorder.kgkirim,
+                xorder.kirimke,
+                xorder.bykirim,
+                xorder.ref_layanan,
+                xorder.ref_kirim,
+                xorder.kurir,
+                xorder.kodekurir,
+                xorder.lokasidari,
+                xorder.lokasike,
+                xorder.alamat,
+                xorderd.jumlah,
+                mbarang.kode mbarang_kode,
+                mbarang.nama mbarang_nama
+            FROM
+                xsuratjalan
+            LEFT JOIN mcustomer ON mcustomer.kode = xsuratjalan.ref_cust
+            LEFT JOIN xorder ON xorder.kode = xsuratjalan.ref_order
+            LEFT JOIN xorderd ON xorderd.ref_order = xorder.kode
+            LEFT JOIN mbarang ON mbarang.kode = xorderd.ref_brg
+            WHERE xsuratjalan.kode = '$kode'";
+
+        $ressj  = $this->db->query($sj)->row();
+
+
+        $data['title']  = "Surat Jalan";
+        $data['sj']     = $ressj;
+        $this->load->view($this->printpage,$data);
     }
     
 }

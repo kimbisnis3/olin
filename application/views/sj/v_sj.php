@@ -202,6 +202,7 @@
                         <button class="btn btn-act btn-warning btn-flat edit-btn invisible" onclick="edit_data()"><i class="fa fa-pencil"></i> Ubah</button>
                         <button class="btn btn-act btn-success btn-flat option-btn invisible" onclick="valid_data()"><i class="fa fa-check"></i> Validasi</button>
                         <button class="btn btn-act btn-danger btn-flat delete-btn invisible" onclick="void_data()" ><i class="fa fa-trash"></i> Void</button>
+                        <button class="btn btn-act bg-olive btn-flat" onclick="cetak_data()" ><i class="fa fa-print"></i> Cetak</button>
                       </div>
                     </div>
                     <div class="box-body">
@@ -575,6 +576,14 @@
               showNotif('Fail', 'Internal Error', 'danger');
           }
       });
+  }
+
+  function cetak_data() {
+      kode = table.cell(idx, 3).data();
+      if (idx == -1) {
+          return false;
+      }
+      window.open(`${apiurl}/cetak?kode=${kode}`);
   }
 
   </script>
