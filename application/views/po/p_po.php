@@ -5,8 +5,8 @@
     <link href="<?php echo base_url() ?>assets/lte/plugins/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet"/>
     <link href="<?php echo base_url() ?>assets/cetak_trx.css" rel="stylesheet"/>
   </head>
-  <!-- <body onload="window.print()"> -->
-<body>
+  <body onload="window.print()">
+<!-- <body> -->
   <div class="container"> 
     <section class="header-report" style="margin-bottom: 20px">
       <div class="row">
