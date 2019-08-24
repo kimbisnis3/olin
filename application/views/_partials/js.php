@@ -21,16 +21,17 @@
 	var id_action ;
 
 	$(document).ready(function() {
-      // activemenux(grupmenu.toLowerCase(), title.replace(/ /g, "").toLowerCase());
-      $('.fa-refresh').addClass('fa-spin');
-      $('.btn-act').prop('disabled',true);
-      Pace.on('done', function() {
-          $('.btn-act').prop('disabled',false);
-          $('.fa-refresh').removeClass('fa-spin');
-      });
-    $("img").on('error', function(){
-   		$(this).prop('src',`${php_base_url}assets/gambar/noimage.png`) 
-	});
+	    // activemenux(grupmenu.toLowerCase(), title.replace(/ /g, "").toLowerCase());
+	    $('.fa-refresh').addClass('fa-spin');
+	    $('.btn-act').prop('disabled', true);
+	    Pace.on('done', function() {
+	        $('.btn-act').prop('disabled', false);
+	        $('.fa-refresh').removeClass('fa-spin');
+	    });
+	    $("img").on('error', function() {
+	        $(this).prop('src', `${php_base_url}assets/gambar/noimage.png`)
+	    });
+	    
 
 	})
 
@@ -283,6 +284,36 @@
 	    });
 	    arr[zzz] = newObj;
 	    return arr[zzz];
+	}
+
+	function uniget(u, d, r = function() {}) {
+	    $.ajax({
+	        url: u,
+	        type: "GET",
+	        dataType: "JSON",
+	        data: d,
+	        success: function(data) {
+	            r(data);
+	        },
+	        error: function(jqXHR, textStatus, errorThrown) {
+	            showNotif('Error', 'Failed Get Data', 'danger')
+	        }
+	    });
+	}
+
+	function unipost(u, d, r = function() {}) {
+	    $.ajax({
+	        url: u,
+	        type: "POST",
+	        dataType: "JSON",
+	        data: d,
+	        success: function(data) {
+	            r(data);
+	        },
+	        error: function(jqXHR, textStatus, errorThrown) {
+	            showNotif('Error', 'Failed Get Data', 'danger')
+	        }
+	    });
 	}
 
 </script>

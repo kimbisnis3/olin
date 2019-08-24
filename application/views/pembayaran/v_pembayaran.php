@@ -170,6 +170,11 @@
                             <input type="text" class="form-control datepicker" name="filterakhir">
                           </div>
                         </div>
+                        <div class="col-md-3">
+                          <label>Agen</label>
+                          <select class="form-control select2" name="filteragen" id="filteragen">
+                          </select>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -203,9 +208,7 @@
                               <th>Agen</th>
                               <th>Kode PO</th>
                               <th>Jenis Bayar</th>
-                              <th>Total</th>
                               <th>Bayar</th>
-                              <th>Kurang</th>
                               <th>Keterangan</th>
                             </tr>
                           </thead>
@@ -240,6 +243,7 @@
       dpicker();
       setMonth('filterawal',30);
       setMonth('filterakhir',0);
+      getSelectcustom('filteragen', 'universe/getcustomer', 'filteragenclass','kode', 'nama')
 
       table = $('#table').DataTable({
           "processing": true,
@@ -257,14 +261,11 @@
               "data": {
                 filterawal  : function() { return $('[name="filterawal"]').val() },
                 filterakhir : function() { return $('[name="filterakhir"').val() },
+                filteragen : function() { return $('[name="filteragen"').val() },
               },
           },
-          "columns": [{ 
-              "className": 'details-control',
-              "orderable": false,
-              "data": null,
-              "defaultContent": ''
-          },
+          "columns": [
+          { "data": "id", "visible" : false }, 
           { "data": "id", "note" : "numbers" }, 
           { "data": "id" , "visible" : false},
           { "data": "kode" , "visible" : false},
@@ -273,9 +274,7 @@
           { "data": "mcustomer_nama" },
           { "data": "ref_jual" },
           { "data": "mjenbayar_nama" },
-          { "data": "total" },
           { "data": "bayar" },
-          { "data": "kurang" },
           { "data": "ket" },
           ]
       });

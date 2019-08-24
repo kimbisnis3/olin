@@ -17,6 +17,7 @@ class Pembayaran extends CI_Controller {
     public function getall(){
         $filterawal = date('Y-m-d', strtotime($this->input->post('filterawal')));
         $filterakhir = date('Y-m-d', strtotime($this->input->post('filterakhir')));
+        $filteragen = $this->input->post('filteragen');
         $q = "SELECT 
                 xpelunasan.id,
                 xpelunasan.kode,
@@ -40,6 +41,9 @@ class Pembayaran extends CI_Controller {
             AND
                 xpelunasan.tgl 
             BETWEEN '$filterawal' AND '$filterakhir'";
+        if ($filteragen) {
+            $q .= " AND ref_cust = '$filteragen'";
+        }
         $result     = $this->db->query($q)->result();
         $list       = [];
         foreach ($result as $i => $r) {
@@ -118,6 +122,7 @@ class Pembayaran extends CI_Controller {
                 xorder.kgkirim,
                 xorder.bykirim,
                 xorder.ref_cust,
+                xorder.ref_kirim,
                 mcustomer.nama mcustomer_nama,
                 (
                     SELECT

@@ -20,6 +20,7 @@ class Qc extends CI_Controller {
         $filterawal = date('Y-m-d', strtotime($this->input->post('filterawal')));
         $filterakhir = date('Y-m-d', strtotime($this->input->post('filterakhir')));
         $filterstatus = $this->input->post('filterstatus');
+        $filteragen = $this->input->post('filteragen');
         $q = "SELECT 
                 xprocorder.id,
                 xprocorder.kode,
@@ -40,13 +41,35 @@ class Qc extends CI_Controller {
             LEFT JOIN mbarang ON mbarang.kode = xprocorder.ref_brg
             LEFT JOIN xorder ON xorder.kode = xprocorder.ref_order
             WHERE
-                xprocorder.tgl 
-            BETWEEN '$filterawal' AND '$filterakhir'";
+                xprocorder.tgl x
+            BETWEEN '$filterawal' AND '$filterakhir'
+            AND xprocorder.void IS NOT TRUE";
         if ($filterstatus) {
             $q .=" AND xprocorder.status <= '$filterstatus'";
         }
+        if ($filteragen) {
+            $q .= " AND xorder.ref_cust = '$filteragen'";
+        }
         $q .= " ORDER BY xprocorder.id DESC";
         $result     = $this->db->query($q)->result();
+        $list       = [];
+        foreach ($result as $i => $r) {
+            $row['id']          = $r->id;
+            $row['kode']        = $r->kode;
+            $row['tgl']         = $r->tgl;
+            $row['ref_brg']     = $r->ref_brg;
+            $row['ref_order']   = $r->ref_order);
+            $row['status']      = $r->status;
+            $row['xorder_kode'] = $r->xorder_kode;
+            $row['pathimage']   = $r->pathimage;
+            $row['a']= $r->a;
+            $row['b']= $r->b;
+            $row['c']= $r->c;
+            $row['d']= $r->d;
+            $row['e']= $r->e;
+            $list[] = $row;
+        }   
+        echo json_encode(array('data' => $list));
         echo json_encode(array('data' => $result));
     }
 
@@ -58,6 +81,23 @@ class Qc extends CI_Controller {
         $result     = $this->db->update('xprocorder',$d,$w);
         $r['sukses'] = $result > 0 ? 'success' : 'fail' ;
         echo json_encode($r);
+    }
+
+    function ada() {
+        $path = "./agen/uploads/po/img-1566493068.png";
+        // $res = file_exists(base_url()."/agen/uploads/po/img-1566493068.png");
+        // return is_file($path) && file_exists($path);
+
+        // if (file_exists($path)) {
+        //     echo 'File exist'; 
+        // }
+
+        if (file_exists($path)) {
+            echo "The file exists";
+        } else {
+            echo "The file does not exist";
+        }
+
     }
     
 }

@@ -31,7 +31,7 @@
               <p>:</p>
             </div>
             <div class="col-xs-4">
-              <p><?php echo $order->kirimke ?></p>
+              <p><?php echo $this->libre->companydata()->nama ?></p>
               <p><?php echo $order->alamat ?></p>
               <p><?php echo $order->telp ?></p>
             </div>
@@ -89,9 +89,9 @@
                     <p>:</p>
                   </div>
                   <div class="col-xs-4">
-                    <p><?php echo $barang->kode ?></p>
+                    <p><?php echo $barang->sn ?></p>
                     <p><?php echo $barang->nama ?></p>
-                    <p><?php echo $barang->jumlah ?></p>
+                    <p><?php echo $barang->jumlah ?> <?php echo $barang->satuan ?></p>
                     <p><?php echo number_format($barang->harga) ?></p>
                     <p><strong><?php echo number_format($barang->subtotal) ?></strong></p>
                   </div>
@@ -109,7 +109,7 @@
                   <div class="col-xs-7">
                     <div class="row">
                       <div class="col-xs-5">
-                        <p>Kode </p>
+                        <p>Design </p>
                         <p>Warna<p>
                       </div>
                       <div class="col-xs-1">
@@ -117,7 +117,7 @@
                         <p>:</p>
                       </div>
                       <div class="col-xs-3">
-                        <p><?php echo $spek->mmodesign_kode ?></p>
+                        <p><?php echo $spek->mmodesign_nama ?></p>
                         <p><?php echo $spek->mwarna_nama ?></p>
                       </div>
                     </div>

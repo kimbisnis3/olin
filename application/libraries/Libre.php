@@ -109,4 +109,10 @@ class libre
         return $response;
 
     }
+
+    public function companydata() {
+      $ci=& get_instance();
+      $result = $ci->db->get('tcompany')->row();
+      return $result;
+    }
 }

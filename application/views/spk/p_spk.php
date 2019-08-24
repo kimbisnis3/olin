@@ -50,14 +50,17 @@
             <div class="col-xs-3">
               <p>Kode</p>
               <p>Tanggal</p>
+              <p>Dateline</p>
             </div>
             <div class="col-xs-1">
               <p>:</p>
               <p>:</p>
+              <p>:</p>
             </div>
             <div class="col-xs-5">
-              <p><?php echo $spk->kode ?></p>
-              <p><?php echo $spk->tgl ?></p>
+              <p><?php echo $barang->sn ?></p>
+              <p><?php echo normal_date($spk->tgl) ?></p>
+              <p><?php echo normal_date(date('Y-m-d', strtotime($spk->tgl. ' + 10 days'))) ?></p>
             </div>
           </div>
         </div>
@@ -69,7 +72,7 @@
         <div class="col-xs-5">
           <div class="row">
             <div class="col-xs-4">
-              <p>Kode</p>
+              <p>Produk</p>
               <p>Model</p>
               <p>Jumlah</p>
               <p>Kode Design</p>
@@ -83,9 +86,9 @@
               <p>:</p>
             </div>
             <div class="col-xs-4">
-              <p><?php echo $barang->mbarang_kode ?></p>
+              <p><?php echo $barang->mbarang_nama ?></p>
               <p><?php echo $barang->mmodesign_nama ?></p>
-              <p><?php echo $barang->jumlah ?></p>
+              <p><?php echo $barang->jumlah ?> <?php echo $barang->satuan ?></p>
               <p><?php echo $barang->mmodesign_kode ?></p>
               <p><?php echo $barang->mwarna_nama ?></p>
             </div>
@@ -107,7 +110,7 @@
             <th>Printing</th>
             <th>Cutting</th>
             <th>Sewing</th>
-            <th>Finishin</th>
+            <th>Finishing</th>
           </tr>
         </thead>
         <tbody>

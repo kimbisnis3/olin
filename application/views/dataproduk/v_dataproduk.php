@@ -87,6 +87,7 @@
                       <div class="form-group">
                         <label>Konv</label>
                         <input type="number" class="form-control" name="konv" >
+                        <input type="hidden" class="form-control" name="idsatuan" >
                       </div>
                     </div>
                     <div class="col-md-3">
@@ -115,12 +116,14 @@
                   </div>
                   <div class="row">
                     <div class="pull-right">
-                      <button style="margin-right: 19px!important" type="button" class="btn btn-primary btn-flat add-btn invisible" onclick="add_harga()" ><i class="fa fa-plus"></i> Tambah</button>
+                      <button style="margin-right: 19px!important" type="button" class="btn btn-primary btn-flat add-btn bounceIn animated" onclick="add_harga()" id="btn-tambah-harga"><i class="fa fa-plus"></i> Tambah</button>
+                      <button style="margin-right: 19px!important" type="button" class="btn btn-warning btn-flat add-btn bounceIn animated" onclick="simpan_harga()" id="btn-simpan-harga"><i class="fa fa-save"></i> Simpan</button>
+                      <button style="margin-right: 19px!important" type="button" class="btn btn-danger btn-flat add-btn bounceIn animated" onclick="batal_harga()" id="btn-batal-harga"><i class="fa fa-times"></i> Batal</button>
                     </div>
                   </div>
                 </div>
                 <div class="box-body pad">
-                  <div class="table-responsive mailbox-messages">
+                  <div class="table-responsive mailbox-messages box-table-harga">
                     <table id="table-harga" class="table table-striped table-bordered" cellspacing="0" width="100%">
                       <thead>
                         <tr id="repeat">
@@ -128,7 +131,25 @@
                           <th>Satuan</th>
                           <th>Harga</th>
                           <th>Keterangan</th>
-                          <th>Opsi</th>
+                          <th>Default</th>
+                          <th width="15%">Opsi</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div class="table-responsive mailbox-messages box-table-harga-edit">
+                    <table id="table-harga-edit" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                      <thead>
+                        <tr id="repeat">
+                          <th>ID</th>
+                          <th>Konv</th>
+                          <th>Satuan</th>
+                          <th>Harga</th>
+                          <th>Keterangan</th>
+                          <th>Default</th>
+                          <th width="15%">Opsi</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -170,7 +191,6 @@
                     </div>
                     <div class="pull-right">
                       <button class="btn btn-warning btn-flat edit-btn invisible" onclick="edit_data()"><i class="fa fa-pencil"></i> Ubah</button>
-                      <button class="btn btn-act btn-success btn-flat option-btn invisible" onclick="default_data()"><i class="fa fa-check"></i> Default</button>
                       <button class="btn btn-danger btn-flat delete-btn invisible" onclick="hapus_data()" ><i class="fa fa-trash"></i> Hapus</button>
                     </div>
                   </div>
@@ -190,7 +210,6 @@
                             <th>Harga</th>
                             <th>Keterangan</th>
                             <th>Nama Gudang</th>
-                            <th>Default</th>
                         </thead>
                         <tbody>
                         </tbody>
@@ -215,6 +234,7 @@
   var state;
   var idx     = -1;
   var table ;
+  var tablehargaedit ;
   var sat   = [];
   var arrsat = JSON.stringify(sat);
 
@@ -246,8 +266,7 @@
           { "data": "namasatuan" },
           { "data": "harga" },
           { "data": "ketbarang" },
-          { "data": "namagudang", "visible" : false },
-          { "data": "def" },
+          { "data": "namagudang", "visible" : false }
           ]
       });
 
@@ -309,13 +328,16 @@
           { "data": "satuan" },
           { "data": "harga" },
           { "data": "ketsatuan" },
+          { "data": "deflabel" },
           { "data": "btn"}
           ]
       });
 
       $('#table-harga tbody').on( 'click', 'button', function () {
         var data = tableharga.row( $(this).parents('tr') ).data();
-        sat.splice(data, 1);
+        // sat.splice(data, 1);
+        sat.pop();
+        console.log(data);
         reloadharga();
     } );
   });
@@ -342,19 +364,93 @@
   }
 
   function add_harga() {
-      sat.push({
+      if (state == 'add') {
+        let defvalue;
+        let deflabel;
+        if (sat.filter(st => st.konv == '1').length && $('[name="konv"]').val() == '1') {
+            showNotif('Warning', 'Konv 1 Sudah Ada', 'warning')
+        } else {
+          if ($('[name="konv"]').val() == '1') {
+            defvalue = 't'
+            deflabel = '<span class="label label-success">Default</span>'
+          } else {
+            defvalue = ''
+            deflabel = ''
+          }
+            sat.push({
+                'konv': $('[name="konv"]').val(),
+                'harga': $('[name="harga"]').val(),
+                'ref_sat': $('[name="ref_sat"]').val(),
+                'satuan': $('[name="ref_sat"] option:selected').html(),
+                'ketsatuan': $('[name="ketsatuan"]').val(),
+                'def': defvalue,
+                'deflabel': deflabel,
+            });
+            reloadharga();
+            clearformsat()
+        }
+        
+        
+      } else if (state == 'update') {
+        if (ceknull('konv')) { return false }
+        if (ceknull('harga')) { return false }
+        if (ceknull('ref_sat')) { return false }
+        if (ceknull('ket')) { return false }
+        param = {
+          'ref_brg': $('[name="kode"]').val(),
           'konv': $('[name="konv"]').val(),
           'harga': $('[name="harga"]').val(),
           'ref_sat': $('[name="ref_sat"]').val(),
-          'satuan': $('[name="ref_sat"] option:selected').html(),
+          'def': '',
           'ketsatuan': $('[name="ketsatuan"]').val()
-      });
-      reloadharga();
-      $('[name="konv"]').val('');
-      $('[name="harga"]').val('');
-      $('[name="ref_sat"]').val('');
-      $('[name="ketsatuan"]').val('');
-      $('.select2').trigger('change');
+        }
+        unipost(`${apiurl}/addharga`, param, function(res) {
+            if (res.sukses == "success") {
+                clearformsat()
+                state_insatuan()
+                tablehargaedit.ajax.reload(null, false);
+                refresh();
+                showNotif('Sukses', 'Data Harga Berhasil Ditambahkan', 'success')
+            }
+        })
+      }
+  }
+
+  function edit_harga(id) {
+      Pace.restart();
+      unipost(`${apiurl}/editharga`, { id : id }, function(data) {
+          $('[name="konv"]').val(data.konv);
+          $('[name="idsatuan"]').val(id);
+          $('[name="harga"]').val(data.harga);
+          $('[name="ref_sat"]').val(data.ref_sat);
+          $('[name="ketsatuan"]').val(data.ket);
+          $('.select2').trigger('change');
+      })
+      state_edsatuan();
+  }
+
+  function batal_harga() {
+      state_insatuan()
+      clearformsat()
+  }
+
+  function simpan_harga() {
+      param = {
+          'id': $('[name="idsatuan"]').val(),
+          'konv': $('[name="konv"]').val(),
+          'harga': $('[name="harga"]').val(),
+          'ref_sat': $('[name="ref_sat"]').val(),
+          'ketsatuan': $('[name="ketsatuan"]').val()
+      }
+      unipost(`${apiurl}/updateharga`, param, function(res) {
+          if (res.sukses == "success") {
+              clearformsat()
+              state_insatuan()
+              tablehargaedit.ajax.reload(null, false);
+              refresh();
+              showNotif('Sukses', 'Data Harga Berhasil Ditambahkan', 'success')
+          }
+      })
   }
 
   function reloadharga() {
@@ -362,15 +458,38 @@
       tableharga.clear().rows.add($.parseJSON(a)).draw();
   }
 
+  function clearformsat() {
+      $('[name="konv"]').val('');
+      $('[name="harga"]').val('');
+      $('[name="ref_sat"]').val('');
+      $('[name="ketsatuan"]').val('');
+      $('.select2').trigger('change');
+  }
+
+  function state_edsatuan() {
+      $('#btn-tambah-harga').addClass('invisible')
+      $('#btn-batal-harga').removeClass('invisible')
+      $('#btn-simpan-harga').removeClass('invisible')
+  }
+
+  function state_insatuan() {
+      $('#btn-tambah-harga').removeClass('invisible')
+      $('#btn-batal-harga').addClass('invisible')
+      $('#btn-simpan-harga').addClass('invisible')
+  }
+
   function add_data() {
       state = 'add';
       sat   = [];
       reloadharga()
       $('#form-data')[0].reset();
+      $('.box-table-harga-edit').addClass('invisible');
+      $('.box-table-harga').removeClass('invisible');
       $('.select2').trigger('change');
       $('#modal-data').modal('show');
       $('.select2').trigger('change');
       $('.modal-title').text('Tambah Data');
+      state_insatuan()
   }
 
   function edit_data() {
@@ -403,8 +522,36 @@
               }
 
               //detail satuan barang
-              sat = data.harga;
-              reloadharga();
+              // sat = data.harga;
+              // reloadharga();
+              $('.box-table-harga').addClass('invisible');
+              $('.box-table-harga-edit').removeClass('invisible');
+              state_insatuan();
+              tablehargaedit = $('#table-harga-edit').DataTable({
+                  "processing": true,
+                  "destroy" : true,
+                  "ajax": {
+                      "url": `${apiurl}/getdetailharga`,
+                      "type": "POST",
+                      "data": {
+                        kodebarang : data.barang.kode
+                      },
+                  },
+                  "columns": [
+                  { "data": "id" , "visible" : false},
+                  { "data": "konv" },
+                  { "data": "namasatuan" },
+                  { "data": "harga" },
+                  { "data": "ket" },
+                  { "data": "def" },
+                  { "data": "btn" },
+                  ]
+              });
+
+              $('#table-harga-edit tbody').on( 'click', '#hapussat', function () {
+                var data = tablehargaedit.row( $(this).parents('tr') ).data();
+                hapus_harga(data.id);
+              } );
               $('.select2').trigger('change');
               $('#modal-data').modal('show');
               $('.modal-title').text('Edit Data');
@@ -460,12 +607,8 @@
       });
   }
 
-  function default_data() {
-      id = table.cell( idx, 2).data();
-      if (idx == -1) {
-          return false;
-      }
-      $('.modal-title').text('Default Barang ?');
+  function default_data(id) {
+      $('.modal-title').text('Default Produk ?');
       $('#modal-konfirmasi').modal('show');
       $('#btnHapus').attr('onclick', 'do_default_data(' + id + ')');
   }
@@ -481,11 +624,12 @@
           success: function(data) {
               $('#modal-konfirmasi').modal('hide');
               if (data.sukses == 'success') {
-                  refresh();
+                  tablehargaedit.ajax.reload(null, false);
+                  table.ajax.reload(null, false);
                   showNotif('Sukses', 'Data Berhasil Diubah', 'success')
               } else if (data.sukses == 'fail') {
-                  $('#modal-data').modal('hide');
-                  refresh();
+                  $('#modal-konfirmasi').modal('hide');
+                  tablehargaedit.ajax.reload(null, false);
                   showNotif('Gagal', 'Data Gagal Diubah', 'danger')
               }
           },
@@ -496,22 +640,22 @@
   }
 
   function hapus_data() {
-      id = table.cell( idx, 2).data();
+      idbarang = table.cell( idx, 4).data();
       if (idx == -1) {
           return false;
       }
       $('.modal-title').text('Yakin Hapus Data ?');
       $('#modal-konfirmasi').modal('show');
-      $('#btnHapus').attr('onclick', 'delete_data(' + id + ')');
+      $('#btnHapus').attr('onclick', 'delete_data(' + idbarang + ')');
   }
 
-  function delete_data(id) {
+  function delete_data(idbarang) {
       $.ajax({
           url: `${apiurl}/deletedata`,
           type: "POST",
           dataType: "JSON",
           data: {
-              id: id,
+              id: idbarang,
           },
           success: function(data) {
               $('#modal-konfirmasi').modal('hide');
@@ -526,6 +670,38 @@
           },
           error: function(jqXHR, textStatus, errorThrown) {
               showNotif('Fail', 'Internal Error', 'danger');
+          }
+      });
+  }
+
+  function hapus_harga(id) {
+      $('.modal-title').text('Yakin Hapus Data ?');
+      $('#modal-konfirmasi').modal('show');
+      $('#btnHapus').attr('onclick', 'delete_harga(' + id + ')');
+  }
+
+  function delete_harga(id) {
+      $.ajax({
+          url: `${apiurl}/deleteharga`,
+          type: "POST",
+          dataType: "JSON",
+          data: {
+              id: id,
+          },
+          success: function(data) {
+              $('#modal-konfirmasi').modal('hide');
+              if (data.sukses == 'success') {
+                  tablehargaedit.ajax.reload(null, false);
+                  showNotif('Sukses', 'Data Harga Berhasil Dihapus', 'success')
+              } else if (data.sukses == 'fail') {
+                  $('#modal-konfirmasi').modal('hide');
+                  refresh();
+                  showNotif('Gagal', 'Data Harga Gagal Dihapus', 'danger')
+              }
+          },
+          error: function(jqXHR, textStatus, errorThrown) {
+              $('#modal-konfirmasi').modal('hide');
+              showNotif('Gagal', 'Barang Sudah Digunakan', 'danger');
           }
       });
   }

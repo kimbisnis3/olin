@@ -19,6 +19,7 @@ class Sj extends CI_Controller {
     public function getall(){
         $filterawal = date('Y-m-d', strtotime($this->input->post('filterawal')));
         $filterakhir = date('Y-m-d', strtotime($this->input->post('filterakhir')));
+        $filteragen = $this->input->post('filteragen');
         $q = "SELECT
                 xsuratjalan.id,
                 xsuratjalan.kode,
@@ -29,12 +30,24 @@ class Sj extends CI_Controller {
                 xsuratjalan.ref_cust,
                 xsuratjalan.ket,
                 xsuratjalan.posted,
-                mcustomer.nama mcustomer_nama
+                mcustomer.nama mcustomer_nama,
+                xorder.kgkirim,
+                xorder.kirimke,
+                xorder.bykirim,
+                xorder.ref_layanan,
+                xorder.kurir,
+                xorder.kodekurir,
+                xorder.lokasidari,
+                xorder.lokasike
             FROM
                 xsuratjalan
             LEFT JOIN mcustomer ON mcustomer.kode = xsuratjalan.ref_cust
+            LEFT JOIN xorder ON xorder.kode = xsuratjalan.ref_order
             WHERE xsuratjalan.void IS NOT TRUE
             AND xsuratjalan.tgl BETWEEN '$filterawal' AND '$filterakhir'";
+        if ($filteragen) {
+            $q .= " AND ref_cust = '$filteragen'";
+        }
         $result     = $this->db->query($q)->result();   
         echo json_encode(array('data' => $result));
     }
@@ -138,9 +151,10 @@ class Sj extends CI_Controller {
             $row    = array(
                 "useri"     => $this->session->userdata('username'),
                 "ref_suratjalan" => $kodesj,
-                "ref_brg"   => $r->ref_brg,
-                "jumlah"    => $r->jumlah,
-                "ref_satbrg"=> $r->ref_satbrg,
+                "ref_brg"       => $r->ref_brg,
+                "jumlah"        => $r->jumlah,
+                "ref_satbrg"    => $r->ref_satbrg,
+                "ref_gud"    => $this->libre->gud_def(),
             );
             $b[] = $row;
         }

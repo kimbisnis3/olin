@@ -1,5 +1,5 @@
 <header class="main-header">
-  <a class="logo">
+  <a href="<?php echo base_url() ?>" class="logo">
     <span class="logo-mini"><b><?php echo $this->libre->appname(); ?></b></span>
     <span class="logo-lg"><b><?php echo $this->libre->appname(); ?></b></span>
   </a>

@@ -197,9 +197,11 @@
   $(function() {
       select2();
       // getprovince();
-      console.log($unibind.attr('uni-bind-val'));
+      // console.log($unibind.attr('uni-bind-val'));
       load_data()
       $("#entries").val('10').trigger('change')
+
+      
   });
 
   function getsong() {

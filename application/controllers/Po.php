@@ -20,6 +20,8 @@ class Po extends CI_Controller {
     public function getall(){
         $filterawal = date('Y-m-d', strtotime($this->input->post('filterawal')));
         $filterakhir = date('Y-m-d', strtotime($this->input->post('filterakhir')));
+        $filteragen = $this->input->post('filteragen');
+        $filterproses = $this->input->post('filterproses');
         $q = "SELECT
                 xorder.id,
                 xorder.kode,
@@ -36,16 +38,27 @@ class Po extends CI_Controller {
                 xorder.lokasike,
                 xorder.pathcorel,
                 xorder.pathimage,
+                xorder.status,
                 mcustomer.nama namacust,
-                mkirim.nama mkirim_nama
+                mkirim.nama mkirim_nama,
+                mlayanan.nama mlayanan_nama
             FROM
                 xorder
             LEFT JOIN mcustomer ON mcustomer.kode = xorder.ref_cust
             LEFT JOIN mkirim ON mkirim.kode = xorder.ref_kirim
+            LEFT JOIN mlayanan ON mlayanan.kode = xorder.ref_layanan
             WHERE xorder.void IS NOT TRUE
             AND
                 xorder.tgl 
             BETWEEN '$filterawal' AND '$filterakhir'";
+        if ($filteragen) {
+            $q .= " AND ref_cust = '$filteragen'";
+        }
+        if ($filterproses == '1') {
+            $q .= " AND xorder.kode IN ( SELECT ref_order FROM xprocorder)";
+        } else if ($filterproses == '0') {
+            $q .= " AND xorder.kode NOT IN ( SELECT ref_order FROM xprocorder)";
+        }
         $result     = $this->db->query($q)->result();
         $list       = [];
         foreach ($result as $i => $r) {
@@ -63,6 +76,8 @@ class Po extends CI_Controller {
             $row['pathcorel']   = $r->pathcorel;
             $row['pathimage']   = $r->pathimage;
             $row['kirimke']     = $r->kirimke;
+            $row['mlayanan_nama']= $r->mlayanan_nama;
+            $row['status']      = statuspo($r->status);
             $list[] = $row;
         }   
         echo json_encode(array('data' => $list));
@@ -634,10 +649,12 @@ class Po extends CI_Controller {
                 msatuan.nama satuan,
                 mgudang.nama gudang,
                 xorderd.jumlah,
-                xorderd.jumlah * xorderd.harga subtotal
+                xorderd.jumlah * xorderd.harga subtotal,
+                mbarangs.sn
             FROM
                 xorderd
             LEFT JOIN mbarang ON mbarang.kode = xorderd.ref_brg
+            LEFT JOIN mbarangs ON mbarang.kode = mbarangs.ref_brg
             LEFT JOIN msatbrg ON msatbrg.kode = xorderd.ref_satbrg
             LEFT JOIN msatuan ON msatuan.kode = msatbrg.ref_sat
             LEFT JOIN mgudang ON mgudang.kode = msatbrg.ref_gud

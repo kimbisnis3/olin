@@ -20,6 +20,7 @@ class Spk extends CI_Controller {
     {
         $filterawal = date('Y-m-d', strtotime($this->input->post('filterawal')));
         $filterakhir = date('Y-m-d', strtotime($this->input->post('filterakhir')));
+        $filteragen = $this->input->post('filteragen');
         $q = "SELECT 
                 xprocorder.id,
                 xprocorder.kode,
@@ -37,6 +38,9 @@ class Spk extends CI_Controller {
             AND
                 xprocorder.tgl 
             BETWEEN '$filterawal' AND '$filterakhir'";
+        if ($filteragen) {
+            $q .= " AND xorder.ref_cust = '$filteragen'";
+        }
         $result     = $this->db->query($q)->result();
         echo json_encode(array('data' => $result));
     }
@@ -197,7 +201,7 @@ class Spk extends CI_Controller {
         $spk  = "SELECT 
                 xprocorder.id,
                 xprocorder.kode,
-                to_char(xprocorder.tgl, 'DD Mon YYYY') tgl,
+                xprocorder.tgl,
                 xprocorder.ref_brg,
                 xprocorder.ref_order,
                 xprocorder.status,
@@ -226,6 +230,8 @@ class Spk extends CI_Controller {
                 mmodesign.kode mmodesign_kode,
                 mmodesign.nama mmodesign_nama,
                 mwarna.nama mwarna_nama,
+                msatuan.nama satuan,
+                mbarangs.sn,
                 CASE WHEN xprocorder.status >= 0 THEN '$done' ELSE '$wait' END a,
                 CASE WHEN xprocorder.status >= 1 THEN '$done' ELSE '$wait' END b,
                 CASE WHEN xprocorder.status >= 2 THEN '$done' ELSE '$wait' END c,
@@ -237,6 +243,9 @@ class Spk extends CI_Controller {
             LEFT JOIN xorderd ON xorder.kode = xorderd.ref_order
             LEFT JOIN xorderds ON xorderd.ID = xorderds.ref_orderd
             LEFT JOIN mbarang ON mbarang.kode = xprocorder.ref_brg
+            LEFT JOIN msatbrg ON msatbrg.kode = xorderd.ref_satbrg
+            LEFT JOIN msatuan ON msatuan.kode = msatbrg.ref_sat
+            LEFT JOIN mbarangs ON mbarang.kode = mbarangs.ref_brg
             LEFT JOIN mmodesign ON mmodesign.kode = xorderds.ref_modesign
             LEFT JOIN mwarna ON mwarna.kode = xorderds.ref_warna
             WHERE xprocorder.kode = '$kode'";

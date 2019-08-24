@@ -158,6 +158,11 @@
                             <input type="text" class="form-control datepicker" name="filterakhir">
                           </div>
                         </div>
+                        <div class="col-md-3">
+                          <label>Agen</label>
+                          <select class="form-control select2" name="filteragen" id="filteragen">
+                          </select>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -222,6 +227,7 @@
       dpicker();
       setMonth('filterawal',30);
       setMonth('filterakhir',0);
+      getSelectcustom('filteragen', 'universe/getcustomer', 'filteragenclass','kode', 'nama')
 
       table = $('#table').DataTable({
           "processing": true,
@@ -231,6 +237,7 @@
               "data": {
                 filterawal  : function() { return $('[name="filterawal"]').val() },
                 filterakhir : function() { return $('[name="filterakhir"').val() },
+                filteragen : function() { return $('[name="filteragen"').val() },
               },
           },
           "columns": [

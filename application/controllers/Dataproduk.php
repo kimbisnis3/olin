@@ -34,6 +34,8 @@ class Dataproduk extends CI_Controller {
             LEFT JOIN mbarang ON mbarang.kode = msatbrg.ref_brg
             LEFT JOIN msatuan ON msatuan.kode = msatbrg.ref_sat
             LEFT JOIN mgudang ON mgudang.kode = msatbrg.ref_gud";
+        $q  .= " WHERE mbarang.kode != 'GX0001'";
+        $q  .= " AND msatbrg.def = 't'";
         $q  .= " ORDER BY msatbrg.id DESC";
         $result     = $this->db->query($q)->result();
         $list       = [];
@@ -54,17 +56,18 @@ class Dataproduk extends CI_Controller {
         echo json_encode(array('data' => $list));
     }
 
-    public function getdetailx()
+    public function getdetailharga()
     {
         $kodebarang = $this->input->post('kodebarang');
         $q = "SELECT
-                msatbrg.id idsatbarang,
+                msatbrg.id,
                 msatbrg.konv,
                 msatbrg.ket,
                 msatbrg.harga,
                 msatbrg.ref_brg,
                 msatbrg.ref_sat,
                 msatbrg.ref_gud,
+                msatbrg.def,
                 msatuan.nama namasatuan,
                 mgudang.nama namagudang
             FROM
@@ -73,26 +76,64 @@ class Dataproduk extends CI_Controller {
             LEFT JOIN mgudang ON mgudang.kode = msatbrg.ref_gud
             WHERE msatbrg.ref_brg = '$kodebarang'";
         $result     = $this->db->query($q)->result();
-        $str        = '<table class="table">
-                        <tr>
-                            <th>Konv</th>
-                            <th>Satuan</th>
-                            <th>Harga</th>
-                            <th>Gudang</th>
-                            <th>Keterangan</th>
-                        </tr>';
-        foreach ($result as $r) {
-            $str    .= '<tr>
-                            <td>'.$r->konv.'</td>
-                            <td>'.$r->namasatuan.'</td>
-                            <td>'.$r->harga.'</td>
-                            <td>'.$r->namagudang.'</td>
-                            <td>'.$r->ket.'</td>
-                        </tr>';
+        foreach ($result as $i => $r) {
+            $row['id']          = $r->id;
+            $row['konv']        = $r->konv;
+            $row['namasatuan']  = $r->namasatuan;
+            $row['harga']       = $r->harga;
+            $row['ket']         = $r->ket;
+            $row['def']         = truefalse($r->def,'Default','');
+            $row['btn']         = "
+            <button class='btn btn-sm btn-warning btn-flat' id='editsat' onclick='edit_harga(".$r->id.")'><i class='fa fa-pencil'></i></button>
+            <button class='btn btn-sm btn-danger btn-flat' id='hapussat' onclick='hapus_harga(".$r->id.")'><i class='fa fa-trash'></i></button>
+            <button class='btn btn-sm btn-success btn-flat ".$this->tf($r->def)."' id='defsat' onclick='default_data(".$r->id.")'><i class='fa fa-check'></i></button>";
+            $list[] = $row;
         }
+        echo json_encode(array('data' => $list));
+    }
 
-        $str        .= '</table>';
-        echo $str;
+    public function tf($def) {
+        if ($def == 't') {
+            return 'invisible';
+        } else {
+            return '';
+        }
+    }
+
+    public function addharga() {
+        $d = array(
+                "useri"     => $this->session->userdata('username'),
+                "ref_brg"   => $this->input->post('ref_brg'),
+                "ref_sat"   => $this->input->post('ref_sat'),
+                "konv"      => $this->input->post('konv'),
+                "harga"     => $this->input->post('harga'),
+                "ket"       => $this->input->post('ketsatuan'),
+                "ref_gud"   => $this->libre->gud_def()
+            );
+        $result     = $this->db->insert('msatbrg',$d);
+        $r['sukses']= $result ? 'success' : 'fail' ;
+        echo json_encode($r);
+    }
+
+    public function updateharga() {
+        $d = array(
+                "useru"     => $this->session->userdata('username'),
+                "dateu"     => 'now()',
+                "ref_sat"   => $this->input->post('ref_sat'),
+                "konv"      => $this->input->post('konv'),
+                "harga"     => $this->input->post('harga'),
+                "ket"       => $this->input->post('ketsatuan'),
+                "ref_gud"   => $this->libre->gud_def()
+            );
+        $result = $this->db->update('msatbrg',$d,array('id' => $this->input->post('id') ));
+        $r['sukses']= $result ? 'success' : 'fail' ;
+        echo json_encode($r);
+    }
+
+    function editharga(){
+        $w['id']= $this->input->post('id');
+        $data   = $this->db->get_where('msatbrg',$w)->row();
+        echo json_encode($data);
     }
 
     public function getdetail()
@@ -156,6 +197,7 @@ class Dataproduk extends CI_Controller {
                 "konv"      => $r->konv,
                 "harga"     => $r->harga,
                 "ket"       => $r->ketsatuan,
+                "def"       => ien($r->def),
                 "ref_gud"   => $this->libre->gud_def(),
             );
             $b[] = $row;
@@ -236,22 +278,6 @@ class Dataproduk extends CI_Controller {
         $a['ket']       = $this->input->post('ket');
         $kodeBrg        = $this->input->post('kode');
         $this->db->update('mbarang',$a,array('kode' => $kodeBrg ));
-        $this->db->delete('msatbrg',array('ref_brg' => $kodeBrg ));
-        $arrHarga = json_decode($this->input->post('arrHarga'));
-        foreach ($arrHarga as $r) {
-            $row    = array(
-                "useru"     => $this->session->userdata('username'),
-                "dateu"     => 'now()',
-                "ref_brg"   => $kodeBrg,
-                "ref_sat"   => $r->ref_sat,
-                "konv"      => $r->konv,
-                "harga"     => $r->harga,
-                "ket"       => $r->ketsatuan,
-                "ref_gud"   => $this->libre->gud_def(),
-            );
-            $b[] = $row;
-        }
-        $result = $this->db->insert_batch('msatbrg',$b);
         $c['ref_brg']   = $kodeBrg;
         $c['sn']        = $this->input->post('sn');
         $c['model']     = $this->input->post('model');
@@ -279,6 +305,14 @@ class Dataproduk extends CI_Controller {
     {
         $w['id']    = $this->input->post('id');
         $result     = $this->db->delete('mbarang',$w);
+        $r['sukses'] = $result ? 'success' : 'fail' ;
+        echo json_encode($r);
+    }
+
+    public function deleteharga()
+    {
+        $w['id']    = $this->input->post('id');
+        $result     = $this->db->delete('msatbrg',$w);
         $r['sukses'] = $result ? 'success' : 'fail' ;
         echo json_encode($r);
     }

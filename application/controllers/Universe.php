@@ -145,6 +145,11 @@ class Universe extends CI_Controller {
         echo json_encode($r);
     }
 
+    public function getcustomer(){
+        $result = $this->db->get_where('mcustomer',array('aktif' => 't'))->result();
+        echo json_encode($result);
+    }
+
     
 
 }

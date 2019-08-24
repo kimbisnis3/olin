@@ -121,4 +121,19 @@ if (!function_exists('status')) {
         }
     }
 
+    function statuspo($s)
+    {
+        if ($s == 0) {
+            $s = '<span class="label label-warning">Pending</span>';
+        } else if($s >= 1 AND $s <= 3) {
+            $s = '<span class="label label-primary">Produksi</span>';
+        } else if($s == 4) {
+            $s = '<span class="label label-success">Ready</span>';
+        } else if($s >= 5) {
+            $s = '<span class="label label-info">Dikirim</span>';
+        }
+       
+        return $s;
+    }
+
 }

@@ -418,6 +418,19 @@
                             <input type="text" class="form-control datepicker" name="filterakhir">
                           </div>
                         </div>
+                        <div class="col-md-3">
+                          <label>Agen</label>
+                          <select class="form-control select2" name="filteragen" id="filteragen">
+                          </select>
+                        </div>
+                        <div class="col-md-3">
+                          <label>Diproses</label>
+                          <select class="form-control select2" name="filterproses" id="filterproses">
+                            <option value=""></option>
+                            <option value="1">Diproses</option>
+                            <option value="0">Belum Diproses</option>
+                          </select>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -447,14 +460,12 @@
                               <th width="5%">No</th>
                               <th>ID</th>
                               <th>Kode</th>
+                              <th>Tanggal</th>
                               <th>Agen</th>
+                              <th>Layanan</th>
                               <th>Pengiriman</th>
-                              <th>Penerima</th>
-                              <th>Berat(kg)</th>
-                              <th>Biaya Kirim</th>
-                              <th>Kurir</th>
-                              <th>Tujuan</th>
                               <th>Keterangan</th>
+                              <th>Status</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -492,6 +503,8 @@
       $('#select-city').select2({ disabled: true });
       $('#select-city-to').select2({ disabled: true });
       $('#select-service').select2({ disabled: true });
+      getSelectcustom('filteragen', 'universe/getcustomer', 'filteragenclass','kode', 'nama')
+      // $('#filteragen').attr('onchange','refresh()')
       
       nilaimax('berat',30)
       // nilaimax('jumlah',1)
@@ -504,6 +517,8 @@
               "data": {
                 filterawal  : function() { return $('[name="filterawal"]').val() },
                 filterakhir : function() { return $('[name="filterakhir"').val() },
+                filteragen : function() { return $('[name="filteragen"').val() },
+                filterproses : function() { return $('[name="filterproses"').val() },
               },
           },
           "columns": [{ 
@@ -517,12 +532,10 @@
           { "data": "kode" },
           { "data": "tgl" },
           { "data": "namacust" },
+          { "data": "mlayanan_nama" },
           { "data": "mkirim_nama" },
-          { "data": "kirimke" },
-          { "data": "kgkirim" },
-          { "data": "bykirim" },
-          { "data": "lokasike" },
-          { "data": "ket" }
+          { "data": "ket" },
+          { "data": "status" }
           ]
       });
 
