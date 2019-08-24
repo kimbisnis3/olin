@@ -62,6 +62,17 @@ if (!function_exists('status')) {
         return $i;
     }
 
+    function showimagecustom($i,$maxw){
+        if ($i == NULL){
+            $i = "(Noimage)";
+        } else {
+            $img = base_url().''.$i;
+            $i = "<img style='max-width : ".$maxw."px;' src='".$img."'>";
+        }
+
+        return $i;
+    }
+
     function dlimage($i){
          
         if ($i == NULL){
@@ -108,6 +119,39 @@ if (!function_exists('status')) {
 
         return $result;
         }
+    }
+
+    function statuspo($s)
+    {
+        if ($s == 0) {
+            $s = '<span class="label label-warning">Pending</span>';
+        } else if($s >= 1 AND $s <= 3) {
+            $s = '<span class="label label-primary">Produksi</span>';
+        } else if($s == 4) {
+            $s = '<span class="label label-success">Ready</span>';
+        } else if($s >= 5) {
+            $s = '<span class="label label-info">Dikirim</span>';
+        }
+       
+        return $s;
+    }
+
+    function imgerr($img)
+    {
+        $path = ".".$img;
+
+        if ($img == null || $img == "") {
+            $img = "(Noimage)";
+        } else {
+            if (file_exists($path)) {
+                $img = $img;
+            } else {
+                $img = '/agen/assets/gambar/noimage.png';
+            }
+        }
+        return $img;
+
+        
     }
 
 }

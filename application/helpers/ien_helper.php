@@ -136,4 +136,22 @@ if (!function_exists('status')) {
         return $s;
     }
 
+    function imgerr($img)
+    {
+        $path = ".".$img;
+
+        if ($img == null || $img == "") {
+            $img = "(Noimage)";
+        } else {
+            if (file_exists($path)) {
+                $img = $img;
+            } else {
+                $img = '/agen/assets/gambar/noimage.png';
+            }
+        }
+        return $img;
+
+        
+    }
+
 }

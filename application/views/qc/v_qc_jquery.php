@@ -54,7 +54,7 @@
                               <option value=""></option>
                               <option value="0">Antri Produksi</option>
                               <option value="1">Sudah Print</option>
-                              <option value="2">-</option>
+                              <option value="2">Sudah Cutting</option>
                               <option value="3">Sudah Jahit</option>
                               <option value="4">Siap Kirim</option>
                             </select>
@@ -152,7 +152,7 @@
                   $(".loop-card").append(`
                     <div class="col-md-3 loop-inside bounceIn animated"><div class="box box-widget widget-user-2"><div class="widget-user-header ${v.status >= 4 ? "bg-green" : "bg-yellow"}">
                     <div class="widget-user-image">
-                    <img class="" src="<?php echo base_url() ?>${path}" alt="Img Produk"></div><h5 class="widget-user-desc">${v.kode}</h5><h5 class="widget-user-desc">${v.mbarang_nama}</h5></div>
+                    <img class="" src="<?php echo base_url() ?>${v.pathimage}" alt="Img Produk"></div><h5 class="widget-user-desc">${v.kode}</h5><h5 class="widget-user-desc">${v.mbarang_nama}</h5></div>
                     <div class="box-footer no-padding">
                     <ul class="nav nav-stacked">
                       <li><a href="#">Antri Produksi <span class="pull-right badge ${badge_a}">${label_a}</span></a></li>

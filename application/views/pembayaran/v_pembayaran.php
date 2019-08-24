@@ -379,7 +379,7 @@
           $('[name="ref_order"]').val(data.kode);
           $('[name="total"]').val(data.total);
           $('[name="bayar"]').val(parseInt(data.kurang));
-          nilaimax('bayar',data.kurang)
+          // nilaimax('bayar',data.kurang)
           $('#modal-order').modal('hide');
       });
 

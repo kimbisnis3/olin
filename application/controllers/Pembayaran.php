@@ -114,7 +114,7 @@ class Pembayaran extends CI_Controller {
 
     public function getorder(){
         $q = "SELECT DISTINCT
-                xorder.id,
+                xorder. ID,
                 xorder.kode,
                 xorder.tgl,
                 xorder.ket,
@@ -201,8 +201,97 @@ class Pembayaran extends CI_Controller {
                 ),
                 0
             ) != 0
-            ORDER BY
-                xorder.kode DESC";
+            AND ref_kirim = 'GX0002'
+            UNION 
+            SELECT DISTINCT
+                xorder. ID,
+                xorder.kode,
+                xorder.tgl,
+                xorder.ket,
+                xorder.pic,
+                xorder.kgkirim,
+                xorder.bykirim,
+                xorder.ref_cust,
+                xorder.ref_kirim,
+                mcustomer.nama mcustomer_nama,
+                (
+                    SELECT
+                        SUM (
+                            xorderd.harga * xorderd.jumlah
+                        )
+                    FROM
+                        xorderd
+                    WHERE
+                        xorderd.ref_order = xorder.kode
+                ) total,
+                COALESCE (
+                    (
+                        SELECT
+                            SUM (xpelunasan.bayar)
+                        FROM
+                            xpelunasan
+                        WHERE
+                            xpelunasan.ref_jual = xorder.kode
+                    ),
+                    0
+                ) dibayar,
+                (
+                    COALESCE (
+                        (
+                            SELECT
+                                SUM (
+                                    xorderd.harga * xorderd.jumlah
+                                )
+                            FROM
+                                xorderd
+                            WHERE
+                                xorderd.ref_order = xorder.kode
+                        ),
+                        0
+                    )
+                ) - COALESCE (
+                    (
+                        SELECT
+                            SUM (xpelunasan.bayar)
+                        FROM
+                            xpelunasan
+                        WHERE
+                            xpelunasan.ref_jual = xorder.kode
+                    ),
+                    0
+                ) kurang
+            FROM
+                xorder
+            LEFT JOIN mcustomer ON mcustomer.kode = xorder.ref_cust
+            LEFT JOIN xpelunasan ON xorder.kode = xpelunasan.ref_jual
+            WHERE
+                xorder.void IS NOT TRUE
+            AND (
+                COALESCE (
+                    (
+                        SELECT
+                            SUM (
+                                xorderd.harga * xorderd.jumlah
+                            )
+                        FROM
+                            xorderd
+                        WHERE
+                            xorderd.ref_order = xorder.kode
+                    ),
+                    0
+                )
+            ) - COALESCE (
+                (
+                    SELECT
+                        SUM (xpelunasan.bayar)
+                    FROM
+                        xpelunasan
+                    WHERE
+                        xpelunasan.ref_jual = xorder.kode
+                ),
+                0
+            ) != 0
+            AND ref_kirim = 'GX0001'";
         $result     = $this->db->query($q)->result();
         $list       = [];
         foreach ($result as $i => $r) {

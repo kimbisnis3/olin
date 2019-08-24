@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-$active_group = 'default';
+$active_group = 'online';
 $query_builder = TRUE;
 
 $db['default'] = array(
@@ -26,13 +26,13 @@ $db['default'] = array(
 	'save_queries' => TRUE
 );
 
-$db['cp'] = array(
+$db['online'] = array(
 	'dsn'	=> '',
-	'hostname' => 'localhost',
-	'username' => 'root',
-	'password' => '',
-	'database' => 'cp',
-	'dbdriver' => 'mysqli',
+	'hostname' => 'cloud.gongsoft.com',
+	'username' => 'gongsoft',
+	'password' => 'gongsoft2016go',
+	'database' => 'OLINDB',
+	'dbdriver' => 'postgre',
 	'dbprefix' => '',
 	'pconnect' => FALSE,
 	'db_debug' => (ENVIRONMENT !== 'production'),

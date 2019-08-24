@@ -18,4 +18,5 @@ tr:nth-child(even) {
 
 .judul {
   	text-align: center;
+  	text-decoration: underline !important;
 }

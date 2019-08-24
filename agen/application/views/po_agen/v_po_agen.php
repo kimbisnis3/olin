@@ -28,7 +28,6 @@
                           <div class="form-group">
                             <label>Produk</label>
                             <input type="hidden" name="id">
-                            <input type="hidden" name="kode">
                             <div class="input-group">
                               <input type="hidden" class="form-control" name="kodebrg">
                               <input type="text" class="form-control" name="namabarang" readonly="true">
@@ -420,9 +419,8 @@
                         <button class="btn btn-act btn-primary btn-flat add-btn invisible" onclick="add_data()" ><i class="fa fa-plus"></i> Tambah</button>
                       </div>
                       <div class="pull-right">
-                        <!-- <button class="btn btn-act btn-warning btn-flat edit-btn invisible" onclick="edit_data()"><i class="fa fa-pencil"></i> Ubah</button> -->
                         <button class="btn btn-act bg-navy btn-flat file-btn" onclick="open_file()"><i class="fa fa-file"></i> File</button>
-                        <!-- <button class="btn btn-act btn-danger btn-flat delete-btn invisible" onclick="hapus_data()" ><i class="fa fa-trash"></i> Void</button> -->
+                        <button class="btn btn-act bg-olive btn-flat" onclick="cetak_data()" ><i class="fa fa-print"></i> Cetak</button>
                       </div>
                     </div>
                     <div class="box-body">
@@ -434,13 +432,12 @@
                               <th width="5%">No</th>
                               <th>ID</th>
                               <th>Kode</th>
+                              <th>Tanggal</th>
+                              <th>Agen</th>
+                              <th>Layanan</th>
                               <th>Pengiriman</th>
-                              <th>Penerima</th>
-                              <th>Berat(kg)</th>
-                              <th>Biaya Kirim</th>
-                              <th>Kurir</th>
-                              <th>Tujuan</th>
                               <th>Keterangan</th>
+                              <th>Status</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -475,10 +472,10 @@
       activemenux('transaksi', 'purchaseorderagen');
       dpicker();
       setProvince();
-      $('#select-provinsi').select2({ disabled: true });
       $('#select-city').select2({ disabled: true });
       $('#select-city-to').select2({ disabled: true });
       $('#select-service').select2({ disabled: true });
+      // $('#filteragen').attr('onchange','refresh()')
       
       nilaimax('berat',30)
       // nilaimax('jumlah',1)
@@ -490,7 +487,7 @@
               "type": "POST",
               "data": {
                 filterawal  : function() { return $('[name="filterawal"]').val() },
-                filterakhir : function() { return $('[name="filterakhir"').val() },
+                filterakhir : function() { return $('[name="filterakhir"').val() }
               },
           },
           "columns": [{ 
@@ -502,13 +499,12 @@
           { "data": "no" }, 
           { "data": "id" , "visible" : false},
           { "data": "kode" },
+          { "data": "tgl" },
+          { "data": "namacust", "visible" : false },
+          { "data": "mlayanan_nama" },
           { "data": "mkirim_nama" },
-          { "data": "kirimke" },
-          { "data": "kgkirim" },
-          { "data": "bykirim" },
-          { "data": "kurir" },
-          { "data": "lokasike" },
-          { "data": "ket" }
+          { "data": "ket" },
+          { "data": "status" }
           ]
       });
 
@@ -723,7 +719,7 @@
 
   function updatefile() {
       var formfile = new FormData($('#form-file')[0]);
-      url = `${apiurl}/updatefile`
+      url = "<?php echo base_url() ?>po/updatefile"
       $.ajax({
           url: url,
           type: "POST",
@@ -758,6 +754,7 @@
       $('.box-upload').removeClass('invisible');
       $('#form-data')[0].reset();
       $('#img-preview').remove();
+      $('[name="ref_layanan"]').val('2019000002');
       $('#select-provinsi').val('10'); //set to Jawa Tengah
       setMonth('tgl',0);
       $('.select2').trigger('change');
@@ -939,11 +936,11 @@
 
   function setCity() {
       let id_province = $('#select-provinsi').val();
-      // $('#select-city').select2({ disabled: false });
+      $('#select-city').select2({ disabled: false });
       if (id_province.length) {
           $('#select-city').load(`${apiurl}/request_city?province=${id_province}`, function() {
             console.log('finish City');
-            // $('#select-city').select2({ disabled: false });
+            $('#select-city').select2({ disabled: false });
             $('#select-city').val('445');
             $('#select-city').trigger('change');
           });
@@ -990,6 +987,16 @@
       $('[name="kodekurir"]').val(k.toString().replace(/\@/g, ''));
     }
   }
+
+  function cetak_data() {
+      kode = table.cell(idx, 3).data();
+      if (idx == -1) {
+          return false;
+      }
+      window.open(`${apiurl}/cetak?kode=${kode}`);
+  }
+
+
   
   </script>
 </body>

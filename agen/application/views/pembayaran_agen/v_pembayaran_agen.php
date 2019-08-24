@@ -183,11 +183,6 @@
                         <button class="btn btn-act btn-success btn-flat refresh-btn" onclick="refresh()"><i class="fa fa-refresh"></i> Refresh</button>
                         <button class="btn btn-act btn-primary btn-flat add-btn invisible" onclick="add_data()" ><i class="fa fa-plus"></i> Tambah</button>
                       </div>
-                      <!-- <div class="pull-right">
-                        <button class="btn btn-act btn-warning btn-flat edit-btn invisible" onclick="edit_data()"><i class="fa fa-pencil"></i> Ubah</button>
-                        <button class="btn btn-act btn-success btn-flat option-btn invisible" onclick="valid_data()"><i class="fa fa-check"></i> Validasi</button>
-                        <button class="btn btn-danger btn-flat delete-btn invisible" onclick="void_data()" ><i class="fa fa-trash"></i> Void</button>
-                      </div> -->
                     </div>
                     <div class="box-body">
                       <div class="table-responsive mailbox-messages">
@@ -203,9 +198,7 @@
                               <th>Agen</th>
                               <th>Kode PO</th>
                               <th>Jenis Bayar</th>
-                              <th>Total</th>
                               <th>Bayar</th>
-                              <th>Kurang</th>
                               <th>Keterangan</th>
                             </tr>
                           </thead>
@@ -259,23 +252,17 @@
                 filterakhir : function() { return $('[name="filterakhir"').val() },
               },
           },
-          "columns": [{ 
-              "className": 'details-control',
-              "orderable": false,
-              "data": null,
-              "defaultContent": ''
-          },
+          "columns": [
+          { "data": "id", "visible" : false }, 
           { "data": "id", "note" : "numbers" }, 
           { "data": "id" , "visible" : false},
           { "data": "kode" , "visible" : false},
           { "data": "posted" , "visible" : false},
           { "data": "tgl" }, 
-          { "data": "mcustomer_nama" , "visible" : false},
+          { "data": "mcustomer_nama", "visible" : false },
           { "data": "ref_jual" },
           { "data": "mjenbayar_nama" },
-          { "data": "total" },
           { "data": "bayar" },
-          { "data": "kurang" },
           { "data": "ket" },
           ]
       });
@@ -380,7 +367,7 @@
           $('[name="ref_order"]').val(data.kode);
           $('[name="total"]').val(data.total);
           $('[name="bayar"]').val(parseInt(data.kurang));
-          nilaimax('bayar',data.kurang)
+          // nilaimax('bayar',data.kurang)
           $('#modal-order').modal('hide');
       });
 
@@ -445,7 +432,6 @@
       if (ceknull('ref_order')) { return false }
       if (ceknull('tgl')) { return false }
       if (ceknull('ref_jenbayar')) { return false }
-      if (ceknull('bayar')) { return false }
       var url;
       if (state == 'add') {
           url = `${apiurl}/savedata`;
