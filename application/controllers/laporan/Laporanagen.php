@@ -44,8 +44,8 @@ class Laporanagen extends CI_Controller {
         if ($this->input->post('gb')) {
             $q .=" ORDER BY {$this->input->post('gb')}";
         }
-        $data['header'] = ['Nama','Alamat','Telp','Email','Alamat'];
-        $data['body']   = ['nama','alamat','telp','email','ket'];
+        $data['header'] = ['Nama','Alamat','Telp','Email','PIC','Keterangan'];
+        $data['body']   = ['nama','alamat','telp','email','pic','ket'];
         $data['maskgb'] = $this->input->post('mask-gb');
         $data['title']  = $this->titlepage;;
         $data['gb']     = $this->input->post('gb');

@@ -190,10 +190,10 @@
                               <th width="5%">No</th>
                               <th>ID</th>
                               <th>Kode</th>
-                              <th>Kode PO</th>
                               <th>Tanggal</th>
                               <th>Produk</th>
                               <th>Keterangan</th>
+                              <th>Kode PO</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -243,11 +243,11 @@
           "columns": [
           { "data": "id" , "note" : "num" }, 
           { "data": "id" , "visible" : false},
-          { "data": "kode" , "visible" : false},
-          { "data": "ref_order" }, 
+          { "data": "kode" },
           { "data": "tgl" }, 
           { "data": "mbarang_nama" },
           { "data": "ket" },
+          { "data": "ref_order" }, 
           ]
       });
 

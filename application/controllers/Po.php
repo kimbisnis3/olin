@@ -214,7 +214,7 @@ class Po extends CI_Controller {
             $row['elempathcorel']   = btndownload($r->pathcorel);
             $row['elempathimage']   = dlimage($r->pathimage);
             $row['pathcorel']   = $r->pathcorel;
-            $row['pathimage']   = $r->pathimage;
+            $row['pathimage']   = imghandler($r->pathimage,60);
             $list[] = $row;
         }   
         echo json_encode(array('data' => $list));

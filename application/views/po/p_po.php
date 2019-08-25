@@ -103,7 +103,7 @@
                 <div class="row">
                   <div class="col-xs-5">
                     <div style="padding: 10px;">
-                      <?php echo showimagecustom($order->pathimage,'100') ?>
+                      <?php echo imghandler($order->pathimage,'100') ?>
                     </div>
                   </div>
                   <div class="col-xs-7">

@@ -50,40 +50,6 @@ if (!function_exists('status')) {
         return $text;
     }
 
-    function showimage($i){
-         
-        if ($i == NULL){
-            $i = "(Noimage)";
-        } else {
-            $img = base_url().''.$i;
-            $i = "<img style='max-width : 60px;' src='".$img."'>";
-        }
-
-        return $i;
-    }
-
-    function showimagecustom($i,$maxw){
-        if ($i == NULL){
-            $i = "(Noimage)";
-        } else {
-            $img = base_url().''.$i;
-            $i = "<img style='max-width : ".$maxw."px;' src='".$img."'>";
-        }
-
-        return $i;
-    }
-
-    function dlimage($i){
-         
-        if ($i == NULL){
-            $i = "(Noimage)";
-        } else {
-            $img = base_url().''.$i;
-            $i = '<a href="'.$img.'" title="ImageName"  download="img_'.time().'" ><img style="max-width : 60px;" src="'.$img.'" alt="ImageName"></a>';
-        }
-
-        return $i;
-    }
 
     function query_to_var($query,$filter) {
         $find       = array_keys($filter);
@@ -136,6 +102,47 @@ if (!function_exists('status')) {
         return $s;
     }
 
+    //IMAGE MANIPULATION
+
+    function showimage($i){
+         
+        if ($i == NULL){
+            $i = "(Noimage)";
+        } else {
+            $img = base_url().''.$i;
+            $i = "<img style='max-width : 60px;' src='".$img."'>";
+        }
+
+        return $i;
+    }
+
+    function showimagecustom($i,$maxw){
+        if ($i == NULL){
+            $i = "(Noimage)";
+        } else {
+            $img = base_url().''.$i;
+            $i = "<img style='max-width : ".$maxw."px;' src='".$img."'>";
+        }
+
+        return $i;
+    }
+
+    function dlimage($img){
+
+        $path = ".".$img;
+
+        if ($img == null || $img == "") {
+            $img = "(Noimage)";
+        } else {
+            if (file_exists($path)) {
+                $img = '<a href="'.$img.'" title="ImageName"  download="img_'.time().'" ><img style="max-width : 60px;" src="'.base_url().$img.'" alt="ImageName"></a>';
+            } else {
+                $img = "<img style='max-width : 60px;'  src='".base_url()."/agen/assets/gambar/noimage.png'>";
+            }
+        }
+        return $img;
+    }
+
     function imgerr($img)
     {
         $path = ".".$img;
@@ -147,6 +154,24 @@ if (!function_exists('status')) {
                 $img = $img;
             } else {
                 $img = '/agen/assets/gambar/noimage.png';
+            }
+        }
+        return $img;
+
+        
+    }
+
+    function imghandler($img,$maxw)
+    {
+        $path = ".".$img;
+
+        if ($img == null || $img == "") {
+            $img = "(Noimage)";
+        } else {
+            if (file_exists($path)) {
+                $img = "<img style='max-width : ".$maxw."px;' src='".base_url().$img."'>";
+            } else {
+                $img = "<img style='max-width : ".$maxw."px;'  src='".base_url()."/agen/assets/gambar/noimage.png'>";
             }
         }
         return $img;

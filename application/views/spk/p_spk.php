@@ -58,7 +58,7 @@
               <p>:</p>
             </div>
             <div class="col-xs-5">
-              <p><?php echo $barang->sn ?></p>
+              <p><?php echo $spk->kode ?></p>
               <p><?php echo normal_date($spk->tgl) ?></p>
               <p><?php echo normal_date(date('Y-m-d', strtotime($spk->tgl. ' + 10 days'))) ?></p>
             </div>
@@ -98,7 +98,7 @@
         </div>
         <div class="col-xs-5">
           <div style="padding: 10px;">
-            <?php echo showimagecustom($barang->pathimage,'100') ?>
+            <?php echo imghandler($barang->pathimage,'100') ?>
           </div>
         </div>
       </div>
