@@ -14,8 +14,7 @@ class Laporanbayar extends CI_Controller {
     function index()
     {
         $setGb ='[
-            {"val":"tgl","label":"Tanggal"},
-            {"val":"mjenbayar_nama","label":"Jenis Bayar"}
+            {"val":"agen","label":"Agen"}
         ]';
         $data['gb']             = json_decode($setGb); 
         $data['filter_date']    = 1; 
@@ -28,38 +27,47 @@ class Laporanbayar extends CI_Controller {
         $st   = date('Y-m-d', strtotime($this->input->post('awal')));
         $en   = date('Y-m-d', strtotime($this->input->post('akhir')));
         $q     = "SELECT
-                    xpelunasan.id,
-                    xpelunasan.kode,
-                    xpelunasan.tgl tgl_real,
-                    to_char(xpelunasan.tgl, 'DD Mon YYYY') tgl,
-                    xpelunasan.total,
-                    xpelunasan.bayar,
-                    xpelunasan.posted,
-                    xpelunasan.ket,
-                    xpelunasan.ref_jual,
-                    mcustomer.nama mcustomer_nama,
-                    mgudang.nama mgudang_nama,
-                    mjenbayar.nama mjenbayar_nama
-                FROM 
-                    xpelunasan
-                LEFT JOIN mcustomer ON mcustomer.kode = xpelunasan.ref_cust
-                LEFT JOIN mgudang ON mgudang.kode = xpelunasan.ref_gud
-                LEFT JOIN mjenbayar ON mjenbayar.kode = xpelunasan.ref_jenbayar
-                WHERE xpelunasan.void IS NOT TRUE";
+                    qr.*, (qr.total - qr.dibayar) kekurangan
+                FROM
+                    (
+                        SELECT
+                            mcustomer.nama agen,
+                            xorder.tgl,
+                            to_char(xorder.tgl, 'DD Mon YYYY') tgl_char,
+                            xorder.kode,
+                            COALESCE (xorder.total, 0) total,
+                            COALESCE (SUM(xpelunasan.bayar), 0) dibayar,
+                            xorder.ket
+                        FROM
+                            xpelunasan
+                        JOIN xorder ON xorder.kode = xpelunasan.ref_jual
+                        LEFT OUTER JOIN mcustomer ON mcustomer.kode = xpelunasan.ref_cust
+                        WHERE
+                            xorder.void IS NOT TRUE
+                        AND xpelunasan.void IS NOT TRUE
+                        GROUP BY
+                            xorder.kode,
+                            xorder.tgl,
+                            xorder.total,
+                            xorder.ref_cust,
+                            mcustomer.nama,
+                            xorder.ket
+                    ) qr";
         if ($st || $en) {
-            $q  .=" AND
-                    xpelunasan.tgl 
+            $q  .=" WHERE
+                    qr.tgl 
                 BETWEEN '$st' AND '$en'";
         }
+        $q .=" ORDER BY ";
         if ($this->input->post('gb')) {
-            $q .=" ORDER BY {$this->input->post('gb')}";
+            $q .=" {$this->input->post('gb')}, ";
         }
-        
+        $q .=" qr.agen, qr.tgl, qr.kode";
         $data['result'] = $this->db->query($q)->result_array();
         $data['periodestart'] = $this->input->post('awal');
         $data['periodeend']   = $this->input->post('akhir');
-        $data['header'] = ['Tanggal','Agen','Bayar','Total','Jenis Bayar'];
-        $data['body']   = ['tgl','mcustomer_nama','bayar','total','mjenbayar_nama'];
+        $data['header'] = ['Agen','Tanggal','Kode','Total','Dibayar','Keterangan','Kekurangan'];
+        $data['body']   = ['agen','tgl_char','kode','total','dibayar','ket','kekurangan'];
         $data['maskgb'] = $this->input->post('mask-gb');
         $data['title']  = $this->titlepage;;
         $data['gb']     = $this->input->post('gb');

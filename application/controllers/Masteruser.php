@@ -14,7 +14,8 @@ class Masteruser extends CI_Controller {
     }
 
     public function getall(){
-        $result     = $this->db->get($this->table)->result();
+        $q          = " SELECT * FROM tuser WHERE id_user != 1";
+        $result     = $this->db->query($q)->result();
         $no         = 1;
         $list       = [];
         foreach ($result as $r) {

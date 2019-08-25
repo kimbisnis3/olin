@@ -14,10 +14,9 @@ class Laporanproduksi extends CI_Controller {
     function index()
     {
         $setGb ='[
-            {"val":"mbarang_nama","label":"Produk"},
-            {"val":"tgl","label":"Tanggal"}
+            {"val":"status","label":"Status"}
         ]';
-        $data['gb']             = json_decode($setGb); 
+        // $data['gb']             = json_decode($setGb); 
         $data['filter_date']    = 1; 
         $data['title']  = $this->titlepage;
         $this->load->view($this->indexpage,$data);
@@ -27,36 +26,58 @@ class Laporanproduksi extends CI_Controller {
     {
         $st   = date('Y-m-d', strtotime($this->input->post('awal')));
         $en   = date('Y-m-d', strtotime($this->input->post('akhir')));
-        $q     = "SELECT 
-                    xprocorder.id,
-                    xprocorder.kode,
-                    to_char(xprocorder.tgl, 'DD Mon YYYY') tgl,
-                    xprocorder.ref_brg,
-                    xprocorder.ref_order,
-                    xprocorder.status,
-                    xprocorder.ket,
-                    mbarang.nama mbarang_nama
-                FROM 
-                    xprocorder
-                LEFT JOIN mbarang ON mbarang.kode = xprocorder.ref_brg
-                LEFT JOIN xorder ON xorder.kode = xprocorder.ref_order
+        $q     = "SELECT
+                    mbarangs.sn kodepdx,
+                    xorderd.ref_brg,
+                    mbarang.nama namabar,
+                    SUM (xorderd.jumlah) jumlah,
+                    xorder.total,
+                    msatbrg.ref_sat satuan,
+                    CASE xprocorder.status
+                WHEN 1 THEN
+                    'Sudah Print'
+                WHEN 2 THEN
+                    'Sudah Cutting'
+                WHEN 3 THEN
+                    'Sudah Jahit'
+                WHEN 4 THEN
+                    'Selesai'
+                END AS status
+                FROM
+                    xorderd
+                JOIN xorder ON xorder.kode = xorderd.ref_order
+                JOIN xprocorder ON xprocorder.ref_order = xorder.kode
+                LEFT OUTER JOIN msatbrg ON msatbrg.kode = xorderd.ref_satbrg
+                LEFT OUTER JOIN mbarang ON mbarang.kode = xorderd.ref_brg
+                LEFT OUTER JOIN mbarangs ON mbarangs.ref_brg = mbarang.kode
                 WHERE xprocorder.void IS NOT TRUE";
         if ($st || $en) {
             $q  .=" AND
                     xprocorder.tgl 
                 BETWEEN '$st' AND '$en'";
         }
+        $q .= " GROUP BY
+                    mbarangs.sn,
+                    xorderd.ref_brg,
+                    mbarang.nama,
+                    msatbrg.ref_sat,
+                    xorder.total,
+                    xprocorder.status";
+        $q .=" ORDER BY ";
         if ($this->input->post('gb')) {
-            $q .=" ORDER BY {$this->input->post('gb')}";
+            $q .=" {$this->input->post('gb')}, ";
         }
+        $q .="  mbarangs.sn,
+                xprocorder.status ASC";
         $data['result']   = $this->db->query($q)->result_array();
         $data['periodestart'] = $this->input->post('awal');
         $data['periodeend']   = $this->input->post('akhir');
-        $data['header'] = ['Tanggal','Produk','Kode PO','Status','Keterangan'];
-        $data['body']   = ['tgl','mbarang_nama','ref_order','status','ket'];
+        $data['header'] = ['Kode Produksi','Kode Produk','Nama Produk','Jumlah','Satuan','Status'];
+        $data['body']   = ['kodepdx','ref_brg','namabar','jumlah','satuan','status'];
         $data['maskgb'] = $this->input->post('mask-gb');
         $data['title']  = $this->titlepage;
         $data['gb']     = $this->input->post('gb');
+        $data['usetotal']  = 1;
         $this->load->view($this->printpage,$data);
     }
     

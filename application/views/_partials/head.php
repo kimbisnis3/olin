@@ -2,6 +2,7 @@
     <meta charset="UTF-8">
     <title class="title"></title>
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+    <link rel="shortcut icon" href="<?php echo base_url() ?>assets/gambar/fav.png">
     <link href="<?php echo base_url() ?>assets/lte/plugins/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet"/>
     <link href="<?php echo base_url() ?>assets/lte/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet"/>
     <link href="<?php echo base_url() ?>assets/lte/plugins/datatables.net-bs/css/dataTables.bootstrap.css" rel="stylesheet" />

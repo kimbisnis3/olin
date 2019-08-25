@@ -68,6 +68,21 @@ echo '</table>';
       </tr>
     <?php } ?>
     </tbody>
+
+    <!-- Total -->
+    <tbody style="display : <?php echo isset($usetotal) ? "": "none";?>">
+    <tr></tr>
+    <?php $sum = 0; ?>
+    <?php foreach ($result as $i => $t) {  ?>
+      <tr style="display : <?php echo ($i + 1) != count($result) ? "none": "";?>">
+        <td><strong>TOTAL</strong></td>
+        <?php foreach ($body as $i => $v) { ?>
+         <td><strong><?php echo is_numeric($t[$v]) ? number_format($sum += $t[$v]) : ''; ?></strong></td>
+        <?php } ?>
+      </tr>
+    <?php } ?>
+    </tbody>
+
   </table>
 <?php } ?>  
 </body>

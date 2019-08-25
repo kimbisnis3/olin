@@ -4,7 +4,7 @@
 	<?php $this->load->view('_partials/head') ?>
 	<style type="text/css">
 		body {
-			background: #9ad3de !important;
+			background: #aed581 !important;
 		}
 		.hue {
 		    background: #f35626;
@@ -28,7 +28,7 @@
 	<body class="hold-transition">
 		<div class="login-box">
 			<div class="login-logo hue">
-				<b><?php echo $this->libre->appname(); ?></b> <br>
+				<img src="<?php base_url() ?>assets/gambar/logoapp.png">
 			</div>
 			<div class="login-box-body" id="login">
 				<p class="login-box-msg">Login</p><br>

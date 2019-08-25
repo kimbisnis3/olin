@@ -14,9 +14,7 @@ class Laporankirim extends CI_Controller {
     function index()
     {
         $setGb ='[
-            {"val":"mcustomer_nama","label":"Agen"},
-            {"val":"mbarang_nama","label":"Produk"},
-            {"val":"tgl","label":"Tanggal"}
+            {"val":"agen","label":"Agen"}
         ]';
         $data['gb']             = json_decode($setGb); 
         $data['filter_date']    = 1; 
@@ -29,30 +27,27 @@ class Laporankirim extends CI_Controller {
         $st   = date('Y-m-d', strtotime($this->input->post('awal')));
         $en   = date('Y-m-d', strtotime($this->input->post('akhir')));
         $q     = "SELECT
-                xsuratjalan.id,
-                xsuratjalan.kode,
-                to_char(xsuratjalan.tgl, 'DD Mon YYYY') tgl,
-                to_char(xsuratjalan.tglkirim, 'DD Mon YYYY') tglkirim,
-                xsuratjalan.kirim,
-                xsuratjalan.biayakirim,
-                xsuratjalan.ref_cust,
-                xsuratjalan.ket,
-                xsuratjalan.posted,
-                mcustomer.nama mcustomer_nama,
-                mbarang.nama mbarang_nama,
-                mbarang.ket mbarang_ket,
-                msatbrg.harga msatbrg_harga,
-                msatbrg.ref_brg msatbrg_ref_brg,
-                msatbrg.ref_sat msatbrg_ref_sat,
-                msatuan.nama satuan
-            FROM
-                xsuratjalan
-            LEFT JOIN mcustomer ON mcustomer.kode = xsuratjalan.ref_cust
-            LEFT JOIN xsuratjaland ON xsuratjaland.ref_suratjalan = xsuratjalan.kode
-            LEFT JOIN mbarang ON mbarang.kode = xsuratjaland.ref_brg
-            LEFT JOIN msatbrg ON msatbrg.kode = xsuratjaland.ref_satbrg
-            LEFT JOIN msatuan ON msatuan.kode = msatbrg.ref_sat
-            WHERE xsuratjalan.void IS NOT TRUE";
+                    mcustomer.nama agen,
+                    to_char(xsuratjalan.tglkirim, 'DD Mon YYYY') tglkirim,
+                    xsuratjaland.ref_brg,
+                    mbarang.nama namabar,
+                    xsuratjaland.jumlah,
+                    msatbrg.ref_sat satuan,
+                    xorder.alamat alamatkirim,
+                    xorder.kurir,
+                    xorder.bykirim,
+                    xorder.kirimke penerima,
+                    xsuratjalan.pic pengirim
+                FROM
+                    xsuratjalan
+                JOIN xsuratjaland ON xsuratjaland.ref_suratjalan = xsuratjalan.kode
+                JOIN msatbrg ON msatbrg.kode = xsuratjaland.ref_satbrg
+                JOIN mbarang ON mbarang.kode = xsuratjaland.ref_brg
+                JOIN xorder ON xorder.kode = xsuratjalan.ref_order
+                JOIN mcustomer ON mcustomer.kode = xsuratjalan.ref_cust
+                WHERE
+                    xsuratjalan.posted IS TRUE
+                AND xsuratjalan.void IS NOT TRUE";
         if ($st || $en) {
             $q  .=" AND
                     xsuratjalan.tgl 
@@ -64,8 +59,8 @@ class Laporankirim extends CI_Controller {
         $data['result'] = $this->db->query($q)->result_array();
         $data['periodestart'] = $this->input->post('awal');
         $data['periodeend']   = $this->input->post('akhir');
-        $data['header'] = ['Tanggal','Kirim','Tanggal Kirim','Agen','Produk','Harga','Satuan'];
-        $data['body']   = ['tgl','kirim','tglkirim','mcustomer_nama','mbarang_nama','msatbrg_harga','satuan'];
+        $data['header'] = ['Agen','Tanggal Kirim','Kode Produk','Produk','Jumlah','Satuan','Alamat Kirim','Kurir','Biaya Kirim','Penerima','Pengirim'];
+        $data['body']   = ['agen','tglkirim','ref_brg','namabar','jumlah','satuan','alamatkirim','kurir','bykirim','penerima','pengirim'];
         $data['maskgb'] = $this->input->post('mask-gb');
         $data['title']  = $this->titlepage;
         $data['gb']     = $this->input->post('gb');
