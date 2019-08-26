@@ -32,6 +32,7 @@ class Qc extends CI_Controller {
                 xorder.pathimage,
                 xorderd.jumlah,
                 mbarang.nama mbarang_nama,
+                msatuan.nama msatuan_nama,
                 CASE WHEN xprocorder.status >= 0 THEN '$done' ELSE '$wait' END a,
                 CASE WHEN xprocorder.status >= 1 THEN '$done' ELSE '$wait' END b,
                 CASE WHEN xprocorder.status >= 2 THEN '$done' ELSE '$wait' END c,
@@ -40,11 +41,14 @@ class Qc extends CI_Controller {
             FROM 
                 xprocorder
             LEFT JOIN mbarang ON mbarang.kode = xprocorder.ref_brg
+            LEFT JOIN msatbrg ON mbarang.kode = msatbrg.ref_brg
+            LEFT JOIN msatuan ON msatuan.kode = msatbrg.ref_sat
             LEFT JOIN xorder ON xorder.kode = xprocorder.ref_order
             LEFT JOIN xorderd ON xorder.kode = xorderd.ref_order
             WHERE
                 xprocorder.tgl
             BETWEEN '$filterawal' AND '$filterakhir'
+            AND msatbrg.def = 't'
             AND xprocorder.void IS NOT TRUE";
         if ($filterstatus) {
             $q .=" AND xprocorder.status <= '$filterstatus'";
@@ -66,6 +70,7 @@ class Qc extends CI_Controller {
             $row['xorder_kode'] = $r->xorder_kode;
             $row['pathimage']   = imgerr($r->pathimage);
             $row['mbarang_nama']= $r->mbarang_nama;
+            $row['msatuan_nama']= $r->msatuan_nama;
             $row['a']           = $r->a;
             $row['b']           = $r->b;
             $row['c']           = $r->c;

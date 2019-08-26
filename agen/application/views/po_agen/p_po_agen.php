@@ -103,7 +103,7 @@
                 <div class="row">
                   <div class="col-xs-5">
                     <div style="padding: 10px;">
-                      <?php echo imghandler($order->pathimage,'100') ?>
+                      <img style="max-width :100px" src="<?php echo base_url().str_replace('/agen/','',$order->pathimage) ?>">
                     </div>
                   </div>
                   <div class="col-xs-7">

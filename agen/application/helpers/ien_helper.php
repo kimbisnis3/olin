@@ -128,16 +128,14 @@ if (!function_exists('status')) {
     }
 
     function dlimage($img){
-
         $path = ".".$img;
-
         if ($img == null || $img == "") {
             $img = "(Noimage)";
         } else {
             if (file_exists($path)) {
                 $img = '<a href="'.$img.'" title="ImageName"  download="img_'.time().'" ><img style="max-width : 60px;" src="'.base_url().$img.'" alt="ImageName"></a>';
             } else {
-                $img = "<img style='max-width : 60px;'  src='".base_url()."/agen/assets/gambar/noimage.png'>";
+                $img = "<img style='max-width : 60px;'  src='".base_url()."/assets/gambar/noimage.png'>";
             }
         }
         return $img;
@@ -153,7 +151,7 @@ if (!function_exists('status')) {
             if (file_exists($path)) {
                 $img = $img;
             } else {
-                $img = '/agen/assets/gambar/noimage.png';
+                $img = '/assets/gambar/noimage.png';
             }
         }
         return $img;

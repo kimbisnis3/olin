@@ -155,7 +155,7 @@
                       <img class="" src="<?php echo base_url() ?>${v.pathimage}" alt="Img Produk"></div>
                       <h5 class="widget-user-desc">${v.kode}</h5>
                       <h5 class="widget-user-desc">${v.mbarang_nama}</h5>
-                      <h5 class="widget-user-desc">Jumlah : ${v.jumlah}</h5>
+                      <h5 class="widget-user-desc">Jumlah : ${v.jumlah} ${v.msatuan_nama}</h5>
                     </div>
                     <div class="box-footer no-padding">
                     <ul class="nav nav-stacked">

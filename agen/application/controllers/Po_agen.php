@@ -205,8 +205,8 @@ class Po_agen extends CI_Controller {
             $row['no']      = $i + 1;
             $row['id']          = $r->id;
             $row['kode']        = $r->kode;
-            $row['elempathcorel']   = btndownload($r->pathcorel);
-            $row['elempathimage']   = dlimage($r->pathimage);
+            $row['elempathcorel']   = btndownload(str_replace('/agen/','',$r->pathcorel));
+            $row['elempathimage']   = "<img style='max-width : 60px;'  src='".base_url().str_replace('/agen/','',$r->pathimage)."'>";
             $row['pathcorel']   = $r->pathcorel;
             $row['pathimage']   = $r->pathimage;
             $list[] = $row;

@@ -25,7 +25,7 @@ class libre
         $path = substr($config['upload_path'],1);
         $ci->upload->initialize($config);
         if ($ci->upload->do_upload($field)) {
-            return $path.'/'.$ci->upload->data('file_name');
+            return '/agen'.$path.'/'.$ci->upload->data('file_name');
         } else {
             return null;
         }

@@ -714,7 +714,7 @@
 
   function updatefile() {
       var formfile = new FormData($('#form-file')[0]);
-      url = "<?php echo base_url() ?>po/updatefile"
+      url = "<?php echo base_url() ?>po_agen/updatefile"
       $.ajax({
           url: url,
           type: "POST",

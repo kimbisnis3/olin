@@ -28,7 +28,7 @@
           </div>
         </div>
         
-        <section class="content">
+        <!-- <section class="content">
           <div class="modal fade" id="modal-lirik" role="dialog" data-backdrop="static">
             <div class="modal-dialog">
               <div class="modal-content">
@@ -91,7 +91,7 @@
               </div>
             </div>
           </div>
-        </section>
+        </section> -->
         <section class="content">
           <div class="row">
             <div class="col-xs-12">
@@ -200,6 +200,8 @@
       // console.log($unibind.attr('uni-bind-val'));
       load_data()
       $("#entries").val('10').trigger('change')
+      console.log($( document ).height())
+      $("body").css("height",$( window ).height())
 
       
   });
