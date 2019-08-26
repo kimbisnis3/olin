@@ -219,8 +219,8 @@ class Po_agen extends CI_Controller {
         $upcorel    = $this->libre->goUpload('corel','corel-'.time(),$this->foldername);
         $upimage    = $this->libre->goUpload('image','img-'.time(),$this->foldername);
         $this->db->trans_begin();
-        $a['pathcorel'] = $upcorel;
-        $a['pathimage'] = $upimage;
+        $a['pathcorel'] = '/agen'.$upcorel;
+        $a['pathimage'] = '/agen'.$upimage;
         $a['useri']     = $this->session->userdata('username');
         $a['ref_cust']  = $this->session->userdata('kodecust');
         $a['tgl']       = date('Y-m-d', strtotime($this->input->post('tgl')));
@@ -242,7 +242,7 @@ class Po_agen extends CI_Controller {
             $a['kodekurir'] = $this->input->post('kodekurir');
             $a['kurir']     = $this->input->post('kurir');
         }
-        $this->db->insert('xorder',$a);
+        $this->db->insert('xorderz',$a);
 
         $idOrder = $this->db->insert_id();
         $kodeOrder = $this->db->get_where('xorder',array('id' => $idOrder))->row()->kode;
@@ -291,8 +291,8 @@ class Po_agen extends CI_Controller {
         if ($this->db->trans_status() === FALSE)
         {
             $this->db->trans_rollback();
-            // @unlink(".".$upcorel);
-            // @unlink(".".$upimage);
+            @unlink(".".$upcorel);
+            @unlink(".".$upimage);
             $r = array(
                 'sukses' => 'fail', 
             );
@@ -442,18 +442,18 @@ class Po_agen extends CI_Controller {
     {
         if (!empty($_FILES['editcorel']['name'])) {
             $upcorel    = $this->libre->goUpload('editcorel','corel-'.time(),$this->foldername);
-            $a['pathcorel'] = $upcorel;
+            $a['pathcorel'] = '/agen'.$upcorel;
             $oldpath = $this->input->post('editpathcorel');
-            @unlink(".".$oldpath);
+            @unlink(".".str_replace('/agen','',$oldpath));
         } else {
             $a['pathcorel'] = $this->input->post('editpathcorel');
         }
 
         if (!empty($_FILES['editimage']['name'])) {
             $upcorel    = $this->libre->goUpload('editimage','image-'.time(),$this->foldername);
-            $a['pathimage'] = $upcorel;
+            $a['pathimage'] = '/agen'.$upcorel;
             $oldpath = $this->input->post('editpathimage');
-            @unlink(".".$oldpath);
+            @unlink(".".str_replace('/agen','',$oldpath));
         } else {
             $a['pathimage'] = $this->input->post('editpathimage');
         }
