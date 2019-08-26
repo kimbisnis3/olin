@@ -291,8 +291,8 @@ class Po_agen extends CI_Controller {
         if ($this->db->trans_status() === FALSE)
         {
             $this->db->trans_rollback();
-            @unlink(".".$upcorel);
-            @unlink(".".$upimage);
+            // @unlink(".".$upcorel);
+            // @unlink(".".$upimage);
             $r = array(
                 'sukses' => 'fail', 
             );
