@@ -176,7 +176,7 @@ class Po_agen extends CI_Controller {
                             <td>'.($i + 1).'.</td>
                             <td>'.$r->nama.'</td>
                             <td>'.$r->mmodesign_nama.'</td>
-                            <td>'.showimage($r->mmodesign_gambar).'</td>
+                            <td>'.showimage(str_replace('/agen/','',$r->mmodesign_gambar)).'</td>
                             <td>'.$r->mwarna_nama.'</td>
                             <td><div style="witdh:10px; height:20px; background-color:'.$r->mwarna_colorc.'" ></div></td>
 
