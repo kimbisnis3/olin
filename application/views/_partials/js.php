@@ -12,6 +12,7 @@
 <script src="<?php echo base_url()?>assets/lte/plugins/ckeditor/ckeditor.js"></script>
 <script src="<?php echo base_url()?>assets/lte/plugins/pace/pace.js"></script>
 <script src="<?php echo base_url()?>assets/numeral.min.js"></script>
+<script src="<?php echo base_url()?>assets/lodash.js"></script>
 <script src="<?php echo base_url()?>assets/lte/plugins/moment/moment.js"></script>
 <script type="text/javascript">
 
