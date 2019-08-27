@@ -169,7 +169,7 @@ if (!function_exists('status')) {
             if (file_exists($path)) {
                 $img = "<img style='max-width : ".$maxw."px;' src='".base_url().$img."'>";
             } else {
-                $img = "<img style='max-width : ".$maxw."px;'  src='".base_url()."/agen/assets/gambar/noimage.png'>";
+                $img = "<img style='max-width : ".$maxw."px;'  src='".base_url()."/assets/gambar/noimage.png'>";
             }
         }
         return $img;
