@@ -335,9 +335,13 @@
 
       $('#table-harga tbody').on( 'click', 'button', function () {
         var data = tableharga.row( $(this).parents('tr') ).data();
-        // sat.splice(data, 1);
-        sat.pop();
-        console.log(data);
+        let i = _.findIndex(sat, { 
+          'konv'  : data.konv, 
+          'satuan': data.satuan,
+          'harga' : data.harga 
+        });
+        sat.splice(i, 1);
+        console.log(sat);
         reloadharga();
     } );
   });
