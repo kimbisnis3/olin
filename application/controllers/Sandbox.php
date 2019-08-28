@@ -15,8 +15,14 @@ class Sandbox extends CI_Controller {
     }
 
     function tes() {
-        $res = $this->db->get('mwarna')->result();
-        echo json_encode($res);
+        $res = $this->db->get('mwarna')->result_array();
+        $headers = $this->input->request_headers();
+        echo json_encode(
+          array(
+            'data'    => $res, 
+            'status'  => 'success',
+            'header'  => $headers
+        ));
     }
 
     function request_province() {

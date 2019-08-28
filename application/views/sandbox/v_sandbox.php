@@ -28,7 +28,7 @@
           </div>
         </div>
         
-        <!-- <section class="content">
+        <section class="content invisible">
           <div class="modal fade" id="modal-lirik" role="dialog" data-backdrop="static">
             <div class="modal-dialog">
               <div class="modal-content">
@@ -59,7 +59,7 @@
                         <input type="text" class="form-control" id="track" onkeyup="getsong()">
                       </div>
                     </div>
-                    <div class="col-md-3">
+                    <!-- <div class="col-md-3">
                       <div class="form-group">
                         <label>Entries</label>
                         <select class="form-control select2" id="entries" onchange="getsong()">
@@ -70,7 +70,7 @@
                           <option value="50">50</option>
                         </select>
                       </div>
-                    </div>
+                    </div> -->
                   </div>
                 </div>
                 <div class="box box-body" style="max-height: 400px; overflow: auto;">
@@ -91,8 +91,8 @@
               </div>
             </div>
           </div>
-        </section> -->
-        <section class="content">
+        </section>
+        <section class="content invisible">
           <div class="row">
             <div class="col-xs-12">
               <div class="row">
@@ -177,6 +177,31 @@
             </div>
           </div>
         </section>
+        <section class="content">
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="box box-info">
+                <div class="box-header">
+                  <button class="btn btn-md btn-flat btn-primary" type="button" id="btn-submit" onclick="kirimdata()">Kirim</button>
+                </div>
+                <div class="box-body">
+                  <div class="table-responsive mailbox-messages">
+                    <table id="table" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                      <thead>
+                        <tr id="repeat">
+                          <th>ID</th>
+                          <th>Kode</th>
+                          <th>Nama</th>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
         </div><!-- /.content-wrapper -->
         <?php $this->load->view('_partials/foot'); ?>
       </div>
@@ -193,6 +218,8 @@
   var table ;
   var $unibind = $('[uni-bind="prov"]');
   var $price = $('#price');
+  var dt_data = [];
+  // var dt = [];
 
   $(function() {
       select2();
@@ -200,11 +227,92 @@
       // console.log($unibind.attr('uni-bind-val'));
       load_data()
       $("#entries").val('10').trigger('change')
-      console.log($( document ).height())
+      // console.log($( document ).height())
       $("body").css("height",$( window ).height())
-
-      
+      maindata();
+      console.log(xxx("bbb"))
   });
+
+  function load_data() {
+      unip('sandbox/tes', {}, function(res) {
+              $.each(res.data, function(i, v) {
+                  dt_data.push({
+                      'id': v.id,
+                      'kode': v.kode,
+                      'nama': v.nama,
+                  });
+              })
+          })
+      // $.each(dt_data, function(i, v) {
+      //   console.log(v)
+      // })
+  }
+
+  function unip(u, d, r = function() {}) {
+      d["clId"] = 'clId';
+      d["areaId"] = 'xxxx';
+      $.ajax({
+          url: u,
+          type: "POST",
+          dataType: "JSON",
+          data: d,
+          headers: {
+              'Authorization':'Basic xxxxxxxxxxxxx',
+          },
+          success: function(data) {
+              r(data);
+          },
+          error: function(jqXHR, textStatus, errorThrown) {
+              showNotif('Error', 'Failed Get Data', 'danger')
+          }
+      });
+  }
+
+  kirimdata = () => {
+    let label_old = $('#btn-submit').html();
+    cbs('#btn-submit',"start");
+    setTimeout(function(){ cbs('#btn-submit',"stop",label_old); }, 3000);
+  }
+
+  cbs = (prop, state, label = "Memuat") => {
+    if (state == "start") {
+      $(prop).prop('disabled',true);
+      $(prop).html(`<i class="fa fa-spinner fa-spin"></i> ${label}`);
+    } else if(state == "stop") {
+      $(prop).prop('disabled',false);
+      $(prop).html(`${label}`);
+    }
+  }
+
+
+
+  const maindata = () => {
+    table = $('#table').DataTable({
+          "processing": true,
+          "ajax": {
+              "url": `${apiurl}/tes`,
+              "type": "POST",
+              "data": {},
+          },
+          "columns": [
+          { "data": "no", "render" : (data,type,row,meta) => {
+            return meta.row + 1
+          } },
+          { "data": "kode" },
+          { "data": "nama" },
+          ]
+      });
+  }
+
+
+  const ref = () => {
+      table.ajax.reload(null, false);
+      idx = -1;
+  }
+
+  const xxx = (a) => {
+    return a
+  }
 
   function getsong() {
     $(".trtrack").remove();
@@ -336,31 +444,6 @@
               $(`#${id}`).select2({
                   disabled: false
               });
-          }
-      });
-  }
-
-  function load_data() {
-      uniget('sandbox/req_province/', {}, function(res) {
-          if (res.status == "success") {
-              console.log(res.data)
-              let a = getObject(res.data, '3', 'province_id')
-              console.log(a);
-          }
-      })
-  }
-
-  function uniget(u, d, r = function() {}) {
-    $.ajax({
-          url: u,
-          type: "GET",
-          dataType: "JSON",
-          data : d,
-          success: function(data) {
-              r(data);
-          },
-          error: function(jqXHR, textStatus, errorThrown) {
-              showNotif('Error', 'Failed Get Data', 'danger')
           }
       });
   }
