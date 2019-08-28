@@ -274,7 +274,7 @@
     setTimeout(function(){ cbs('#btn-submit',"stop",label_old); }, 3000);
   }
 
-  cbs = (prop, state, label = "Memuat") => {
+  cbs = (prop, state, label = "Processing") => {
     if (state == "start") {
       $(prop).prop('disabled',true);
       $(prop).html(`<i class="fa fa-spinner fa-spin"></i> ${label}`);
@@ -295,11 +295,9 @@
               "data": {},
           },
           "columns": [
-          { "data": "no", "render" : (data,type,row,meta) => {
-            return meta.row + 1
-          } },
-          { "data": "kode" },
-          { "data": "nama" },
+          { "render" : (data,type,row,meta) => {return meta.row + 1} },
+          { "render" : (data,type,row,meta) => {return row.kode} },
+          { "render" : (data,type,row,meta) => {return row.nama} },
           ]
       });
   }
