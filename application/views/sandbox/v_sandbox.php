@@ -225,27 +225,24 @@
       select2();
       // getprovince();
       // console.log($unibind.attr('uni-bind-val'));
-      load_data()
-      $("#entries").val('10').trigger('change')
+      // load_data()
+      // $("#entries").val('10').trigger('change')
       // console.log($( document ).height())
       $("body").css("height",$( window ).height())
       maindata();
       console.log(xxx("bbb"))
   });
 
-  function load_data() {
+  const load_data = () => {
       unip('sandbox/tes', {}, function(res) {
-              $.each(res.data, function(i, v) {
-                  dt_data.push({
-                      'id': v.id,
-                      'kode': v.kode,
-                      'nama': v.nama,
-                  });
-              })
+          $.each(res.data, function(i, v) {
+              dt_data.push({
+                  'id': v.id,
+                  'kode': v.kode,
+                  'nama': v.nama,
+              });
           })
-      // $.each(dt_data, function(i, v) {
-      //   console.log(v)
-      // })
+      })
   }
 
   function unip(u, d, r = function() {}) {
@@ -284,8 +281,6 @@
     }
   }
 
-
-
   const maindata = () => {
     table = $('#table').DataTable({
           "processing": true,
@@ -301,7 +296,6 @@
           ]
       });
   }
-
 
   const ref = () => {
       table.ajax.reload(null, false);
