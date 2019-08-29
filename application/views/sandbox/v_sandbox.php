@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
   <?php $this->load->view('_partials/head'); ?>
-  <?php $this->load->view('sandbox/css_sandbox'); ?>
   <style type="text/css">
 
   </style>
