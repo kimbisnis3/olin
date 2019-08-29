@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html>
   <?php $this->load->view('_partials/head'); ?>
+  <?php $this->load->view('sandbox/css_sandbox'); ?>
+  <style type="text/css">
+
+  </style>
   <body class="hold-transition skin-blue sidebar-mini">
     <div class="wrapper" id="app">
       <?php $this->load->view('_partials/topbar'); ?>
@@ -182,6 +186,27 @@
             <div class="col-xs-12">
               <div class="box box-info">
                 <div class="box-header">
+                  <div class="pull-right">
+                    <button class="btn btn-md btn-flat btn-merah" type="button">.btn-merah</button>
+                    <button class="btn btn-md btn-flat btn-biru" type="button">.btn-biru</button>
+                    <button class="btn btn-md btn-flat btn-hijau" type="button">.btn-hijau</button>
+                    <button class="btn btn-md btn-flat btn-oren" type="button">.btn-oren</button>
+                    <button class="btn btn-md btn-flat btn-kuning" type="button">.btn-kuning</button>
+                    <button class="btn btn-md btn-flat btn-hitam" type="button">.btn-hitam</button>
+                    <button class="btn btn-md btn-flat btn-pink" type="button">.btn-pink</button>
+                    <button class="btn btn-md btn-flat btn-coklat" type="button">.btn-coklat</button>
+                    <button class="btn btn-md btn-flat btn-violet" type="button">.btn-violet</button>
+                    <button class="btn btn-md btn-flat btn-teal" type="button">.btn-teal</button>
+                    <button class="btn btn-md btn-flat btn-olive" type="button">.btn-olive</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="box box-info">
+                <div class="box-header">
                   <button class="btn btn-md btn-flat btn-primary" type="button" id="btn-submit" onclick="kirimdata()">Kirim</button>
                 </div>
                 <div class="box-body">
@@ -189,7 +214,7 @@
                     <table id="table" class="table table-striped table-bordered" cellspacing="0" width="100%">
                       <thead>
                         <tr id="repeat">
-                          <th>ID</th>
+                          <th width="5%">ID</th>
                           <th>Kode</th>
                           <th>Nama</th>
                         </thead>
@@ -208,6 +233,7 @@
     </body>
   </html>
   <?php $this->load->view('_partials/js'); ?>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/store2/2.9.0/store2.min.js" integrity="sha256-YnOC3D/Zcb05gayw4p1Xk7cyoTd1dnzug9+9nCj/AvA=" crossorigin="anonymous"></script>
   <script type="text/javascript">
   var path = 'sandbox';
   var title = 'SandBox';
@@ -219,43 +245,56 @@
   var $unibind = $('[uni-bind="prov"]');
   var $price = $('#price');
   var dt_data = [];
+  var xxx = [];
   // var dt = [];
 
   $(function() {
       select2();
       // getprovince();
       // console.log($unibind.attr('uni-bind-val'));
-      // load_data()
       // $("#entries").val('10').trigger('change')
       // console.log($( document ).height())
       $("body").css("height",$( window ).height())
       maindata();
-      console.log(xxx("bbb"))
+      console.log(xxxz("bbb"))
+      loopx()
   });
 
-  const load_data = () => {
-      unip('sandbox/tes', {}, function(res) {
-          $.each(res.data, function(i, v) {
-              dt_data.push({
-                  'id': v.id,
-                  'kode': v.kode,
-                  'nama': v.nama,
-              });
-          })
+  const aa = () => {
+      unig('https://jsonplaceholder.typicode.com/users', {}, function(res) {
+          // $.each(res.data, function(i, v) {
+          //     dt_data.push({
+          //         'id': v.id,
+          //         'kode': v.kode,
+          //         'nama': v.nama,
+          //     });
+          // })
+          store.set('sandbox_user', res)
       })
+      return store.get('sandbox_user');
   }
 
-  function unip(u, d, r = function() {}) {
-      d["clId"] = 'clId';
-      d["areaId"] = 'xxxx';
+  const loopx = () => {
+    let x = aa()
+    console.log(x)
+  }
+
+  // const storedata = () => {
+
+  //     store.set('user', person)
+  // }
+
+  function unig(u, d, r = function() {}) {
+      // d["clId"] = 'clId';
+      // d["areaId"] = 'xxxx';
       $.ajax({
           url: u,
-          type: "POST",
+          type: "GET",
           dataType: "JSON",
           data: d,
-          headers: {
-              'Authorization':'Basic xxxxxxxxxxxxx',
-          },
+          // headers: {
+          //     'Authorization':'Basic xxxxxxxxxxxxx',
+          // },
           success: function(data) {
               r(data);
           },
@@ -283,16 +322,16 @@
 
   const maindata = () => {
     table = $('#table').DataTable({
-          "processing": true,
-          "ajax": {
-              "url": `${apiurl}/tes`,
-              "type": "POST",
-              "data": {},
-          },
+          "data": aa(),
+          // "ajax": {
+          //     "url": `${apiurl}/tes`,
+          //     "type": "POST",
+          //     "data": {},
+          // },
           "columns": [
           { "render" : (data,type,row,meta) => {return meta.row + 1} },
-          { "render" : (data,type,row,meta) => {return row.kode} },
-          { "render" : (data,type,row,meta) => {return row.nama} },
+          { "render" : (data,type,row,meta) => {return row.name} },
+          { "render" : (data,type,row,meta) => {return row.name} },
           ]
       });
   }
@@ -302,7 +341,12 @@
       idx = -1;
   }
 
-  const xxx = (a) => {
+  const refx = () => {
+      a = aa();
+      table.clear().rows.add(a).draw();
+  }
+
+  const xxxz = (a) => {
     return a
   }
 
