@@ -214,8 +214,8 @@
                       <thead>
                         <tr id="repeat">
                           <th width="5%">ID</th>
-                          <th>Kode</th>
                           <th>Nama</th>
+                          <th>Email</th>
                         </thead>
                         <tbody>
                         </tbody>
@@ -322,6 +322,8 @@
   const maindata = () => {
     table = $('#table').DataTable({
           "data": aa(),
+          scrollY : '50vh',
+          scrollCollapse: true,
           // "ajax": {
           //     "url": `${apiurl}/tes`,
           //     "type": "POST",
@@ -329,8 +331,8 @@
           // },
           "columns": [
           { "render" : (data,type,row,meta) => {return meta.row + 1} },
-          { "render" : (data,type,row,meta) => {return row.name} },
-          { "render" : (data,type,row,meta) => {return row.name} },
+          { "render" : (data,type,row,meta) => {return row['name']} },
+          { "render" : (data,type,row,meta) => {return row['email']} },
           ]
       });
   }
@@ -338,6 +340,48 @@
   const ref = () => {
       table.ajax.reload(null, false);
       idx = -1;
+  }
+
+  $('#xx tbody').on('click', 'td.details-control', function() {
+        var tr = $(this).closest('tr');
+        var row = table.row(tr);
+
+        if (row.child.isShown()) {
+            row.child.hide();
+            tr.removeClass('shown');
+        } else {
+            format(row.child, row.data());
+            tr.addClass('shown');
+        }
+    });
+
+  function format(callback, data) {
+      $.ajax({
+          url: `${apiurl}/getdetail`,
+          type: "POST",
+          data: {
+            kodebarang : data.kode
+          },
+          success: function(response) {
+              callback($(response)).show();
+          },
+          error: function() {
+              $('#output').html('Bummer: there was an error!');
+          }
+      });
+  }
+
+  function imgexist(link_img) {
+      $.ajax({
+          url: link_img,
+          type: "HEAD",
+          success: function(response) {
+              return php_base_url+link_img;
+          },
+          error: function() {
+              return `${php_base_url}assets/gambar/noimage.png`;
+          }
+      });
   }
 
   const refx = () => {

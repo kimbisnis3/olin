@@ -34,7 +34,7 @@ class Dataproduk extends CI_Controller {
             LEFT JOIN mbarang ON mbarang.kode = msatbrg.ref_brg
             LEFT JOIN msatuan ON msatuan.kode = msatbrg.ref_sat
             LEFT JOIN mgudang ON mgudang.kode = msatbrg.ref_gud";
-        $q  .= " WHERE mbarang.kode != 'GX0001'";
+        $q  .= " WHERE mbarang.ref_ktg != 'GX0002'";
         $q  .= " AND msatbrg.def = 't'";
         $q  .= " ORDER BY msatbrg.id DESC";
         $result     = $this->db->query($q)->result();
@@ -140,43 +140,37 @@ class Dataproduk extends CI_Controller {
     {
         $kodebarang = $this->input->post('kodebarang');
         $q = "SELECT
-                mbarangs.id,
-                mbarangs.sn,
-                mbarangs.ket,
-                mbarangs.ref_brg,
-                mbarang.nama namabarang,
-                mbarangs.tipe,
-                mmodesign.gambar gambardesign,
-                mmodesign.nama namadesign,
-                mwarna.colorc kodewarna
+                mbarang.nama
             FROM
-                mbarangs
-            LEFT JOIN mbarang ON mbarang.kode = mbarangs.ref_brg
-            LEFT JOIN mmodesign ON mmodesign.kode = mbarangs.model
-            LEFT JOIN mwarna ON mwarna.kode = mbarangs.warna
-            WHERE mbarangs.ref_brg = '$kodebarang'";
+                mbarangd
+            LEFT JOIN mbarang ON mbarang.kode = mbarangd.ref_brg
+            WHERE mbarangd.ref_brg = '$kodebarang'";
         $result     = $this->db->query($q)->result();
-        $str        = '<table class="table fadeIn animated">
-                        <tr>
-                            <th>No. Seri</th>
-                            <th>Keterangan</th>
-                            <th>Design</th>
-                            <th>Gambar</th>
-                            <th>Warna</th>
-                        </tr>';
-        foreach ($result as $r) {
-            $str    .= '<tr>
-                            <td>'.$r->sn.'</td>
-                            <td>'.$r->ket.'</td>
-                            <td>'.$r->namadesign.'</td>
-                            <td>'.showimage($r->gambardesign).'</td>
-                            <td><div style="witdh:10px; height:20px; background-color:'.$r->kodewarna.'" ></div></td>
-                        </tr>';
-        }
-
-        $str        .= '</table>';
-        echo $str;
+        echo json_encode($result);
     }
+
+    // public function getdetail()
+    // {
+    //     $kodebarang = $this->input->post('kodebarang');
+    //     $q = "SELECT
+    //             mbarangs.id,
+    //             mbarangs.sn,
+    //             mbarangs.ket,
+    //             mbarangs.ref_brg,
+    //             mbarang.nama namabarang,
+    //             mbarangs.tipe,
+    //             mmodesign.gambar gambardesign,
+    //             mmodesign.nama namadesign,
+    //             mwarna.colorc kodewarna
+    //         FROM
+    //             mbarangs
+    //         LEFT JOIN mbarang ON mbarang.kode = mbarangs.ref_brg
+    //         LEFT JOIN mmodesign ON mmodesign.kode = mbarangs.model
+    //         LEFT JOIN mwarna ON mwarna.kode = mbarangs.warna
+    //         WHERE mbarangs.ref_brg = '$kodebarang'";
+    //     $result     = $this->db->query($q)->result();
+    //     echo json_encode($result);
+    // }
 
 
     public function savedata()
@@ -184,6 +178,7 @@ class Dataproduk extends CI_Controller {
         $this->db->trans_begin();
         $a['useri']     = $this->session->userdata('username');
         $a['nama']      = $this->input->post('nama');
+        $a['kode']      = $this->input->post('kode');
         $a['ket']       = $this->input->post('ket');
         $this->db->insert('mbarang',$a);
         $idBrg = $this->db->insert_id();
@@ -204,7 +199,7 @@ class Dataproduk extends CI_Controller {
         }
         $result = $this->db->insert_batch('msatbrg',$b);
         $c['ref_brg']   = $kodeBrg;
-        $c['sn']        = $this->input->post('sn');
+        $c['sn']        = null;
         $c['model']     = $this->input->post('model');
         $c['warna']     = $this->input->post('warna');
         $c['ket']       = $this->input->post('ketspek');
@@ -275,11 +270,12 @@ class Dataproduk extends CI_Controller {
         $a['useru']     = $this->session->userdata('username');
         $a['dateu']     = 'now()';
         $a['nama']      = $this->input->post('nama');
+        $a['kode']      = $this->input->post('kode');
         $a['ket']       = $this->input->post('ket');
         $kodeBrg        = $this->input->post('kode');
         $this->db->update('mbarang',$a,array('kode' => $kodeBrg ));
         $c['ref_brg']   = $kodeBrg;
-        $c['sn']        = $this->input->post('sn');
+        $c['sn']        = null;
         $c['model']     = $this->input->post('model');
         $c['warna']     = $this->input->post('warna');
         $c['ket']       = $this->input->post('ketspek');

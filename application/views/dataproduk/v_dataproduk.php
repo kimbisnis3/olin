@@ -31,7 +31,6 @@
                           <label>Nama</label>
                           <input type="hidden" name="idbarang">
                           <input type="hidden" name="idsatbarang">
-                          <input type="hidden" name="kode">
                           <input type="text" class="form-control" name="nama">
                         </div>
                       </div>
@@ -45,8 +44,8 @@
                     <div class="row">
                       <div class="col-md-3">
                         <div class="form-group">
-                          <label>Kode Design</label>
-                          <input type="text" class="form-control" name="sn">
+                          <label>Kode Produk</label>
+                          <input type="text" class="form-control" name="kode">
                         </div>
                       </div>
                       <div class="col-md-3">
@@ -202,14 +201,14 @@
                             <th width="1%"></th>
                             <th width="5%">No</th>
                             <th>ID</th>
-                            <th>ID Barang</th>
                             <th>Kode Barang</th>
+                            <th>ID Barang</th>
                             <th>Nama Barang</th>
                             <th>Konv</th>
                             <th>Nama Satuan</th>
                             <th>Harga</th>
                             <th>Keterangan</th>
-                            <th>Nama Gudang</th>
+                            <th>Nama Gudang</th>                            
                         </thead>
                         <tbody>
                         </tbody>
@@ -259,7 +258,7 @@
           //data 0 for detail-controls
           { "data": "no" }, 
           { "data": "id" , "visible" : false},
-          { "data": "kode" , "visible" : false},
+          { "data": "kode" , "visible" : true},
           { "data": "idbarang" , "visible" : false},
           { "data": "namabarang" },
           { "data": "konv", "visible" : false },
@@ -347,17 +346,41 @@
   });
 
   function format(callback, data) {
+      barloading(1)
       $.ajax({
           url: `${apiurl}/getdetail`,
           type: "POST",
+          dataType: "JSON",
           data: {
-            kodebarang : data.kode
+              kodebarang: data.kode
           },
           success: function(response) {
-              callback($(response)).show();
+            let head = `
+            <table class="table fadeIn animated">
+                  <thead>
+                    <tr>
+                      <th>Nama</th>
+                    </tr>
+                  </thead>`;
+
+            let body;
+            $.each(response, function(i, v) {
+                body = ` <tr>
+                      <td>${v.nama}</td>
+                    </tr>`
+            })
+            let foot = "</table>"
+            let element = head + body + foot
+            if (response.length) {
+              callback($(element)).show();
+            } else {
+              callback($("KOSONG")).show();
+            }
+            barloading(0)
           },
           error: function() {
               $('#output').html('Bummer: there was an error!');
+              barloading(0)
           }
       });
   }
@@ -519,7 +542,6 @@
 
               //spek barang
               if (data.spek) {
-                $('[name="sn"]').val(data.spek.sn);
                 $('[name="model"]').val(data.spek.model);
                 $('[name="warna"]').val(data.spek.warna);
                 $('[name="ketspek"]').val(data.spek.ket); 
@@ -586,7 +608,6 @@
             ket         : $('[name="ket"]').val(),
             ref_gud     : $('[name="ref_gud"]').val(),
 
-            sn          : $('[name="sn"]').val(),
             model       : $('[name="model"]').val(),
             warna       : $('[name="warna"]').val(),
             ketspek     : $('[name="ketspek"]').val(),

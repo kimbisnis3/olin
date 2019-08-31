@@ -29,11 +29,12 @@
 	        $('.btn-act').prop('disabled', false);
 	        $('.fa-refresh').removeClass('fa-spin');
 	    });
-	    $("img").on('error', function() {
-	        $(this).prop('src', `${php_base_url}assets/gambar/noimage.png`)
-	    });
-	    
-
+	    // $("img").on('error', function() {
+	    //     $(this).prop('src', `${php_base_url}assets/gambar/noimage.png`)
+	    // });
+	 //    $('img').on("error", function () {
+		//     this.src = ResolveUrl(`${php_base_url}assets/gambar/noimage.png`);
+		// });
 	})
 
 	function setMonth(name, days, tipe = '') {
@@ -118,6 +119,15 @@
 	            exit: 'animated fadeOut'
 	        },
 	    }, );
+	}
+
+	function barloading(param){
+		if (param == 1) {
+			Pace.stop();
+      		Pace.bar.render();
+		} else if (param == 0) {
+            Pace.start();
+		}
 	}
 
 	function getSelect(id, u, classoption, caption) {
@@ -215,10 +225,13 @@
 
 	function imgError(image) {
 	    image.onerror = "";
-	    image.src = "/images/noimage.gif";
+	    image.src = `${php_base_url}assets/gambar/noimage.png`;
 	    return true;
 	}
 
+	function showimage(url) {
+	    return `<img onerror="this.onerror=null; this.src='${php_base_url}assets/gambar/noimage.png'" style="max-width : 60px;" src="${php_base_url}${url}" >`
+	}
 
 	function ceknull(x) {
 	    if ($('[name="' + x + '"]').val() == '' || $('[name="' + x + '"]').val() == null) {
