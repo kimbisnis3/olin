@@ -43,7 +43,7 @@
                             </div>
                             <div class="form-group">
                               <label>Jenis Bayar</label>
-                              <select class="form-control select2" name="ref_jenbayar">
+                              <select class="form-control select2" name="ref_jenbayar" onchange="jenisbayar()">
                                 <option> - </option>
                                 <?php foreach ($jenisbayar as $i => $v): ?>
                                 <option value="<?php echo $v->kode ?>"><?php echo $v->nama; ?></option>
@@ -339,6 +339,16 @@
               $('#output').html('Bummer: there was an error!');
           }
       });
+  }
+
+  function jenisbayar() {
+    let ref_jenbayar = $('[name="ref_jenbayar"]').val()
+    let total = $('[name="total"]').val()
+    if (ref_jenbayar == 'GX0003') {
+      $('#bayar').val(total / 2)
+    } else if (ref_jenbayar == 'GX0001') {
+      $('#bayar').val(total)
+    }
   }
 
   function open_order() {

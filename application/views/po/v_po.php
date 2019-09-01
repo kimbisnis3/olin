@@ -149,7 +149,7 @@
                                 </div>
                                 <div class="col-md-4">
                                   <div class="form-group">
-                                    <label>Berat (kg) max 30kg</label>
+                                    <label>Berat (kg)</label>
                                     <input type="number" class="form-control" name="berat" onkeyup="setService()" id="berat">
                                   </div>
                                   <div class="form-group">
@@ -191,6 +191,7 @@
                             <div class="form-group">
                               <label>Produk</label>
                               <input type="hidden" name="id">
+                              <input type="hidden" name="arr_produk">
                               <div class="input-group">
                                 <input type="hidden" class="form-control" name="kodebrg">
                                 <input type="text" class="form-control" name="namabarang" readonly="true">
@@ -211,15 +212,21 @@
                           <div class="col-md-6">
                             <div class="form-group">
                               <label>Jumlah</label>
-                              <input type="text" class="form-control" name="jumlah" id="jumlah">
+                              <input type="number" class="form-control" name="jumlah" id="jumlah">
+                              <input type="hidden" class="form-control" name="beratkg" id="beratkg">
+                              <input type="hidden" class="form-control" name="total" id="input-total-harga">
                             </div>
                           </div>
                           <div class="col-md-4">
-                            <div class="form-group">
-                              <label style="visibility: hidden;">xxxx</label>
-                              <button type="button" class="btn btn-flat btn-block btn-hijau" id="btn-tambah-barang" onclick="add_barang()"><i class="fa fa-plus"></i> Tambah</button>
-                              <button type="button" class="btn btn-flat btn-block btn-oren" id="btn-simpan-barang" onclick="update_barang()"><i class="fa fa-save"></i> Simpan</button>
-                              <button type="button" class="btn btn-flat btn-block btn-merah" id="btn-batal-barang" onclick="batal_barang()"><i class="fa fa-times"></i> Batal</button>
+                            <label style="visibility: hidden;">xxxx</label>
+                            <button type="button" class="btn btn-flat btn-block btn-hijau bounceIn animated" id="btn-tambah-barang" onclick="add_barang()"><i class="fa fa-plus"></i> Tambah</button>
+                            <div class="row">
+                              <div class="col-md-6">
+                                <button type="button" class="btn btn-flat btn-block btn-oren bounceIn animated" id="btn-simpan-barang" onclick="update_barang()"><i class="fa fa-save"></i></button>
+                              </div>
+                              <div class="col-md-6">
+                                <button type="button" class="btn btn-flat btn-block btn-merah bounceIn animated" id="btn-batal-barang" onclick="batal_barang()"><i class="fa fa-times"></i></button>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -239,6 +246,15 @@
                                 </thead>
                                 <tbody>
                                 </tbody>
+                                <tfoot>
+                                  <tr>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th>Total</th>
+                                    <th colspan="2" id="total-harga"></th>
+                                  </tr>
+                                </tfoot>
                               </table>
                             </div>
                           </div>
@@ -316,6 +332,7 @@
                                 <th>Konv</th>
                                 <th>Satuan</th>
                                 <th>Harga</th>
+                                <th>Berat</th>
                                 <th>Keterangan</th>
                                 <th>Opsi</th>
                               </tr>
@@ -568,7 +585,7 @@
           { "data": "mlayanan_nama" },
           { "data": "mkirim_nama" },
           { "data": "ket" },
-          { "data": "status" }
+          { "data": "statusorder" }
           ]
       });
 
@@ -719,6 +736,7 @@
             { "data": "konv" },
             { "data": "namasatuan" },
             { "data": "harga" },
+            { "data": "beratkg", "visible" : false },
             { "data": "ket" },
             { "data": "opsi" },
           ]
@@ -728,6 +746,7 @@
       $('#table-barang tbody').on('click', 'button', function() {
           var data = tablebarang.row($(this).parents('tr')).data();
           $('[name="kodebrg"]').val(data.kode);
+          $('[name="beratkg"]').val(data.beratkg);
           $('[name="harga"]').val(`${numeral(data.harga).format('0,0')}`);
           $('[name="namabarang"]').val(`${data.nama}`);
           $('#modal-barang').modal('hide');
@@ -826,6 +845,9 @@
       $('#modal-data .modal-title').text('Tambah Data');
       tabel_add_barang()
       state_insatuan()
+      arr_produk =[]
+      reloadbarang();
+      clearbarang();
   }
 
   function add_barang() {
@@ -837,10 +859,13 @@
           'nama': $('[name="namabarang"]').val(),
           'kode': $('[name="kodebrg"]').val(),
           'jumlah': $('[name="jumlah"]').val(),
-          'harga': $('[name="harga"]').val()
+          'harga': $('[name="harga"]').val(),
+          'beratkg': $('[name="beratkg"]').val(),
       });
       reloadbarang();
       clearbarang();
+      total_harga()
+      console.log(arr_produk)
   }
 
   function clearbarang() {
@@ -848,6 +873,21 @@
       $('[name="kodebrg"]').val('')
       $('[name="jumlah"]').val('')
       $('[name="harga"]').val('')
+      $('#total-harga').html('');
+      $('#input-total-harga').val('');
+  }
+
+  function total_harga() {
+      let total = _.sumBy(arr_produk, function(o) {
+          return parseFloat(o.harga.replace(",", "")) * o.jumlah
+      });
+      let berat = _.sumBy(arr_produk, function(o) {
+        let b = (o.beratkg == null || o.beratkg == '') ? 0 : parseInt(o.beratkg);
+        return b * o.jumlah
+      });
+      $('#total-harga').html(numeral(total).format('0,0'));
+      $('#input-total-harga').val(total);
+      $('[name="berat"]').val(berat);
   }
 
   function reloadbarang() {
@@ -871,18 +911,20 @@
           { "data": "jumlah" },
           { "data": "harga" },
           { "render" : (data,type,row,meta) => { return `<button type="button" class="btn btn-sm btn-oren btn-flat" onclick="edit_barang(${meta.row})"><i class="fa fa-pencil"></i></button>
-          <button type="button" class="btn btn-sm btn-merah btn-flat" onclick="del_barang(${meta.row})"><i class="fa fa-trash"></i></button>` }},
+          <button type="button" class="btn btn-sm btn-merah btn-flat" onclick="del_barang(${meta.row},${row.id})"><i class="fa fa-trash"></i></button>` }},
           ]
       });
   }
 
   function edit_barang(index) {
+    $('[name="id"]').val(arr_produk[index]['id'])
     $('[name="namabarang"]').val(arr_produk[index]['nama'])
     $('[name="kodebrg"]').val(arr_produk[index]['kode'])
     $('[name="jumlah"]').val(arr_produk[index]['jumlah'])
     $('[name="harga"]').val(arr_produk[index]['harga'])
     state_edsatuan()
     $('#btn-simpan-barang').attr('onclick', 'update_barang(' + index + ')');
+    total_harga()
   }
 
   function update_barang(index) {
@@ -895,14 +937,47 @@
     };
     arr_produk[index] = newval;
     reloadbarang()
+    // showNotif('', 'Data Diubah', 'success');
     state_insatuan()
     clearbarang()
+    total_harga()
   }
 
-  function del_barang(index) {
-    arr_produk.splice(index, 1);
-    reloadbarang()
+  function del_barang(index, id) {
+      if (id == '' || id == null) {
+          arr_produk.splice(index, 1);
+          reloadbarang()
+          state_insatuan()
+          total_harga()
+      } else {
+          $.ajax({
+              url: `${apiurl}/deletebarang`,
+              type: "POST",
+              dataType: "JSON",
+              data: {
+                  id: id,
+                  total: $('#input-total-harga').val(),
+              },
+              success: function(data) {
+                  if (data.sukses == 'success') {
+                      arr_produk.splice(index, 1);
+                      total_harga()
+                      reloadbarang();
+                  } else if (data.sukses == 'fail') {
+                      reloadbarang();
+                  }
+              },
+              error: function(jqXHR, textStatus, errorThrown) {
+                  showNotif('Fail', 'Internal Error', 'danger');
+              }
+          });
+      }
+  }
+
+  function batal_barang() {
     state_insatuan()
+    clearbarang()
+    total_harga()
   }
 
   function state_edsatuan() {
@@ -918,7 +993,13 @@
   }
 
   function edit_data() {
+      arr_produk =[]
+      let label_old = $('.edit-btn').html();
+      cbs('.edit-btn',"start","Memuat");
+      tabel_add_barang()
+      state_insatuan()
       $('#btnSimpan').prop('disabled',true);
+      clearbarang()
       kode = table.cell( idx, 3).data();
       $('.box-upload').addClass('invisible');
       if (idx == -1) {
@@ -935,32 +1016,32 @@
           },
           dataType: "JSON",
           success: function(data) {
-              $('[name="kode"]').val(data.kode);
-              $('[name="kodebrg"]').val(data.kodebrg);
-              $('[name="tgl"]').val(data.tgl);
-              $('[name="ref_kirim"]').val(data.ref_kirim);
-              $('[name="ref_cust"]').val(data.ref_cust);
-              $('[name="namacust"]').val(data.mcustomer_nama);
-              $('[name="namabarang"]').val(data.mbarang_nama);
-              $('[name="ref_layanan"]').val(data.ref_layanan);
-              $('[name="kirimke"]').val(data.kirimke);
-              $('[name="ket"]').val(data.ket);
-              $('[name="alamat"]').val(data.alamat);
-              $('[name="jumlah"]').val(data.jumlah);
-              $('[name="harga"]').val(data.harga);
-              $('[name="berat"]').val(data.kgkirim);
-              $('[name="provinsi"]').val(data.kodeprovfrom);
-              $('[name="provinsito"]').val(data.kodeprovto);
-              $('[name="city"]').val(data.kodecityfrom);
+              arr_produk = data.barang
+              reloadbarang();
+              $('[name="kode"]').val(data.po.kode);
+              $('[name="tgl"]').val(data.po.tgl);
+              $('[name="ref_kirim"]').val(data.po.ref_kirim);
+              $('[name="ref_cust"]').val(data.po.ref_cust);
+              $('[name="namacust"]').val(data.po.mcustomer_nama);
+              $('[name="ref_layanan"]').val(data.po.ref_layanan);
+              $('[name="kirimke"]').val(data.po.kirimke);
+              $('[name="ket"]').val(data.po.ket);
+              $('[name="total"]').val(data.po.total - data.po.bykirim);
+              $('#total-harga').html(data.po.total - data.po.bykirim);
+              $('[name="alamat"]').val(data.po.alamat);
+              $('[name="berat"]').val(data.po.kgkirim);
+              $('[name="provinsi"]').val(data.po.kodeprovfrom);
+              $('[name="provinsito"]').val(data.po.kodeprovto);
+              $('[name="city"]').val(data.po.kodecityfrom);
               setTimeout(function(){ 
-                $('[name="cityto"]').val(data.kodecityto);
-                $('[name="kurir"]').val(data.kurir);
+                $('[name="cityto"]').val(data.po.kodecityto);
+                $('[name="kurir"]').val(data.po.kurir);
                 $('[name="kurir"]').trigger('change'); 
                 $('[name="cityto"]').trigger('change'); 
               }, 4000);
               setTimeout(function(){ 
-                $('[name="biaya"]').val(data.bykirim);
-                $('[name="kodekurir"]').val(data.kodekurir);
+                $('[name="biaya"]').val(data.po.bykirim);
+                $('[name="kodekurir"]').val(data.po.kodekurir);
                 $('[name="biaya"], [name="kodekurir"]').trigger('change');
                 $('#btnSimpan').prop('disabled',false); 
               }, 5000);
@@ -968,7 +1049,8 @@
               $('.select2').trigger('change');
               $('#modal-data').modal('show');
               notifLoading();
-              $('.modal-title').text('Edit Data');
+              $('#modal-data .modal-title').text('Edit Data');
+              cbs('.edit-btn',"stop",label_old);
           },
           error: function(jqXHR, textStatus, errorThrown) {
               showNotif('Fail', 'Internal Error', 'danger');
@@ -977,10 +1059,10 @@
   }
 
   function savedata() {
+      let label_old = $('.btn-save').html();
+      cbs('.btn-save',"start","Mengirim");
       if (ceknull('namacust')) { return false }
-      if (ceknull('namabarang')) { return false }
       if (ceknull('tgl')) { return false }
-      if (ceknull('jumlah')) { return false }
       if (state == 'add') {
         if (ceknull('corel')) { return false }
       }
@@ -997,6 +1079,7 @@
       } else {
           url = `${apiurl}/updatedata`;
       }
+      $('[name="arr_produk"]').val(JSON.stringify(arr_produk));
       var formData = new FormData($('#form-data')[0]);
       $('.btn-save').prop('disabled',true);
       $.ajax({
@@ -1020,11 +1103,13 @@
                   showNotif('Sukses', 'Tidak Ada Perubahan', 'success')
                   $('.btn-save').prop('disabled',false);
               }
+            cbs('.btn-save',"stop",label_old);
 
           },
           error: function(jqXHR, textStatus, errorThrown) {
               showNotif('Fail', 'Internal Error', 'danger')
               $('.btn-save').prop('disabled',false);
+              cbs('.btn-save',"stop",label_old);
           }
       });
   }
@@ -1139,7 +1224,7 @@
     if (s.length > 0) {
       let b = s.match((/\?(.*?)\?/g));
       let k = s.match((/\@(.*?)\@/g));
-      $('[name="biaya"]').val(b.toString().replace(/\?/g, ''));
+      $('[name="biaya"]').val(parseFloat(b.toString().replace(/\?/g, '')) * $('[name="berat"]').val());
       $('[name="kodekurir"]').val(k.toString().replace(/\@/g, ''));
     }
   }

@@ -154,6 +154,7 @@
                               <th>Kode</th>
                               <th>Nama Barang</th>
                               <th>Jumlah</th>
+                              <th>Satuan</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -199,6 +200,7 @@
           { "data": "id" , "visible" : false},
           { "data": "kode" },
           { "data": "nama" },
+          { "data": "msatuan_nama" },
           { "data": "jumlah" },
           ]
       });

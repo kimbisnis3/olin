@@ -67,13 +67,14 @@ class Spk extends CI_Controller {
                 xorder.void IS NOT TRUE
             AND 
                 xpelunasan.posted IS TRUE
-            AND xorder.kode NOT IN (
-                SELECT
-                    ref_order
-                FROM
-                    xprocorder
-                WHERE xprocorder.void IS NOT TRUE
-            )";
+            ";
+        // $q .= " AND xorder.kode NOT IN (
+        //         SELECT
+        //             ref_order
+        //         FROM
+        //             xprocorder
+        //         WHERE xprocorder.void IS NOT TRUE
+        //     )";
         $result     = $this->db->query($q)->result();
         echo json_encode(array('data' => $result));
     }

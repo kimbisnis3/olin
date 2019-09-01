@@ -165,8 +165,20 @@
                       <li><a href="#">Sudah Jahit <span class="pull-right badge ${badge_d}">${label_d}</span></a></li>
                       <li><a href="#">Siap Kirim <span class="pull-right badge ${badge_e}">${label_e}</span></a></li>
                     </ul>
-                    </div><div class="box-footer no-padding">
+                    </div>
+                    <div class="box-footer no-padding">
                     <button class="btn btn-success btn-block" ${v.status >= 4 ? "Disabled" : ""} onclick="qc_data(${v.id},${v.status})">${ v.status >= 4 ? "Selesai" : "QC"}</button>
+                    </div>
+                    <div class="box-footer no-padding option-btn">
+                    <div class="row">
+                      <div class="col-md-6">
+                      <button class="btn btn-success btn-block" ${v.status <= 0 ? "Disabled" : ""} onclick="qc_data(${v.id},${v.status})">${ v.status <= 4 ? "Mundur" : "-"}</button>
+                      </div>
+                      <div class="col-md-6">
+                        <button class="btn btn-success btn-block" ${v.status >= 4 ? "Disabled" : ""} onclick="qc_data(${v.id},${v.status})">${ v.status >= 4 ? "Selesai" : "QC"}</button>
+                      </div>
+                    </div>
+                    
                     </div>
                     </div>
                     </div>`)

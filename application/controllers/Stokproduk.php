@@ -19,12 +19,17 @@ class Stokproduk extends CI_Controller {
                 dinventot. ID,
                 dinventot.ref_brg,
                 mbarang.nama,
-                mbarangs.sn kode,
-                dinventot.jumlah
+                mbarang.kode,
+                dinventot.jumlah,
+                msatuan.nama msatuan_nama
             FROM
                 dinventot
             LEFT JOIN mbarang ON mbarang.kode = dinventot.ref_brg
-            LEFT JOIN mbarangs ON mbarangs.ref_brg = mbarang.kode";
+            LEFT JOIN mbarangs ON mbarangs.ref_brg = mbarang.kode
+            LEFT JOIN msatbrg ON msatbrg.ref_brg = mbarang.kode
+            LEFT JOIN msatuan ON msatuan.kode = msatbrg.ref_sat
+            WHERE
+                msatbrg.def = 't'";
         $result     = $this->db->query($q)->result();
         echo json_encode(array('data' => $result));
     }

@@ -351,7 +351,7 @@
   }
 
   function edit_data() {
-      kode = table.cell( idx, 3).data();
+      kode = table.cell( idx, 2).data();
       if (idx == -1) {
           return false;
       }
