@@ -233,6 +233,20 @@
 	    return `<img onerror="this.onerror=null; this.src='${php_base_url}assets/gambar/noimage.png'" style="max-width : 60px;" src="${php_base_url}${url}" >`
 	}
 
+	function showcolor(color) {
+	    return `<div style="background-color: ${color}; padding: 10px; border: 1px solid white;">`
+	}
+
+	function cbs(prop, state, label = "Processing") {
+	    if (state == "start") {
+	        $(prop).prop('disabled', true);
+	        $(prop).html(`<i class="fa fa-spinner fa-spin"></i> ${label}`);
+	    } else if (state == "stop") {
+	        $(prop).prop('disabled', false);
+	        $(prop).html(`${label}`);
+	    }
+	}
+
 	function ceknull(x) {
 	    if ($('[name="' + x + '"]').val() == '' || $('[name="' + x + '"]').val() == null) {
 	        showNotif('', 'Kolom Wajib Diisi', 'danger');

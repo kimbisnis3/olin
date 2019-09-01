@@ -26,7 +26,7 @@
                 <div class="box-body pad">
                   <form id="form-data">
                     <div class="row">
-                      <div class="col-md-7">
+                      <div class="col-md-5">
                         <div class="form-group">
                           <label>Nama</label>
                           <input type="hidden" name="idbarang">
@@ -34,7 +34,18 @@
                           <input type="text" class="form-control" name="nama">
                         </div>
                       </div>
-                      <div class="col-md-5">
+                      <div class="col-md-3">
+                        <div class="form-group">
+                          <label>Kategori</label>
+                          <select class="form-control select2" name="ref_ktg">
+                            <option value=""></option>
+                            <?php foreach ($ktg as $i => $v): ?>
+                              <option value="<?php echo $v->kode?>"><?php echo $v->nama ?></option>
+                            <?php endforeach ?>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-md-4">
                         <div class="form-group">
                           <label>Keterangan</label>
                           <input type="text" class="form-control" name="ket" >
@@ -82,14 +93,14 @@
                 <div class="box box-info">
                 <div class="box-header">
                   <div class="row">
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                       <div class="form-group">
                         <label>Konv</label>
-                        <input type="number" class="form-control" name="konv" >
                         <input type="hidden" class="form-control" name="idsatuan" >
+                        <input type="number" class="form-control" name="konv" >
                       </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                       <div class="form-group">
                         <label>Satuan</label>
                         <select class="form-control select2" name="ref_sat">
@@ -104,6 +115,12 @@
                       <div class="form-group">
                         <label>Harga</label>
                         <input type="number" class="form-control" name="harga" >
+                      </div>
+                    </div>
+                    <div class="col-md-2">
+                      <div class="form-group">
+                        <label>Berat (kg)</label>
+                        <input type="number" class="form-control" name="beratkg" >
                       </div>
                     </div>
                     <div class="col-md-3">
@@ -129,6 +146,7 @@
                           <th>Konv</th>
                           <th>Satuan</th>
                           <th>Harga</th>
+                          <th>Berat</th>
                           <th>Keterangan</th>
                           <th>Default</th>
                           <th width="15%">Opsi</th>
@@ -146,6 +164,7 @@
                           <th>Konv</th>
                           <th>Satuan</th>
                           <th>Harga</th>
+                          <th>Berat</th>
                           <th>Keterangan</th>
                           <th>Default</th>
                           <th width="15%">Opsi</th>
@@ -165,6 +184,67 @@
             </div>
           </div>
           </div>  <!-- END MODAL INPUT-->
+          <div class="modal fade" id="modal-komponen" role="dialog" data-backdrop="static">
+            <div class="modal-dialog modal-lg">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                  <h4 class="modal-title"></h4>
+                </div>
+                <div class="modal-body">
+                  <div class="box box-info">
+                    <div class="box-header">
+                      <div class="row">
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <select class="form-control select2" id="select-komponen">
+                              <option value=""></option>
+                              <?php foreach ($komp as $i => $v): ?>
+                              <option value="<?php echo $v->kode ?>"><?php echo $v->nama ?></option>
+                              <?php endforeach ?>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-md-3">
+                          <div class="form-group">
+                            <button type="button" class="btn btn-md btn-flat btn-block btn-hijau" id="btn-tambah-komponen" onclick="add_komponen()"><i class="fa fa-plus"></i> Tambah Komponen</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="box-body pad">
+                      <div class="table-responsive mailbox-messages">
+                        <table id="tbkomponen" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                          <thead>
+                            <tr id="repeat">
+                              <th width="5%">No</th>
+                              <th>ID</th>
+                              <th>Kode Barang</th>
+                              <th>ID Barang</th>
+                              <th>Nama Barang</th>
+                              <th>Konv</th>
+                              <th>Nama Satuan</th>
+                              <th>Harga</th>
+                              <th>Ket</th>
+                              <th>Design</th>
+                              <th>Gambar Design</th>
+                              <th>Warna</th>
+                              <th>Opsi</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-warning btn-flat" data-dismiss="modal">Tutup</button>
+                </div>
+              </div>
+            </div>
+            </div>  <!-- END MODAL KOMPONEN-->
           <div id="modal-konfirmasi" class="modal fade" role="dialog">
             <div class="modal-dialog modal-sm">
               <div class="modal-content">
@@ -181,6 +261,34 @@
           </div>
           <section class="content">
             <div class="row">
+                <div class="col-xs-12">
+                  <div class="box box-info">
+                    <div class="box-header bg">
+                      <div class="pull-right box-tools">
+                        <button class="btn btn-default btn-sm pull-right" data-widget="collapse" data-toggle="tooltip" title="Collapse" style="margin-right: 5px;"><i class="fa fa-minus"></i></button>
+                      </div>
+                      <i class="fa fa-search"></i>
+                      <h3 class="box-title">
+                      Filter Data
+                      </h3>
+                    </div>
+                    <div class="box-body">
+                      <div class="row">
+                        <div class="col-md-3">
+                          <label>Kategori</label>
+                          <select class="form-control select2" name="filterktg">
+                            <option value=""></option>
+                            <?php foreach ($ktg as $i => $v): ?>
+                              <option value="<?php echo $v->kode?>"><?php echo $v->nama ?></option>
+                            <?php endforeach ?>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <div class="row">
               <div class="col-xs-12">
                 <div class="box box-info">
                   <div class="box-header">
@@ -189,6 +297,7 @@
                       <button class="btn btn-primary btn-flat add-btn invisible" onclick="add_data()" ><i class="fa fa-plus"></i> Tambah</button>
                     </div>
                     <div class="pull-right">
+                      <button class="btn btn-coklat btn-flat option-btn invisible" onclick="open_komponen()"><i class="fa fa-bars"></i> Komponen</button>
                       <button class="btn btn-warning btn-flat edit-btn invisible" onclick="edit_data()"><i class="fa fa-pencil"></i> Ubah</button>
                       <button class="btn btn-danger btn-flat delete-btn invisible" onclick="hapus_data()" ><i class="fa fa-trash"></i> Hapus</button>
                     </div>
@@ -207,8 +316,11 @@
                             <th>Konv</th>
                             <th>Nama Satuan</th>
                             <th>Harga</th>
-                            <th>Keterangan</th>
-                            <th>Nama Gudang</th>                            
+                            <th>Ket</th>
+                            <th>Design</th>
+                            <th>Gambar Design</th>
+                            <th>Warna</th>                            
+                            <th>Kategori</th>                            
                         </thead>
                         <tbody>
                         </tbody>
@@ -241,31 +353,35 @@
       getAkses(title);
       select2();
       activemenux('masterdata', 'dataproduk');
+      $('[name="filterktg"]').val('GX0001');
+      $('[name="filterktg"]').trigger('change');
 
       table = $('#table').DataTable({
           "processing": true,
+          "scrollX": true,
           "ajax": {
               "url": `${apiurl}/getall`,
               "type": "POST",
-              "data": {},
+              "data": {
+                filterktg  : function() { return $('[name="filterktg"]').val() },
+              },
           },
-          "columns": [{ 
-              "className": 'details-control',
-              "orderable": false,
-              "data": null,
-              "defaultContent": ''
-          },
+          "columns": [
           //data 0 for detail-controls
-          { "data": "no" }, 
+          { "render" : (data,type,row,meta) => {return "detil"} , "visible" : false },
+          { "render" : (data,type,row,meta) => {return meta.row + 1} },
           { "data": "id" , "visible" : false},
-          { "data": "kode" , "visible" : true},
+          { "data": "kodebarang" , "visible" : true},
           { "data": "idbarang" , "visible" : false},
           { "data": "namabarang" },
           { "data": "konv", "visible" : false },
           { "data": "namasatuan" },
-          { "data": "harga" },
+          { "render" : (data,type,row,meta) => { return numeral(row['harga']).format('0,0')} },
           { "data": "ketbarang" },
-          { "data": "namagudang", "visible" : false }
+          { "data": "namadesign" },
+          { "render" : (data,type,row,meta) => { return showimage(row['gambardesign'])} },
+          { "render" : (data,type,row,meta) => { return showcolor(row['kodewarna'])} },
+          { "data": "kategori_nama" },
           ]
       });
 
@@ -326,6 +442,7 @@
           { "data": "konv" },
           { "data": "satuan" },
           { "data": "harga" },
+          { "data": "beratkg" },
           { "data": "ketsatuan" },
           { "data": "deflabel" },
           { "data": "btn"}
@@ -337,6 +454,7 @@
         let i = _.findIndex(sat, { 
           'konv'  : data.konv, 
           'satuan': data.satuan,
+          'beratkg': data.beratkg,
           'harga' : data.harga 
         });
         sat.splice(i, 1);
@@ -350,33 +468,12 @@
       $.ajax({
           url: `${apiurl}/getdetail`,
           type: "POST",
-          dataType: "JSON",
           data: {
-              kodebarang: data.kode
+              kodebarang: data.kodebarang
           },
           success: function(response) {
-            let head = `
-            <table class="table fadeIn animated">
-                  <thead>
-                    <tr>
-                      <th>Nama</th>
-                    </tr>
-                  </thead>`;
-
-            let body;
-            $.each(response, function(i, v) {
-                body = ` <tr>
-                      <td>${v.nama}</td>
-                    </tr>`
-            })
-            let foot = "</table>"
-            let element = head + body + foot
-            if (response.length) {
-              callback($(element)).show();
-            } else {
-              callback($("KOSONG")).show();
-            }
-            barloading(0)
+              callback($(response)).show();
+              barloading(0)
           },
           error: function() {
               $('#output').html('Bummer: there was an error!');
@@ -407,6 +504,7 @@
             sat.push({
                 'konv': $('[name="konv"]').val(),
                 'harga': $('[name="harga"]').val(),
+                'beratkg': $('[name="beratkg"]').val(),
                 'ref_sat': $('[name="ref_sat"]').val(),
                 'satuan': $('[name="ref_sat"] option:selected').html(),
                 'ketsatuan': $('[name="ketsatuan"]').val(),
@@ -427,6 +525,7 @@
           'ref_brg': $('[name="kode"]').val(),
           'konv': $('[name="konv"]').val(),
           'harga': $('[name="harga"]').val(),
+          'beratkg': $('[name="beratkg"]').val(),
           'ref_sat': $('[name="ref_sat"]').val(),
           'def': '',
           'ketsatuan': $('[name="ketsatuan"]').val()
@@ -449,6 +548,7 @@
           $('[name="konv"]').val(data.konv);
           $('[name="idsatuan"]').val(id);
           $('[name="harga"]').val(data.harga);
+          $('[name="beratkg"]').val(data.beratkg);
           $('[name="ref_sat"]').val(data.ref_sat);
           $('[name="ketsatuan"]').val(data.ket);
           $('.select2').trigger('change');
@@ -466,6 +566,7 @@
           'id': $('[name="idsatuan"]').val(),
           'konv': $('[name="konv"]').val(),
           'harga': $('[name="harga"]').val(),
+          'beratkg': $('[name="beratkg"]').val(),
           'ref_sat': $('[name="ref_sat"]').val(),
           'ketsatuan': $('[name="ketsatuan"]').val()
       }
@@ -474,7 +575,6 @@
               clearformsat()
               state_insatuan()
               tablehargaedit.ajax.reload(null, false);
-              refresh();
               showNotif('Sukses', 'Data Harga Berhasil Ditambahkan', 'success')
           }
       })
@@ -488,6 +588,7 @@
   function clearformsat() {
       $('[name="konv"]').val('');
       $('[name="harga"]').val('');
+      $('[name="beratkg"]').val('');
       $('[name="ref_sat"]').val('');
       $('[name="ketsatuan"]').val('');
       $('.select2').trigger('change');
@@ -521,6 +622,8 @@
 
   function edit_data() {
       kode = table.cell( idx, 3).data();
+      let label_old = $('.edit-btn').html();
+      cbs('.edit-btn',"start","Memuat");
       if (idx == -1) {
           return false;
       }
@@ -538,6 +641,7 @@
               $('[name="idbarang"]').val(data.barang.idbarang);
               $('[name="nama"]').val(data.barang.nama);
               $('[name="ket"]').val(data.barang.ket);
+              $('[name="ref_ktg"]').val(data.barang.ref_ktg);
               $('[name="kode"]').val(data.barang.kode);
 
               //spek barang
@@ -568,6 +672,7 @@
                   { "data": "konv" },
                   { "data": "namasatuan" },
                   { "data": "harga" },
+                  { "data": "beratkg" },
                   { "data": "ket" },
                   { "data": "def" },
                   { "data": "btn" },
@@ -580,10 +685,12 @@
               } );
               $('.select2').trigger('change');
               $('#modal-data').modal('show');
-              $('.modal-title').text('Edit Data');
+              $('#modal-data .modal-title').text('Edit Data');
+              cbs('.edit-btn',"stop",label_old);
           },
           error: function(jqXHR, textStatus, errorThrown) {
               showNotif('Fail', 'Internal Error', 'danger');
+              cbs('#edit-btn',"stop",label_old);
           }
       });
   }
@@ -606,6 +713,7 @@
             idsatbarang : $('[name="idsatbarang"]').val(),
             nama        : $('[name="nama"]').val(),
             ket         : $('[name="ket"]').val(),
+            ref_ktg     : $('[name="ref_ktg"]').val(),
             ref_gud     : $('[name="ref_gud"]').val(),
 
             model       : $('[name="model"]').val(),
@@ -628,6 +736,101 @@
           },
           error: function(jqXHR, textStatus, errorThrown) {
               showNotif('Fail', 'Internal Error', 'danger')
+          }
+      });
+  }
+
+  function open_komponen() {
+      kode = table.cell( idx, 3).data();
+      nama = table.cell( idx, 5).data();
+      if (idx == -1) {
+          return false;
+      }
+      tbkomponen = $('#tbkomponen').DataTable({
+          "processing": true,
+          "destroy": true,
+          scrollY : '50vh',
+          scrollCollapse: true,
+          "ajax": {
+              "url": `${apiurl}/getkomponen`,
+              "type": "POST",
+              "data": {
+                  kode: kode
+              },
+          },
+           "columns": [
+              { "render" : (data,type,row,meta) => {return meta.row + 1} },
+              { "data": "id" , "visible" : false},
+              { "data": "kodebarang" , "visible" : true},
+              { "data": "idbarang" , "visible" : false},
+              { "data": "namabarang" },
+              { "data": "konv", "visible" : false },
+              { "data": "namasatuan" },
+              { "render" : (data,type,row,meta) => { return numeral(row['harga']).format('0,0')} },
+              { "data": "ketbarang" },
+              { "data": "namadesign"  , "visible" : true},
+              { "render" : (data,type,row,meta) => { return showimage(row['gambardesign'])}  , "visible" : true},
+              { "render" : (data,type,row,meta) => { return showcolor(row['kodewarna'])}  , "visible" : true},
+              { "render" : (data,type,row,meta) => { return `<button class="btn btn-sm btn-merah btn-flat" onclick="del_komponen(${row['mbarangd_id']})"><i class="fa fa-trash"></i></button>` }},
+              ]
+      });
+      $('#modal-komponen').modal('show');
+      $('#modal-komponen .modal-title').html("Komponen "+nama);
+  }
+
+  function add_komponen() {
+      let label_old = $('#btn-tambah-komponen').html();
+      cbs('#btn-tambah-komponen',"start","Menyimpan");
+      param = {
+        ref_brgp  : $('#select-komponen').val(),
+        ref_brg   : kode,
+      }
+      $.ajax({
+          url: `${apiurl}/addkomponen`,
+          type: "POST",
+          dataType: "JSON",
+          data: {
+              ref_brgp  : $('#select-komponen').val(),
+              ref_brg   : kode,
+          },
+          success: function(data) {
+              if (data.sukses == 'success') {
+                  $('#select-komponen').val('');
+                  $('#select-komponen').trigger('change');
+                  cbs('#btn-tambah-komponen',"stop",label_old)
+                  tbkomponen.ajax.reload(null, false);
+                  showNotif('Sukses', 'Data Berhasil Ditambahkan', 'success')
+              } else if (data.sukses == 'fail') {
+                  tablehargaedit.ajax.reload(null, false);
+                  cbs('#btn-tambah-komponen',"stop",label_old)
+                  showNotif('Gagal', 'Data Gagal Diubah', 'danger')
+              }
+          },
+          error: function(jqXHR, textStatus, errorThrown) {
+              showNotif('Fail', 'Internal Error', 'danger');
+          }
+      });
+  }
+
+  function del_komponen(id) {
+    $.ajax({
+          url: `${apiurl}/delkomponen`,
+          type: "POST",
+          dataType: "JSON",
+          data: {
+              id : id,
+          },
+          success: function(data) {
+              if (data.sukses == 'success') {
+                  tbkomponen.ajax.reload(null, false);
+                  showNotif('Sukses', 'Data Berhasil Dihapus', 'success')
+              } else if (data.sukses == 'fail') {
+                  tbkomponen.ajax.reload(null, false);
+                  showNotif('Gagal', 'Data Gagal Dihapus', 'danger')
+              }
+          },
+          error: function(jqXHR, textStatus, errorThrown) {
+              showNotif('Fail', 'Internal Error', 'danger');
           }
       });
   }

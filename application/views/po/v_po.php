@@ -14,7 +14,7 @@
           </ol>
         </section>
           <div class="modal fade" id="modal-data" role="dialog" data-backdrop="static">
-            <div class="modal-dialog modal-lg">
+            <div class="modal-dialog modal-lg" style="width: 90vw">
               <div class="modal-content">
                 <div class="modal-header">
                   <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -22,192 +22,224 @@
                 </div>
                 <div class="modal-body">
                   <form id="form-data">
-                    <div class="box-body pad">
-                      <div class="row">
-                        <div class="col-md-6">
-                          <div class="form-group">
-                            <label>Agen</label>
-                            <input type="hidden" name="kode">
-                            <div class="input-group">
-                              <input type="hidden" class="form-control" name="ref_cust">
-                              <input type="text" class="form-control" name="namacust" readonly="true">
-                              <div class="input-group-btn">
-                                <button type="button" class="btn btn-primary btn-flat" onclick="open_cust()"><i class="fa fa-table"></i></button>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="col-md-6">
-                          <div class="form-group">
-                            <label>Produk</label>
-                            <input type="hidden" name="id">
-                            <div class="input-group">
-                              <input type="hidden" class="form-control" name="kodebrg">
-                              <input type="text" class="form-control" name="namabarang" readonly="true">
-                              <div class="input-group-btn">
-                                <button type="button" class="btn btn-primary btn-flat" onclick="open_barang()"><i class="fa fa-table"></i></button>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="row">
-                        <div class="col-md-6">
-                          <div class="form-group">
-                            <label>Tanggal</label>
-                            <input type="text" class="form-control datepicker" name="tgl">
-                          </div>
-                        </div>
-                        <div class="col-md-6">
+                    <div class="row">
+                      <div class="col-md-7">
+                        <div class="box-body pad">
                           <div class="row">
                             <div class="col-md-6">
                               <div class="form-group">
-                                <label>Jumlah</label>
-                                <input type="text" class="form-control" name="jumlah" id="jumlah">
+                                <label>Agen</label>
+                                <input type="hidden" name="kode">
+                                <div class="input-group">
+                                  <input type="hidden" class="form-control" name="ref_cust">
+                                  <input type="text" class="form-control" name="namacust" readonly="true">
+                                  <div class="input-group-btn">
+                                    <button type="button" class="btn btn-primary btn-flat" onclick="open_cust()"><i class="fa fa-table"></i></button>
+                                  </div>
+                                </div>
                               </div>
                             </div>
                             <div class="col-md-6">
                               <div class="form-group">
-                                <label>Harga</label>
-                                <input type="text" class="form-control" name="harga" readonly="true">
+                                <label>Tanggal</label>
+                                <input type="text" class="form-control datepicker" name="tgl">
                               </div>
                             </div>
                           </div>
-                        </div>
-                      </div>
-                      <div class="row">
-                        <div class="col-md-6">
-                          <div class="form-group">
-                            <label>Keterangan</label>
-                            <input type="text" class="form-control" name="ket">
-                          </div>
-                        </div>
-                        <div class="col-md-6">
-                          <div class="row box-upload">
-                            <div class="col-md-6">
-                              <div class="form-group">
-                                <label>File Corel * </label>
-                                <input type="file" class="form-control" name="corel" id="corel">
-                                <input type="hidden" name="pathcorel" id="path">
-                              </div>
-                            </div>
-                            <div class="col-md-6">
-                              <div class="form-group">
-                                <label>Gambar</label>
-                                <input type="file" class="form-control" name="image" id="image">
-                                <input type="hidden" name="pathimg" id="path">
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="row">
-                        <div class="col-md-4">
-                          <div class="form-group">
-                            <label>Penerima</label>
-                            <input type="text" class="form-control" name="kirimke">
-                          </div>
-                        </div>
-                        <div class="col-md-4">
-                          <div class="form-group">
-                            <label>Layanan</label>
-                            <select class="form-control select2" name="ref_layanan">
-                              <option value="">-</option>
-                              <?php foreach ($mlayanan as $i => $v): ?>
-                              <option value="<?php echo $v->kode ?>"><?php echo $v->nama; ?></option>
-                              <?php endforeach ?>
-                            </select>
-                          </div>
-                        </div>
-                        <div class="col-md-4">
-                          <div class="form-group">
-                            <label>Pengiriman</label>
-                            <select class="form-control select2" name="ref_kirim" onchange="changekirim()" id="ref_kirim">
-                              <option value="">-</option>
-                              <?php foreach ($mkirim as $i => $v): ?>
-                              <option value="<?php echo $v->kode ?>"><?php echo $v->nama; ?></option>
-                              <?php endforeach ?>
-                            </select>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="row">
-                        <div class="col-md-8">
-                          <div class="form-group">
-                            <label>Alamat Lengkap</label>
-                            <input type="text" class="form-control" name="alamat">
-                          </div>
-                        </div>      
-                      </div>
-                    </div>
-                    <div class="box-body pad invisible fadeIn animated" id="box-kurir">
-                      <div class="row">
-                        <div class="col-md-12">
                           <div class="row">
                             <div class="col-md-4">
                               <div class="form-group">
-                                <label>Provinsi Asal</label>
-                                <select class="form-control select2" id="select-provinsi" name="provinsi" onchange="setCity()">
-                                  <option value="">- Pilih Data -</option>
-                                </select>
-                                <input type="hidden" name="mask-provinsi">
+                                <label>Keterangan</label>
+                                <input type="text" class="form-control" name="ket">
                               </div>
+                            </div>
+                            <div class="col-md-8">
+                              <div class="row box-upload">
+                                <div class="col-md-6">
+                                  <div class="form-group">
+                                    <label>File Corel * </label>
+                                    <input type="file" class="form-control" name="corel" id="corel">
+                                    <input type="hidden" name="pathcorel" id="path">
+                                  </div>
+                                </div>
+                                <div class="col-md-6">
+                                  <div class="form-group">
+                                    <label>Gambar</label>
+                                    <input type="file" class="form-control" name="image" id="image">
+                                    <input type="hidden" name="pathimg" id="path">
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-md-4">
                               <div class="form-group">
-                                <label>Kota Asal</label>
-                                <select class="form-control select2" id="select-city" name="city">
-                                  <option value="">- Pilih Data -</option>
-                                </select>
-                                <input type="hidden" name="mask-city">
+                                <label>Penerima</label>
+                                <input type="text" class="form-control" name="kirimke">
                               </div>
                             </div>
                             <div class="col-md-4">
                               <div class="form-group">
-                                <label>Provinsi Tujuan</label>
-                                <select class="form-control select2" id="select-provinsi-to" name="provinsito" onchange="setCityTo()">
-                                  <option value="">- Pilih Data -</option>
+                                <label>Layanan</label>
+                                <select class="form-control select2" name="ref_layanan">
+                                  <option value="">-</option>
+                                  <?php foreach ($mlayanan as $i => $v): ?>
+                                  <option value="<?php echo $v->kode ?>"><?php echo $v->nama; ?></option>
+                                  <?php endforeach ?>
                                 </select>
-                                <input type="hidden" name="mask-provinsito">
-                              </div>
-                              <div class="form-group">
-                                <label>Kota Tujuan</label>
-                                <select class="form-control select2" id="select-city-to" name="cityto">
-                                  <option value="">- Pilih Data -</option>
-                                </select>
-                                <input type="hidden" name="mask-cityto">
                               </div>
                             </div>
                             <div class="col-md-4">
                               <div class="form-group">
-                                <label>Berat (kg) max 30kg</label>
-                                <input type="number" class="form-control" name="berat" onkeyup="setService()" id="berat">
-                              </div>
-                              <div class="form-group">
-                                <label>Kurir</label>
-                                <select class="form-control select2" id="select-kurir" name="kurir" onchange="setService()">
-                                  <option value="">- Pilih Data -</option>
-                                  <option value="jne">JNE</option>
-                                  <option value="tiki">TIKI</option>
-                                  <option value="pos">POS</option>
+                                <label>Pengiriman</label>
+                                <select class="form-control select2" name="ref_kirim" onchange="changekirim()" id="ref_kirim">
+                                  <option value="">-</option>
+                                  <?php foreach ($mkirim as $i => $v): ?>
+                                  <option value="<?php echo $v->kode ?>"><?php echo $v->nama; ?></option>
+                                  <?php endforeach ?>
                                 </select>
                               </div>
                             </div>
                           </div>
                           <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-8">
                               <div class="form-group">
-                                <label>Service</label>
-                                <select class="form-control select2" id="select-service" name="serv" onchange="setPrice()">
-                                  <option value="">- Pilih Data -</option>
-                                </select>
+                                <label>Alamat Lengkap</label>
+                                <input type="text" class="form-control" name="alamat">
                               </div>
                             </div>
-                            <div class="col-md-3">
-                              <label>Biaya</label>
-                              <input type="text" class="form-control" name="biaya" readonly="true">
+                          </div>
+                        </div>
+                        <div class="box-body pad invisible fadeIn animated" id="box-kurir">
+                          <div class="row">
+                            <div class="col-md-12">
+                              <div class="row">
+                                <div class="col-md-4">
+                                  <div class="form-group">
+                                    <label>Provinsi Asal</label>
+                                    <select class="form-control select2" id="select-provinsi" name="provinsi" onchange="setCity()">
+                                      <option value="">- Pilih Data -</option>
+                                    </select>
+                                    <input type="hidden" name="mask-provinsi">
+                                  </div>
+                                  <div class="form-group">
+                                    <label>Kota Asal</label>
+                                    <select class="form-control select2" id="select-city" name="city">
+                                      <option value="">- Pilih Data -</option>
+                                    </select>
+                                    <input type="hidden" name="mask-city">
+                                  </div>
+                                </div>
+                                <div class="col-md-4">
+                                  <div class="form-group">
+                                    <label>Provinsi Tujuan</label>
+                                    <select class="form-control select2" id="select-provinsi-to" name="provinsito" onchange="setCityTo()">
+                                      <option value="">- Pilih Data -</option>
+                                    </select>
+                                    <input type="hidden" name="mask-provinsito">
+                                  </div>
+                                  <div class="form-group">
+                                    <label>Kota Tujuan</label>
+                                    <select class="form-control select2" id="select-city-to" name="cityto">
+                                      <option value="">- Pilih Data -</option>
+                                    </select>
+                                    <input type="hidden" name="mask-cityto">
+                                  </div>
+                                </div>
+                                <div class="col-md-4">
+                                  <div class="form-group">
+                                    <label>Berat (kg) max 30kg</label>
+                                    <input type="number" class="form-control" name="berat" onkeyup="setService()" id="berat">
+                                  </div>
+                                  <div class="form-group">
+                                    <label>Kurir</label>
+                                    <select class="form-control select2" id="select-kurir" name="kurir" onchange="setService()">
+                                      <option value="">- Pilih Data -</option>
+                                      <option value="jne">JNE</option>
+                                      <option value="tiki">TIKI</option>
+                                      <option value="pos">POS</option>
+                                    </select>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="row">
+                                <div class="col-md-6">
+                                  <div class="form-group">
+                                    <label>Service</label>
+                                    <select class="form-control select2" id="select-service" name="serv" onchange="setPrice()">
+                                      <option value="">- Pilih Data -</option>
+                                    </select>
+                                  </div>
+                                </div>
+                                <div class="col-md-3">
+                                  <label>Biaya</label>
+                                  <input type="text" class="form-control" name="biaya" readonly="true">
+                                </div>
+                                <div class="col-md-3">
+                                  <label>Kode Kurir</label>
+                                  <input type="text" class="form-control" name="kodekurir" readonly="true">
+                                </div>
+                              </div>
                             </div>
-                            <div class="col-md-3">
-                              <label>Kode Kurir</label>
-                              <input type="text" class="form-control" name="kodekurir" readonly="true">
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-5">
+                        <div class="row">
+                          <div class="col-md-6">
+                            <div class="form-group">
+                              <label>Produk</label>
+                              <input type="hidden" name="id">
+                              <div class="input-group">
+                                <input type="hidden" class="form-control" name="kodebrg">
+                                <input type="text" class="form-control" name="namabarang" readonly="true">
+                                <div class="input-group-btn">
+                                  <button type="button" class="btn btn-primary btn-flat" onclick="open_barang()"><i class="fa fa-table"></i></button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="form-group">
+                              <label>Harga</label>
+                              <input type="text" class="form-control" name="harga" readonly="true">
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-md-6">
+                            <div class="form-group">
+                              <label>Jumlah</label>
+                              <input type="text" class="form-control" name="jumlah" id="jumlah">
+                            </div>
+                          </div>
+                          <div class="col-md-4">
+                            <div class="form-group">
+                              <label style="visibility: hidden;">xxxx</label>
+                              <button type="button" class="btn btn-flat btn-block btn-hijau" id="btn-tambah-barang" onclick="add_barang()"><i class="fa fa-plus"></i> Tambah</button>
+                              <button type="button" class="btn btn-flat btn-block btn-oren" id="btn-simpan-barang" onclick="update_barang()"><i class="fa fa-save"></i> Simpan</button>
+                              <button type="button" class="btn btn-flat btn-block btn-merah" id="btn-batal-barang" onclick="batal_barang()"><i class="fa fa-times"></i> Batal</button>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-md-12">
+                            <div class="table-responsive mailbox-messages">
+                              <table id="table-add-barang" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                                <thead>
+                                  <tr>
+                                    <th width="5%">No</th>
+                                    <th>ID</th>
+                                    <th>Produk</th>
+                                    <th>Jumlah</th>
+                                    <th>Harga</th>
+                                    <th>Opsi</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                              </table>
                             </div>
                           </div>
                         </div>
@@ -491,6 +523,7 @@
   var state;
   var idx     = -1;
   var table ;
+  var arr_produk =[];
 
   $(document).ready(function() {
       getAkses(title);
@@ -679,7 +712,7 @@
               "defaultContent": "<button class='btn btn-sm btn-success btn-flat'><i class='fa fa-check'></i></button>"
           }],
           "columns": [
-            { "data": "no" }, 
+            { "data": "no", "visible" : false }, 
             { "data": "id" , "visible" : false},
             { "data": "kode" , "visible" : false},
             { "data": "nama" },
@@ -696,7 +729,7 @@
           var data = tablebarang.row($(this).parents('tr')).data();
           $('[name="kodebrg"]').val(data.kode);
           $('[name="harga"]').val(`${numeral(data.harga).format('0,0')}`);
-          $('[name="namabarang"]').val(`${data.nama} (${data.konv} ${data.namasatuan}) Rp. ${numeral(data.harga).format('0,0')}`);
+          $('[name="namabarang"]').val(`${data.nama}`);
           $('#modal-barang').modal('hide');
       });
 
@@ -790,7 +823,98 @@
       setMonth('tgl',0);
       $('.select2').trigger('change');
       $('#modal-data').modal('show');
-      $('.modal-title').text('Tambah Data');
+      $('#modal-data .modal-title').text('Tambah Data');
+      tabel_add_barang()
+      state_insatuan()
+  }
+
+  function add_barang() {
+      if (ceknull('namabarang')) { return false }
+      if (ceknull('jumlah')) { return false }
+      if (ceknull('harga')) { return false }
+      arr_produk.push({
+          'id': $('[name="id"]').val(),
+          'nama': $('[name="namabarang"]').val(),
+          'kode': $('[name="kodebrg"]').val(),
+          'jumlah': $('[name="jumlah"]').val(),
+          'harga': $('[name="harga"]').val()
+      });
+      reloadbarang();
+      clearbarang();
+  }
+
+  function clearbarang() {
+      $('[name="namabarang"]').val('')
+      $('[name="kodebrg"]').val('')
+      $('[name="jumlah"]').val('')
+      $('[name="harga"]').val('')
+  }
+
+  function reloadbarang() {
+      tableaddbarang.clear().rows.add(arr_produk).draw();
+  }
+
+  function tabel_add_barang() {
+    tableaddbarang = $('#table-add-barang').DataTable({
+          "processing": true,
+          "paging": false,
+          "lengthChange": false,
+          "searching": false,
+          "ordering": false,
+          "info": false,
+          "destroy" : true,
+          "data": arr_produk,
+          "columns": [
+          { "render" : (data,type,row,meta) => {return meta.row + 1} },
+          { "data": "id" , "visible" : false},
+          { "data": "nama" },
+          { "data": "jumlah" },
+          { "data": "harga" },
+          { "render" : (data,type,row,meta) => { return `<button type="button" class="btn btn-sm btn-oren btn-flat" onclick="edit_barang(${meta.row})"><i class="fa fa-pencil"></i></button>
+          <button type="button" class="btn btn-sm btn-merah btn-flat" onclick="del_barang(${meta.row})"><i class="fa fa-trash"></i></button>` }},
+          ]
+      });
+  }
+
+  function edit_barang(index) {
+    $('[name="namabarang"]').val(arr_produk[index]['nama'])
+    $('[name="kodebrg"]').val(arr_produk[index]['kode'])
+    $('[name="jumlah"]').val(arr_produk[index]['jumlah'])
+    $('[name="harga"]').val(arr_produk[index]['harga'])
+    state_edsatuan()
+    $('#btn-simpan-barang').attr('onclick', 'update_barang(' + index + ')');
+  }
+
+  function update_barang(index) {
+    let newval = {
+        'id': $('[name="id"]').val(),
+        'nama': $('[name="namabarang"]').val(),
+        'kode': $('[name="kodebrg"]').val(),
+        'jumlah': $('[name="jumlah"]').val(),
+        'harga': $('[name="harga"]').val()
+    };
+    arr_produk[index] = newval;
+    reloadbarang()
+    state_insatuan()
+    clearbarang()
+  }
+
+  function del_barang(index) {
+    arr_produk.splice(index, 1);
+    reloadbarang()
+    state_insatuan()
+  }
+
+  function state_edsatuan() {
+      $('#btn-tambah-barang').addClass('invisible')
+      $('#btn-batal-barang').removeClass('invisible')
+      $('#btn-simpan-barang').removeClass('invisible')
+  }
+
+  function state_insatuan() {
+      $('#btn-tambah-barang').removeClass('invisible')
+      $('#btn-batal-barang').addClass('invisible')
+      $('#btn-simpan-barang').addClass('invisible')
   }
 
   function edit_data() {

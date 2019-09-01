@@ -13,10 +13,24 @@ class Dataproduk extends CI_Controller {
         $data['satuan'] = $this->db->get('msatuan')->result();
         $data['design'] = $this->db->get('mmodesign')->result();
         $data['warna']  = $this->db->get('mwarna')->result();
+        $data['ktg']    = $this->db->get('mkategori')->result();
+        $komp = "SELECT
+                mbarang.id,
+                mbarang.kode,
+                mbarang.ket,
+                mbarang.nama
+            FROM
+                msatbrg
+            LEFT JOIN mbarang ON mbarang.kode = msatbrg.ref_brg";
+        $komp  .= " WHERE mbarang.ref_ktg = 'GX0002'";
+        $komp  .= " AND msatbrg.def = 't'";
+        $komp  .= " ORDER BY msatbrg.id DESC";
+        $data['komp']   = $this->db->query($komp)->result();
         $this->load->view($this->indexpage,$data);  
     }
 
     public function getall(){
+        $filterktg = $this->input->post('filterktg');
         $q = "SELECT
                 msatbrg.id,
                 msatbrg.konv,
@@ -28,32 +42,28 @@ class Dataproduk extends CI_Controller {
                 mbarang.ket ketbarang,
                 mbarang.nama namabarang,
                 msatuan.nama namasatuan,
-                mgudang.nama namagudang
+                mgudang.nama namagudang,
+                mmodesign.gambar gambardesign,
+                mmodesign.nama namadesign,
+                mwarna.colorc kodewarna,
+                mkategori.nama kategori_nama
             FROM
                 msatbrg
             LEFT JOIN mbarang ON mbarang.kode = msatbrg.ref_brg
+            LEFT JOIN mkategori ON mkategori.kode = mbarang.ref_ktg
+            LEFT JOIN mbarangs ON mbarang.kode = mbarangs.ref_brg
+            LEFT JOIN mmodesign ON mmodesign.kode = mbarangs.model
+            LEFT JOIN mwarna ON mwarna.kode = mbarangs.warna
             LEFT JOIN msatuan ON msatuan.kode = msatbrg.ref_sat
             LEFT JOIN mgudang ON mgudang.kode = msatbrg.ref_gud";
-        $q  .= " WHERE mbarang.ref_ktg != 'GX0002'";
-        $q  .= " AND msatbrg.def = 't'";
+        $q  .= " WHERE msatbrg.def = 't'";
+        // $q  .= " AND mbarang.ref_ktg != 'GX0002'";
+        if ($filterktg) {
+            $q  .= " AND mbarang.ref_ktg = '$filterktg'";
+        }
         $q  .= " ORDER BY msatbrg.id DESC";
-        $result     = $this->db->query($q)->result();
-        $list       = [];
-        foreach ($result as $i => $r) {
-            $row['no']          = $i + 1;
-            $row['id']          = $r->id;
-            $row['idbarang']    = $r->idbarang;
-            $row['kode']        = $r->kodebarang;
-            $row['konv']        = $r->konv;
-            $row['harga']       = number_format($r->harga);
-            $row['namabarang']  = $r->namabarang;
-            $row['ketbarang']   = $r->ketbarang;
-            $row['namasatuan']  = $r->namasatuan;
-            $row['namagudang']  = $r->namagudang;
-            $row['def']         = truefalse($r->def,'Default','');
-            $list[] = $row;
-        }   
-        echo json_encode(array('data' => $list));
+        $result     = $this->db->query($q)->result();   
+        echo json_encode(array('data' => $result));
     }
 
     public function getdetailharga()
@@ -66,6 +76,7 @@ class Dataproduk extends CI_Controller {
                 msatbrg.harga,
                 msatbrg.ref_brg,
                 msatbrg.ref_sat,
+                msatbrg.beratkg,
                 msatbrg.ref_gud,
                 msatbrg.def,
                 msatuan.nama namasatuan,
@@ -81,6 +92,7 @@ class Dataproduk extends CI_Controller {
             $row['konv']        = $r->konv;
             $row['namasatuan']  = $r->namasatuan;
             $row['harga']       = $r->harga;
+            $row['beratkg']     = $r->beratkg;
             $row['ket']         = $r->ket;
             $row['def']         = truefalse($r->def,'Default','');
             $row['btn']         = "
@@ -122,6 +134,7 @@ class Dataproduk extends CI_Controller {
                 "ref_sat"   => $this->input->post('ref_sat'),
                 "konv"      => $this->input->post('konv'),
                 "harga"     => $this->input->post('harga'),
+                "beratkg"   => $this->input->post('beratkg'),
                 "ket"       => $this->input->post('ketsatuan'),
                 "ref_gud"   => $this->libre->gud_def()
             );
@@ -143,35 +156,84 @@ class Dataproduk extends CI_Controller {
                 mbarang.nama
             FROM
                 mbarangd
-            LEFT JOIN mbarang ON mbarang.kode = mbarangd.ref_brg
+            LEFT JOIN mbarang ON mbarang.kode = mbarangd.ref_brgp
             WHERE mbarangd.ref_brg = '$kodebarang'";
         $result     = $this->db->query($q)->result();
-        echo json_encode($result);
+        $brg = '<table class="table">
+                        <thead>
+                        <tr>
+                            <th>Nama</th>
+                        </tr>
+                        <thead>';
+        foreach ($result as $i => $r) {
+            $brg    .= '<tbody>
+                        <tr>
+                            <td>'.$r->nama.'</td>
+                        </tr>
+                        </tbody>';
+        }
+        $brg .='</table>';
+        echo $brg;
     }
 
-    // public function getdetail()
-    // {
-    //     $kodebarang = $this->input->post('kodebarang');
-    //     $q = "SELECT
-    //             mbarangs.id,
-    //             mbarangs.sn,
-    //             mbarangs.ket,
-    //             mbarangs.ref_brg,
-    //             mbarang.nama namabarang,
-    //             mbarangs.tipe,
-    //             mmodesign.gambar gambardesign,
-    //             mmodesign.nama namadesign,
-    //             mwarna.colorc kodewarna
-    //         FROM
-    //             mbarangs
-    //         LEFT JOIN mbarang ON mbarang.kode = mbarangs.ref_brg
-    //         LEFT JOIN mmodesign ON mmodesign.kode = mbarangs.model
-    //         LEFT JOIN mwarna ON mwarna.kode = mbarangs.warna
-    //         WHERE mbarangs.ref_brg = '$kodebarang'";
-    //     $result     = $this->db->query($q)->result();
-    //     echo json_encode($result);
-    // }
+    function getkomponen() {
+        $kode = $this->input->post('kode');
+        $q  = "SELECT
+                msatbrg. ID,
+                msatbrg.konv,
+                msatbrg.ket,
+                msatbrg.harga,
+                mbarang. ID idbarang,
+                mbarang.kode kodebarang,
+                mbarang.ket ketbarang,
+                mbarang.nama namabarang,
+                msatuan.nama namasatuan,
+                mmodesign.gambar gambardesign,
+                mmodesign.nama namadesign,
+                mwarna.colorc kodewarna,
+                mbarangd.id mbarangd_id
+            FROM
+                mbarangd
+            LEFT JOIN msatbrg ON mbarangd.ref_brgp = msatbrg.ref_brg
+            LEFT JOIN mbarang ON mbarangd.ref_brgp = mbarang.kode
+            LEFT JOIN msatuan ON msatuan.kode = msatbrg.ref_sat
+            LEFT JOIN mbarangs ON mbarang.kode = mbarangs.ref_brg
+            LEFT JOIN mwarna ON mwarna.kode = mbarangs.warna
+            LEFT JOIN mmodesign ON mmodesign.kode = mbarangs.model";
+        $q  .= " WHERE mbarangd.ref_brg = '$kode'";
+        $q  .= " ORDER BY msatbrg.id DESC";
+        $result = $this->db->query($q)->result();
+        echo json_encode(array('data' => $result));
+    } 
 
+    function addkomponen() {
+        $q = "SELECT
+                msatbrg.id,
+                msatbrg.kode,
+                mbarang.id idbarang,
+                mbarang.kode kodebarang
+            FROM
+                msatbrg
+            LEFT JOIN mbarang ON mbarang.kode = msatbrg.ref_brg";
+        $q  .= " WHERE msatbrg.def = 't'";
+        $q  .= " AND mbarang.ref_ktg = 'GX0002'";
+        $q  .= " ORDER BY msatbrg.id DESC";
+        $res = $this->db->query($q)->row();
+
+        $d['ref_brgp']      = $this->input->post('ref_brgp');
+        $d['ref_brg']       = $this->input->post('ref_brg');
+        $d['ref_msatbrg']   = $res->kode;
+        $result = $this->db->insert('mbarangd',$d);
+        $r['sukses']= $result ? 'success' : 'fail' ;
+        echo json_encode($r);
+    }
+
+    function delkomponen() {
+        $w['id'] = $this->input->post('id');
+        $result = $this->db->delete('mbarangd',$w);
+        $r['sukses']= $result ? 'success' : 'fail' ;
+        echo json_encode($r);
+    }
 
     public function savedata()
     {   
@@ -180,6 +242,7 @@ class Dataproduk extends CI_Controller {
         $a['nama']      = $this->input->post('nama');
         $a['kode']      = $this->input->post('kode');
         $a['ket']       = $this->input->post('ket');
+        $a['ref_ktg']   = $this->input->post('ref_ktg');
         $this->db->insert('mbarang',$a);
         $idBrg = $this->db->insert_id();
         $kodeBrg = $this->db->get_where('mbarang',array('id' => $idBrg))->row()->kode;
@@ -191,6 +254,7 @@ class Dataproduk extends CI_Controller {
                 "ref_sat"   => $r->ref_sat,
                 "konv"      => $r->konv,
                 "harga"     => $r->harga,
+                "beratkg"   => $r->beratkg,
                 "ket"       => $r->ketsatuan,
                 "def"       => ien($r->def),
                 "ref_gud"   => $this->libre->gud_def(),
@@ -228,7 +292,8 @@ class Dataproduk extends CI_Controller {
                 mbarang.id,
                 mbarang.kode,
                 mbarang.nama,
-                mbarang.ket
+                mbarang.ket,
+                mbarang.ref_ktg
             FROM
                 mbarang
             WHERE mbarang.kode = '$kode'";
@@ -272,6 +337,7 @@ class Dataproduk extends CI_Controller {
         $a['nama']      = $this->input->post('nama');
         $a['kode']      = $this->input->post('kode');
         $a['ket']       = $this->input->post('ket');
+        $a['ref_ktg']   = $this->input->post('ref_ktg');
         $kodeBrg        = $this->input->post('kode');
         $this->db->update('mbarang',$a,array('kode' => $kodeBrg ));
         $c['ref_brg']   = $kodeBrg;

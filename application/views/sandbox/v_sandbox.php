@@ -319,6 +319,46 @@
     }
   }
 
+  // function format(callback, data) {
+  //     barloading(1)
+  //     $.ajax({
+  //         url: `${apiurl}/getdetail`,
+  //         type: "POST",
+  //         // dataType: "JSON",
+  //         data: {
+  //             kodebarang: data.kodebarang
+  //         },
+  //         success: function(response) {
+  //           let head = `
+  //           <table class="table fadeIn animated">
+  //                 <thead>
+  //                   <tr>
+  //                     <th>Nama</th>
+  //                   </tr>
+  //                 </thead>`;
+
+  //           let body;
+  //           $.each(response, function(i, v) {
+  //               body = ` <tr>
+  //                     <td>${v.nama}</td>
+  //                   </tr>`
+  //           })
+  //           let foot = "</table>"
+  //           let element = head + body + foot
+  //           if (response.length) {
+  //             callback($(response)).show();
+  //           } else {
+  //             callback($("KOSONG")).show();
+  //           }
+  //           barloading(0)
+  //         },
+  //         error: function() {
+  //             $('#output').html('Bummer: there was an error!');
+  //             barloading(0)
+  //         }
+  //     });
+  // }
+
   const maindata = () => {
     table = $('#table').DataTable({
           "data": aa(),
