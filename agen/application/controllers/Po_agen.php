@@ -40,7 +40,9 @@ class Po_agen extends CI_Controller {
                 xorder.status,
                 mcustomer.nama namacust,
                 mkirim.nama mkirim_nama,
-                mlayanan.nama mlayanan_nama
+                mlayanan.nama mlayanan_nama,
+                (SELECT count(statusd) FROM xorderd WHERE xorderd.ref_order = xorder.kode) jmlorder,
+                (SELECT count(statusd) FROM xorderd WHERE xorderd.ref_order = xorder.kode AND statusd=4) orderdone
             FROM
                 xorder
             LEFT JOIN mcustomer ON mcustomer.kode = xorder.ref_cust
@@ -53,6 +55,7 @@ class Po_agen extends CI_Controller {
         if ($kodecust) {
             $q .= " AND ref_cust = '$kodecust'";
         }
+        $q .=" ORDER BY xorder.id DESC" ;
         $result     = $this->db->query($q)->result();
         $list       = [];
         foreach ($result as $i => $r) {
@@ -72,6 +75,9 @@ class Po_agen extends CI_Controller {
             $row['kirimke']     = $r->kirimke;
             $row['mlayanan_nama']= $r->mlayanan_nama;
             $row['status']      = statuspo($r->status);
+            $row['jmlorder']    = $r->jmlorder;
+            $row['orderdone']   = $r->orderdone;
+            $row['statusorder'] = ($r->orderdone == $r->jmlorder) ? '<span class="label label-success">Selesai Semua</span>' : '<span class="label label-warning">Belum Selesai</span>' ;
             $list[] = $row;
         }   
         echo json_encode(array('data' => $list));
@@ -94,6 +100,7 @@ class Po_agen extends CI_Controller {
                 msatuan.nama satuan,
                 mgudang.nama gudang,
                 xorderd.jumlah,
+                xorderd.statusd,
                 xorderd.jumlah * xorderd.harga subtotal
             FROM
                 xorderd
@@ -139,6 +146,7 @@ class Po_agen extends CI_Controller {
                             <th>Harga</th>
                             <th>Subtotal</th>
                             <th>Keterangan</th>
+                            <th>Status</th>
                         </tr>
                         <thead>';
         foreach ($brg as $i => $r) {
@@ -152,6 +160,7 @@ class Po_agen extends CI_Controller {
                             <td>'.number_format($r->harga).'</td>
                             <td>'.number_format($r->subtotal).'</td>
                             <td>'.$r->ket.'</td>
+                            <td>'.statuspo($r->statusd).'</td>
                         </tr>
                         </tbody>';
         }       
@@ -179,7 +188,6 @@ class Po_agen extends CI_Controller {
                             <td>'.showimage(str_replace('/agen/','',$r->mmodesign_gambar)).'</td>
                             <td>'.$r->mwarna_nama.'</td>
                             <td><div style="witdh:10px; height:20px; background-color:'.$r->mwarna_colorc.'" ></div></td>
-
                         </tr>
                         </tbody>';
         }
@@ -190,7 +198,7 @@ class Po_agen extends CI_Controller {
         echo $tabs;
     }
 
-     public function loadfilelist(){
+    public function loadfilelist(){
         $q = "SELECT
                 xorder.id,
                 xorder.kode,
@@ -242,12 +250,14 @@ class Po_agen extends CI_Controller {
             $a['kodekurir'] = $this->input->post('kodekurir');
             $a['kurir']     = $this->input->post('kurir');
         }
-        $this->db->insert('xorderz',$a);
+        $this->db->insert('xorder',$a);
 
         $idOrder = $this->db->insert_id();
         $kodeOrder = $this->db->get_where('xorder',array('id' => $idOrder))->row()->kode;
-        $kodebrg = $this->input->post('kodebrg');
-        $Brg = $this->db->query("
+        $kodebrg    = $this->input->post('kodebrg');
+        $arr_produk = $this->input->post('arr_produk');
+        foreach (json_decode($arr_produk) as $r) {
+            $Brg = $this->db->query("
             SELECT 
                 msatbrg.kode msatbrg_kode,
                 msatbrg.ref_brg msatbrg_ref_brg,
@@ -259,33 +269,38 @@ class Po_agen extends CI_Controller {
             LEFT JOIN msatbrg ON msatbrg.ref_brg = mbarang.kode 
             WHERE 
                 msatbrg.def = 't' 
-            AND mbarang.kode = '$kodebrg'")->row();
-        $b['useri']     = $this->session->userdata('username');
-        $b['ref_order'] = $kodeOrder;
-        $b['ref_brg']   = $Brg->msatbrg_ref_brg;
-        $b['jumlah']    = $this->input->post('jumlah');
-        $b['ref_satbrg']= $Brg->msatbrg_kode;
-        $b['harga']     = $Brg->msatbrg_harga;
-        $b['ref_gud']   = $Brg->msatbrg_ref_gud;
-        $b['ket']       = $Brg->msatbrg_ket;
+            AND mbarang.kode = '$r->kode'")->row();
+            $rowb['useri']     = $this->session->userdata('username');
+            $rowb['ref_order'] = $kodeOrder;
+            $rowb['ref_brg']   = $Brg->msatbrg_ref_brg;
+            $rowb['jumlah']    = $r->jumlah;
+            $rowb['harga']     = str_replace(",","",$r->harga);
+            $rowb['ref_satbrg']= $Brg->msatbrg_kode;
+            $rowb['ref_gud']   = $Brg->msatbrg_ref_gud;
+            $rowb['ket']       = $Brg->msatbrg_ket;
+            $b[] = $rowb;
+        }
         $this->db->delete('xorderd',array('ref_order' => $kodeOrder));
-        $this->db->insert('xorderd',$b);
-        $idOrderd = $this->db->insert_id();
-        $design = $this->db->get_where('mbarangs',array('ref_brg' => $kodebrg))->result();
-        foreach ($design as $r) {
-            $row    = array(
-                "useri"         => $this->session->userdata('username'),
-                "ref_orderd"    => $idOrderd,
-                "ref_modesign"  => $r->model,
-                "ref_warna"     => $r->warna,
-                "ket"           => $r->ket
-            );
-            $c[] = $row;
+        $this->db->insert_batch('xorderd',$b);
+        $idOrderd = $this->db->get_where('xorderd',array('ref_order' => $kodeOrder))->result();
+        foreach ($idOrderd as $i) {
+        $kodebarang = $this->db->get_where('xorderd',array('id' => $i->id))->row()->ref_brg;
+        $design = $this->db->get_where('mbarangs',array('ref_brg' => $kodebarang))->result();
+            foreach ($design as $r) {
+                $row    = array(
+                    "useri"         => $this->session->userdata('username'),
+                    "ref_orderd"    => $i->id,
+                    "ref_modesign"  => $r->model,
+                    "ref_warna"     => $r->warna,
+                    "ket"           => $r->ket
+                );
+                $c[] = $row;
+            }
         }
         if (count($design) > 0) {
             $this->db->insert_batch('xorderds',$c);
         }
-        $d['total'] = ($this->input->post('jumlah') * $Brg->msatbrg_harga) + $this->input->post('biaya');
+        $d['total'] = $this->input->post('total') + $this->input->post('biaya');
         $this->db->update('xorder',$d,array('kode' => $kodeOrder));
 
         if ($this->db->trans_status() === FALSE)
@@ -309,7 +324,7 @@ class Po_agen extends CI_Controller {
 
     public function edit()
     {
-        $q = "SELECT 
+        $q_po = "SELECT 
                 xorder.*,
                 xorder.id,
                 xorder.kode,
@@ -332,20 +347,32 @@ class Po_agen extends CI_Controller {
                 xorder.kodecityto,
                 xorder.alamat,
                 xorder.kirimke,
-                xorderd.jumlah,
-                xorderd.harga,
-                xorderd.ref_brg,
-                mcustomer.nama mcustomer_nama,
-                mbarang.nama mbarang_nama,
-                mbarang.kode kodebrg
+                mcustomer.nama mcustomer_nama
             FROM 
                 xorder
-            LEFT JOIN xorderd ON xorderd.ref_order = xorder.kode
             LEFT JOIN mcustomer ON mcustomer.kode = xorder.ref_cust
-            LEFT JOIN mbarang ON mbarang.kode = xorderd.ref_brg
             WHERE xorder.kode = '{$this->input->post('kode')}'";
-        $data   = $this->db->query($q)->row();
-        echo json_encode($data);
+
+        $q_barang ="SELECT 
+                xorderd.id,
+                xorderd.jumlah,
+                xorderd.harga,
+                mbarang.nama,
+                mbarang.kode,
+                msatbrg.beratkg
+            FROM 
+                xorderd
+            LEFT JOIN mbarang ON mbarang.kode = xorderd.ref_brg
+            LEFT JOIN msatbrg ON mbarang.kode = msatbrg.ref_brg
+            WHERE xorderd.ref_order = '{$this->input->post('kode')}'";
+        $q_barang .=" AND msatbrg.def = 't'";
+        $po         = $this->db->query($q_po)->row();
+        $barang     = $this->db->query($q_barang)->result();
+        echo json_encode(
+            array(
+                'po'    => $po, 
+                'barang'=> $barang, 
+        ));
     }
 
     public function updatedata() 
@@ -354,7 +381,7 @@ class Po_agen extends CI_Controller {
         $kodeorder      = $this->input->post('kode');
         $a['useru']     = $this->session->userdata('username');
         $a['dateu']     = 'now()';
-        $a['ref_cust']  = $this->input->post('ref_cust');
+        $a['ref_cust']  = $this->session->userdata('kodecust');
         $a['tgl']       = date('Y-m-d', strtotime($this->input->post('tgl')));
         $a['ref_gud']   = $this->libre->gud_def();
         $a['ket']       = $this->input->post('ket');
@@ -376,49 +403,8 @@ class Po_agen extends CI_Controller {
         }
         $this->db->update('xorder',$a,array('kode' => $kodeorder));
         $kodebrg = $this->input->post('kodebrg');
-        $Brg = $this->db->query("
-            SELECT 
-                msatbrg.kode msatbrg_kode,
-                msatbrg.ref_brg msatbrg_ref_brg,
-                msatbrg.harga msatbrg_harga,
-                msatbrg.ref_gud msatbrg_ref_gud,
-                msatbrg.ket msatbrg_ket
-            FROM 
-                mbarang 
-            LEFT JOIN msatbrg ON msatbrg.ref_brg = mbarang.kode 
-            WHERE 
-                msatbrg.def = 't' 
-            AND mbarang.kode = '$kodebrg'")->row();
-        $b['useru']     = $this->session->userdata('username');
-        $b['dateu']     = 'now()';
-        $b['ref_order'] = $kodeorder;
-        $b['ref_brg']   = $Brg->msatbrg_ref_brg;
-        $b['jumlah']    = $this->input->post('jumlah');
-        $b['ref_satbrg']= $Brg->msatbrg_kode;
-        $b['harga']     = $Brg->msatbrg_harga;
-        $b['ref_gud']   = $this->libre->gud_def();
-        $b['ket']       = $Brg->msatbrg_ket;
-        $this->db->update('xorderd',$b,array('ref_order' => $kodeorder));
-        //get orderd id first
-        $idOrderd = $this->db->get('xorderd',array('ref_order' => $kodeorder))->row()->id ;
-        $design = $this->db->get_where('mbarangs',array('ref_brg' => $kodebrg))->result();
-        foreach ($design as $r) {
-            $row    = array(
-                "useri"         => $this->session->userdata('username'),
-                "ref_orderd"    => $idOrderd,
-                "ref_modesign"  => $r->model,
-                "ref_warna"     => $r->warna,
-                "ket"           => $r->ket
-            );
-            $c[] = $row;
-        }
-        if (count($design) > 0) {
-            $this->db->delete('xorderds',array('ref_orderd' => $idOrderd));
-            $this->db->insert_batch('xorderds',$c);
-        }
-        $d['total'] = ($this->input->post('jumlah') * $Brg->msatbrg_harga) + $this->input->post('biaya');
+        $d['total'] = $this->input->post('total') + $this->input->post('biaya');
         $this->db->update('xorder',$d,array('kode' => $kodeorder));
-
         if ($this->db->trans_status() === FALSE)
         {
             $this->db->trans_rollback();
@@ -435,8 +421,6 @@ class Po_agen extends CI_Controller {
         }
         echo json_encode($r);
     }
-
-
 
     function updatefile()
     {
@@ -504,6 +488,7 @@ class Po_agen extends CI_Controller {
                 msatbrg.konv,
                 msatbrg.ket,
                 msatbrg.harga,
+                ( COALESCE( msatbrg.beratkg, 0 )) beratkg,
                 msatbrg.ref_brg,
                 msatbrg.ref_sat,
                 msatbrg.ref_gud,
@@ -531,7 +516,8 @@ class Po_agen extends CI_Controller {
                     mbarangs
                 WHERE
                     mbarangs.ref_brg = mbarang.kode
-            ) > 0";
+            ) > 0
+            AND mbarang.ref_ktg != 'GX0002'";
         $result     = $this->db->query($q)->result();
         $list       = [];
         foreach ($result as $i => $r) {
@@ -543,6 +529,7 @@ class Po_agen extends CI_Controller {
             $row['namasatuan']  = $r->namasatuan;
             $row['konv']        = $r->konv;
             $row['harga']       = $r->harga;
+            $row['beratkg']     = $r->beratkg;
 
             $list[] = $row;
         }   
@@ -555,6 +542,170 @@ class Po_agen extends CI_Controller {
         $d['tglvoid'] = 'now()';
         $w['id'] = $this->input->post('id');
         $result = $this->db->update($this->table,$d,$w);
+        $r['sukses'] = $result ? 'success' : 'fail' ;
+        echo json_encode($r);
+    }
+
+    public function addbarang()
+    {
+        $this->db->trans_begin();
+        $kodebarang = $this->input->post('kode');
+        $kodeorder  = $this->input->post('kodeorder');
+        $Brg = $this->db->query("
+            SELECT 
+                msatbrg.kode msatbrg_kode,
+                msatbrg.ref_brg msatbrg_ref_brg,
+                msatbrg.harga msatbrg_harga,
+                msatbrg.ref_gud msatbrg_ref_gud,
+                msatbrg.ket msatbrg_ket
+            FROM 
+                mbarang 
+            LEFT JOIN msatbrg ON msatbrg.ref_brg = mbarang.kode 
+            WHERE 
+                msatbrg.def = 't' 
+            AND mbarang.kode = '$kodebarang'")->row();
+            
+        $a['useri']     = $this->session->userdata('username');
+        $a['ref_order'] = $kodeorder;
+        $a['ref_brg']   = $Brg->msatbrg_ref_brg;
+        $a['jumlah']    = $this->input->post('jumlah');
+        $a['harga']     = str_replace(",","",$this->input->post('harga'));
+        $a['ref_satbrg']= $Brg->msatbrg_kode;
+        $a['ref_gud']   = $Brg->msatbrg_ref_gud;
+        $a['ket']       = $Brg->msatbrg_ket;
+        $this->db->insert('xorderd',$a);
+        $idorderd= $this->db->insert_id();
+        $design  = $this->db->get_where('mbarangs',array('ref_brg' => $kodebarang))->result();
+            foreach ($design as $r) {
+                $row    = array(
+                    "useri"         => $this->session->userdata('username'),
+                    "ref_orderd"    => $idorderd,
+                    "ref_modesign"  => $r->model,
+                    "ref_warna"     => $r->warna,
+                    "ket"           => $r->ket
+                );
+                $c[] = $row;
+            }
+        $this->db->delete('xorderds',array('ref_orderd' => $idorderd));
+        if (count($design) > 0) {
+            $this->db->insert_batch('xorderds',$c);
+        }
+        $q_barang = " SELECT 
+                xorderd.id,
+                xorderd.jumlah,
+                xorderd.harga,
+                mbarang.nama,
+                mbarang.kode,
+                msatbrg.beratkg
+            FROM 
+                xorderd
+            LEFT JOIN mbarang ON mbarang.kode = xorderd.ref_brg
+            LEFT JOIN msatbrg ON mbarang.kode = msatbrg.ref_brg
+            WHERE xorderd.ref_order = '$kodeorder'";
+        $q_barang .=" AND msatbrg.def = 't'";
+        $barang = $this->db->query($q_barang)->result();
+        if ($this->db->trans_status() === FALSE)
+        {
+            $this->db->trans_rollback();
+            $r = array(
+                'sukses' => 'fail', 
+            );
+        }
+        else
+        {
+            $this->db->trans_commit();
+            $r = array(
+                'sukses' => 'success',
+                'barang' => $barang,
+            );
+        }
+        echo json_encode($r);
+    }
+
+    public function updatebarang() {
+        $this->db->trans_begin();
+        $kodebarang = $this->input->post('kode');
+        $idorderd = $this->input->post('id');
+        $kodeorder  = $this->input->post('kodeorder');
+        $Brg = $this->db->query("
+            SELECT 
+                msatbrg.kode msatbrg_kode,
+                msatbrg.ref_brg msatbrg_ref_brg,
+                msatbrg.harga msatbrg_harga,
+                msatbrg.ref_gud msatbrg_ref_gud,
+                msatbrg.ket msatbrg_ket
+            FROM 
+                mbarang 
+            LEFT JOIN msatbrg ON msatbrg.ref_brg = mbarang.kode 
+            WHERE 
+                msatbrg.def = 't' 
+            AND mbarang.kode = '$kodebarang'")->row();
+            
+        $a['useru']     = $this->session->userdata('username');
+        $a['dateu']     = 'now()';
+        $a['ref_order'] = $kodeorder;
+        $a['ref_brg']   = $Brg->msatbrg_ref_brg;
+        $a['jumlah']    = $this->input->post('jumlah');
+        $a['harga']     = str_replace(",","",$this->input->post('harga'));
+        $a['ref_satbrg']= $Brg->msatbrg_kode;
+        $a['ref_gud']   = $Brg->msatbrg_ref_gud;
+        $a['ket']       = $Brg->msatbrg_ket;
+        $w['id']        = $this->input->post('id');
+        $this->db->update('xorderd',$a,$w);
+        $design  = $this->db->get_where('mbarangs',array('ref_brg' => $kodebarang))->result();
+            foreach ($design as $r) {
+                $row    = array(
+                    "useru"         => $this->session->userdata('username'),
+                    "dateu"         => 'now()',
+                    "ref_orderd"    => $idorderd,
+                    "ref_modesign"  => $r->model,
+                    "ref_warna"     => $r->warna,
+                    "ket"           => $r->ket
+                );
+                $c[] = $row;
+            }
+        $this->db->delete('xorderds',array('ref_orderd' => $idorderd));
+        if (count($design) > 0) {
+            $this->db->insert_batch('xorderds',$c);
+        }
+        $q_barang = " SELECT 
+                xorderd.id,
+                xorderd.jumlah,
+                xorderd.harga,
+                mbarang.nama,
+                mbarang.kode,
+                msatbrg.beratkg
+            FROM 
+                xorderd
+            LEFT JOIN mbarang ON mbarang.kode = xorderd.ref_brg
+            LEFT JOIN msatbrg ON mbarang.kode = msatbrg.ref_brg
+            WHERE xorderd.ref_order = '$kodeorder'";
+        $q_barang .=" AND msatbrg.def = 't'";
+        $barang = $this->db->query($q_barang)->result();
+        if ($this->db->trans_status() === FALSE)
+        {
+            $this->db->trans_rollback();
+            $r = array(
+                'sukses' => 'fail', 
+            );
+        }
+        else
+        {
+            $this->db->trans_commit();
+            $r = array(
+                'sukses' => 'success',
+                'barang' => $barang,
+            );
+        }
+        echo json_encode($r);
+    }
+
+    public function deletebarang()
+    {
+        $w['id'] = $this->input->post('id');
+        $kodeorder = $this->db->get_where('xorderd',array('id' => $this->input->post('id')))->row()->ref_order;
+        $z['total'] = $this->input->post('total');
+        $result = $this->db->delete('xorderd',$w);
         $r['sukses'] = $result ? 'success' : 'fail' ;
         echo json_encode($r);
     }
@@ -585,14 +736,15 @@ class Po_agen extends CI_Controller {
     function request_ongkir() {
         $origin         = $this->input->get('origin'); 
         $destination    = $this->input->get('destination'); 
-        $weight         = $this->input->get('weight') * 1000;
+        // $weight         = $this->input->get('weight') * 1000;
+        $weight         = 1 * 1000;
         $courier        = $this->input->get('courier');
         $response = $this->libre->get_ongkir_ro($origin,$destination,$weight,$courier);
         $data = json_decode($response, true); 
         $op = "<option value=''>-</option>";
             for ($i=0; $i < count($data['rajaongkir']['results'][0]['costs']); $i++) {  
             $res = $data['rajaongkir']['results'][0]['costs'][$i];
-            $op .= "<option value='@".$res['service']."@?".$res['cost'][0]['value']."?'>".$res['service']." (".$res['description']." - ".number_format($res['cost'][0]['value']).")</option>";
+            $op .= "<option value='@".$res['service']."@?".$res['cost'][0]['value']."?'>".$res['service']." (".$res['description']." | Perkilo | ".number_format($res['cost'][0]['value']).")</option>";
             }
         echo $op; 
         

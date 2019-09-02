@@ -14,7 +14,7 @@
           </ol>
         </section>
           <div class="modal fade" id="modal-data" role="dialog" data-backdrop="static">
-            <div class="modal-dialog modal-lg">
+            <div class="modal-dialog modal-lg" style="width: 90vw">
               <div class="modal-content">
                 <div class="modal-header">
                   <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -22,179 +22,228 @@
                 </div>
                 <div class="modal-body">
                   <form id="form-data">
-                    <div class="box-body pad">
-                      <div class="row">
-                        <div class="col-md-6">
-                          <div class="form-group">
-                            <label>Produk</label>
-                            <input type="hidden" name="id">
-                            <div class="input-group">
-                              <input type="hidden" class="form-control" name="kodebrg">
-                              <input type="text" class="form-control" name="namabarang" readonly="true">
-                              <div class="input-group-btn">
-                                <button type="button" class="btn btn-primary btn-flat" onclick="open_barang()"><i class="fa fa-table"></i></button>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="row">
-                        <div class="col-md-6">
-                          <div class="form-group">
-                            <label>Tanggal</label>
-                            <input type="text" class="form-control datepicker" name="tgl">
-                          </div>
-                        </div>
-                        <div class="col-md-6">
+                    <div class="row">
+                      <div class="col-md-7">
+                        <div class="box-body pad">
                           <div class="row">
                             <div class="col-md-6">
                               <div class="form-group">
-                                <label>Jumlah</label>
-                                <input type="text" class="form-control" name="jumlah" id="jumlah">
-                              </div>
-                            </div>
-                            <div class="col-md-6">
-                              <div class="form-group">
-                                <label>Harga</label>
-                                <input type="text" class="form-control" name="harga" readonly="true">
+                                <label>Tanggal</label>
+                                <input type="hidden" name="kode">
+                                <input type="text" class="form-control datepicker" name="tgl">
                               </div>
                             </div>
                           </div>
-                        </div>
-                      </div>
-                      <div class="row">
-                        <div class="col-md-6">
-                          <div class="form-group">
-                            <label>Keterangan</label>
-                            <input type="text" class="form-control" name="ket">
-                          </div>
-                        </div>
-                        <div class="col-md-6">
-                          <div class="row box-upload">
-                            <div class="col-md-6">
-                              <div class="form-group">
-                                <label>File Corel * </label>
-                                <input type="file" class="form-control" name="corel" id="corel">
-                                <input type="hidden" name="pathcorel" id="path">
-                              </div>
-                            </div>
-                            <div class="col-md-6">
-                              <div class="form-group">
-                                <label>Gambar</label>
-                                <input type="file" class="form-control" name="image" id="image">
-                                <input type="hidden" name="pathimg" id="path">
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="row">
-                        <div class="col-md-4">
-                          <div class="form-group">
-                            <label>Penerima</label>
-                            <input type="text" class="form-control" name="kirimke">
-                          </div>
-                        </div>
-                        <div class="col-md-4">
-                          <div class="form-group">
-                            <label>Layanan</label>
-                            <select class="form-control select2" name="ref_layanan">
-                              <option value="">-</option>
-                              <?php foreach ($mlayanan as $i => $v): ?>
-                              <option value="<?php echo $v->kode ?>"><?php echo $v->nama; ?></option>
-                              <?php endforeach ?>
-                            </select>
-                          </div>
-                        </div>
-                        <div class="col-md-4">
-                          <div class="form-group">
-                            <label>Pengiriman</label>
-                            <select class="form-control select2" name="ref_kirim" onchange="changekirim()" id="ref_kirim">
-                              <option value="">-</option>
-                              <?php foreach ($mkirim as $i => $v): ?>
-                              <option value="<?php echo $v->kode ?>"><?php echo $v->nama; ?></option>
-                              <?php endforeach ?>
-                            </select>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="row">
-                        <div class="col-md-8">
-                          <div class="form-group">
-                            <label>Alamat Lengkap</label>
-                            <input type="text" class="form-control" name="alamat">
-                          </div>
-                        </div>      
-                      </div>
-                    </div>
-                    <div class="box-body pad invisible fadeIn animated" id="box-kurir">
-                      <div class="row">
-                        <div class="col-md-12">
                           <div class="row">
                             <div class="col-md-4">
                               <div class="form-group">
-                                <label>Provinsi Asal</label>
-                                <select class="form-control select2" id="select-provinsi" name="provinsi" onchange="setCity()">
-                                  <option value="">- Pilih Data -</option>
-                                </select>
-                                <input type="hidden" name="mask-provinsi">
+                                <label>Keterangan</label>
+                                <input type="text" class="form-control" name="ket">
                               </div>
+                            </div>
+                            <div class="col-md-8">
+                              <div class="row box-upload">
+                                <div class="col-md-6">
+                                  <div class="form-group">
+                                    <label>File Corel * </label>
+                                    <input type="file" class="form-control" name="corel" id="corel">
+                                    <input type="hidden" name="pathcorel" id="path">
+                                  </div>
+                                </div>
+                                <div class="col-md-6">
+                                  <div class="form-group">
+                                    <label>Gambar</label>
+                                    <input type="file" class="form-control" name="image" id="image">
+                                    <input type="hidden" name="pathimg" id="path">
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-md-4">
                               <div class="form-group">
-                                <label>Kota Asal</label>
-                                <select class="form-control select2" id="select-city" name="city">
-                                  <option value="">- Pilih Data -</option>
-                                </select>
-                                <input type="hidden" name="mask-city">
+                                <label>Penerima</label>
+                                <input type="text" class="form-control" name="kirimke">
                               </div>
                             </div>
                             <div class="col-md-4">
                               <div class="form-group">
-                                <label>Provinsi Tujuan</label>
-                                <select class="form-control select2" id="select-provinsi-to" name="provinsito" onchange="setCityTo()">
-                                  <option value="">- Pilih Data -</option>
+                                <label>Layanan</label>
+                                <select class="form-control select2" name="ref_layanan">
+                                  <option value="">-</option>
+                                  <?php foreach ($mlayanan as $i => $v): ?>
+                                  <option value="<?php echo $v->kode ?>"><?php echo $v->nama; ?></option>
+                                  <?php endforeach ?>
                                 </select>
-                                <input type="hidden" name="mask-provinsito">
-                              </div>
-                              <div class="form-group">
-                                <label>Kota Tujuan</label>
-                                <select class="form-control select2" id="select-city-to" name="cityto">
-                                  <option value="">- Pilih Data -</option>
-                                </select>
-                                <input type="hidden" name="mask-cityto">
                               </div>
                             </div>
                             <div class="col-md-4">
                               <div class="form-group">
-                                <label>Berat (kg) max 30kg</label>
-                                <input type="number" class="form-control" name="berat" onkeyup="setService()" id="berat">
-                              </div>
-                              <div class="form-group">
-                                <label>Kurir</label>
-                                <select class="form-control select2" id="select-kurir" name="kurir" onchange="setService()">
-                                  <option value="">- Pilih Data -</option>
-                                  <option value="jne">JNE</option>
-                                  <option value="tiki">TIKI</option>
-                                  <option value="pos">POS</option>
+                                <label>Pengiriman</label>
+                                <select class="form-control select2" name="ref_kirim" onchange="changekirim()" id="ref_kirim">
+                                  <option value="">-</option>
+                                  <?php foreach ($mkirim as $i => $v): ?>
+                                  <option value="<?php echo $v->kode ?>"><?php echo $v->nama; ?></option>
+                                  <?php endforeach ?>
                                 </select>
                               </div>
                             </div>
                           </div>
                           <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-8">
                               <div class="form-group">
-                                <label>Service</label>
-                                <select class="form-control select2" id="select-service" name="serv" onchange="setPrice()">
-                                  <option value="">- Pilih Data -</option>
-                                </select>
+                                <label>Alamat Lengkap</label>
+                                <input type="text" class="form-control" name="alamat">
                               </div>
                             </div>
-                            <div class="col-md-3">
-                              <label>Biaya</label>
-                              <input type="text" class="form-control" name="biaya" readonly="true">
+                          </div>
+                        </div>
+                        <div class="box-body pad invisible fadeIn animated" id="box-kurir">
+                          <div class="row">
+                            <div class="col-md-12">
+                              <div class="row">
+                                <div class="col-md-4">
+                                  <div class="form-group">
+                                    <label>Provinsi Asal</label>
+                                    <select class="form-control select2" id="select-provinsi" name="provinsi" onchange="setCity()">
+                                      <option value="">- Pilih Data -</option>
+                                    </select>
+                                    <input type="hidden" name="mask-provinsi">
+                                  </div>
+                                  <div class="form-group">
+                                    <label>Kota Asal</label>
+                                    <select class="form-control select2" id="select-city" name="city">
+                                      <option value="">- Pilih Data -</option>
+                                    </select>
+                                    <input type="hidden" name="mask-city">
+                                  </div>
+                                </div>
+                                <div class="col-md-4">
+                                  <div class="form-group">
+                                    <label>Provinsi Tujuan</label>
+                                    <select class="form-control select2" id="select-provinsi-to" name="provinsito" onchange="setCityTo()">
+                                      <option value="">- Pilih Data -</option>
+                                    </select>
+                                    <input type="hidden" name="mask-provinsito">
+                                  </div>
+                                  <div class="form-group">
+                                    <label>Kota Tujuan</label>
+                                    <select class="form-control select2" id="select-city-to" name="cityto">
+                                      <option value="">- Pilih Data -</option>
+                                    </select>
+                                    <input type="hidden" name="mask-cityto">
+                                  </div>
+                                </div>
+                                <div class="col-md-4">
+                                  <div class="form-group">
+                                    <label>Berat (kg)</label>
+                                    <input type="number" class="form-control" name="berat" onkeyup="setService()" id="berat" readonly>
+                                  </div>
+                                  <div class="form-group">
+                                    <label>Kurir</label>
+                                    <select class="form-control select2" id="select-kurir" name="kurir" onchange="setService()">
+                                      <option value="">- Pilih Data -</option>
+                                      <option value="jne">JNE</option>
+                                      <option value="tiki">TIKI</option>
+                                      <option value="pos">POS</option>
+                                    </select>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="row">
+                                <div class="col-md-6">
+                                  <div class="form-group">
+                                    <label>Service</label>
+                                    <select class="form-control select2" id="select-service" name="serv" onchange="setPrice()">
+                                      <option value="">- Pilih Data -</option>
+                                    </select>
+                                  </div>
+                                </div>
+                                <div class="col-md-3">
+                                  <label>Biaya</label>
+                                  <input type="text" class="form-control" name="biaya" readonly="true">
+                                </div>
+                                <div class="col-md-3">
+                                  <label>Kode Kurir</label>
+                                  <input type="text" class="form-control" name="kodekurir" readonly="true">
+                                </div>
+                              </div>
                             </div>
-                            <div class="col-md-3">
-                              <label>Kode Kurir</label>
-                              <input type="text" class="form-control" name="kodekurir" readonly="true">
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-5">
+                        <div class="row">
+                          <div class="col-md-6">
+                            <div class="form-group">
+                              <label>Produk</label>
+                              <input type="hidden" name="id">
+                              <input type="hidden" name="arr_produk">
+                              <div class="input-group">
+                                <input type="hidden" class="form-control" name="kodebrg">
+                                <input type="text" class="form-control" name="namabarang" readonly="true">
+                                <div class="input-group-btn">
+                                  <button type="button" class="btn btn-primary btn-flat" onclick="open_barang()"><i class="fa fa-table"></i></button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="form-group">
+                              <label>Harga</label>
+                              <input type="text" class="form-control" name="harga" readonly="true">
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-md-6">
+                            <div class="form-group">
+                              <label>Jumlah</label>
+                              <input type="number" class="form-control" name="jumlah" id="jumlah">
+                              <input type="hidden" class="form-control" name="beratkg" id="beratkg">
+                              <input type="hidden" class="form-control" name="total" id="input-total-harga">
+                            </div>
+                          </div>
+                          <div class="col-md-4">
+                            <label style="visibility: hidden;">xxxx</label>
+                            <button type="button" class="btn btn-flat btn-block btn-hijau bounceIn animated" id="btn-tambah-barang" onclick="add_barang()"><i class="fa fa-plus"></i> Tambah</button>
+                            <div class="row">
+                              <div class="col-md-6">
+                                <button type="button" class="btn btn-flat btn-block btn-oren bounceIn animated" id="btn-simpan-barang" onclick="update_barang()"><i class="fa fa-save"></i></button>
+                              </div>
+                              <div class="col-md-6">
+                                <button type="button" class="btn btn-flat btn-block btn-merah bounceIn animated" id="btn-batal-barang" onclick="batal_barang()"><i class="fa fa-times"></i></button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-md-12">
+                            <div class="table-responsive mailbox-messages">
+                              <table id="table-add-barang" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                                <thead>
+                                  <tr>
+                                    <th width="5%">No</th>
+                                    <th>ID</th>
+                                    <th>Produk</th>
+                                    <th>Jumlah</th>
+                                    <th>Harga</th>
+                                    <th>Opsi</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                                <tfoot>
+                                  <tr>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th>Total</th>
+                                    <th colspan="2" id="total-harga"></th>
+                                  </tr>
+                                </tfoot>
+                              </table>
                             </div>
                           </div>
                         </div>
@@ -271,6 +320,7 @@
                                 <th>Konv</th>
                                 <th>Satuan</th>
                                 <th>Harga</th>
+                                <th>Berat</th>
                                 <th>Keterangan</th>
                                 <th>Opsi</th>
                               </tr>
@@ -419,6 +469,7 @@
                         <button class="btn btn-act btn-primary btn-flat add-btn invisible" onclick="add_data()" ><i class="fa fa-plus"></i> Tambah</button>
                       </div>
                       <div class="pull-right">
+                        <button class="btn btn-act btn-warning btn-flat edit-btn invisible" onclick="edit_data()"><i class="fa fa-pencil"></i> Ubah</button>
                         <button class="btn btn-act bg-navy btn-flat file-btn" onclick="open_file()"><i class="fa fa-file"></i> File</button>
                         <button class="btn btn-act bg-olive btn-flat" onclick="cetak_data()" ><i class="fa fa-print"></i> Cetak</button>
                       </div>
@@ -463,6 +514,7 @@
   var state;
   var idx     = -1;
   var table ;
+  var arr_produk =[];
 
   $(document).ready(function() {
       getAkses(title);
@@ -487,7 +539,7 @@
               "type": "POST",
               "data": {
                 filterawal  : function() { return $('[name="filterawal"]').val() },
-                filterakhir : function() { return $('[name="filterakhir"').val() }
+                filterakhir : function() { return $('[name="filterakhir"').val() },
               },
           },
           "columns": [{ 
@@ -500,11 +552,11 @@
           { "data": "id" , "visible" : false},
           { "data": "kode" },
           { "data": "tgl" },
-          { "data": "namacust", "visible" : false },
+          { "data": "namacust" },
           { "data": "mlayanan_nama" },
           { "data": "mkirim_nama" },
           { "data": "ket" },
-          { "data": "status" }
+          { "data": "statusorder" }
           ]
       });
 
@@ -557,6 +609,7 @@
           },
           success: function(response) {
               callback($(response)).show();
+              imgError(image)
           },
           error: function() {
               $('#output').html('Bummer: there was an error!');
@@ -648,13 +701,14 @@
               "defaultContent": "<button class='btn btn-sm btn-success btn-flat'><i class='fa fa-check'></i></button>"
           }],
           "columns": [
-            { "data": "no" }, 
+            { "data": "no", "visible" : false }, 
             { "data": "id" , "visible" : false},
             { "data": "kode" , "visible" : false},
             { "data": "nama" },
             { "data": "konv" },
             { "data": "namasatuan" },
             { "data": "harga" },
+            { "data": "beratkg", "visible" : false },
             { "data": "ket" },
             { "data": "opsi" },
           ]
@@ -664,8 +718,9 @@
       $('#table-barang tbody').on('click', 'button', function() {
           var data = tablebarang.row($(this).parents('tr')).data();
           $('[name="kodebrg"]').val(data.kode);
+          $('[name="beratkg"]').val(data.beratkg);
           $('[name="harga"]').val(`${numeral(data.harga).format('0,0')}`);
-          $('[name="namabarang"]').val(`${data.nama} (${data.konv} ${data.namasatuan}) Rp. ${numeral(data.harga).format('0,0')}`);
+          $('[name="namabarang"]').val(`${data.nama}`);
           $('#modal-barang').modal('hide');
       });
 
@@ -718,10 +773,9 @@
   }
 
   function updatefile() {
-      var formfile = new FormData($('#form-file')[0]);
-      url = "<?php echo base_url() ?>po_agen/updatefile"
+      var formfile = new FormData($('#form-file')[0])
       $.ajax({
-          url: url,
+          url: `${apiurl}/updatefile`,
           type: "POST",
           data: formfile,
           dataType: "JSON",
@@ -759,11 +813,247 @@
       setMonth('tgl',0);
       $('.select2').trigger('change');
       $('#modal-data').modal('show');
-      $('.modal-title').text('Tambah Data');
+      $('#modal-data .modal-title').text('Tambah Data');
+      tabel_add_barang()
+      state_insatuan()
+      arr_produk =[]
+      reloadbarang();
+      clearbarang();
+  }
+
+  function clearbarang() {
+      $('[name="namabarang"]').val('')
+      $('[name="kodebrg"]').val('')
+      $('[name="jumlah"]').val('')
+      $('[name="harga"]').val('')
+      $('#total-harga').html('');
+      $('#input-total-harga').val('');
+  }
+
+  function total_harga() {
+      let total = _.sumBy(arr_produk, function(o) {
+          return parseFloat(o.harga.replace(",", "")) * o.jumlah
+      });
+      let berat = _.sumBy(arr_produk, function(o) {
+        return o.beratkg * o.jumlah
+      });
+      $('#total-harga').html(numeral(total).format('0,0'));
+      $('#input-total-harga').val(total);
+      $('[name="berat"]').val(berat);
+      let biayaperkilo = getbiayakirim($('[name="serv"]').val());
+      $('[name="biaya"]').val(biayaperkilo * berat);
+  }
+
+  function reloadbarang() {
+      tableaddbarang.clear().rows.add(arr_produk).draw();
+  }
+
+  function tabel_add_barang() {
+    tableaddbarang = $('#table-add-barang').DataTable({
+          "processing": true,
+          "paging": false,
+          "lengthChange": false,
+          "searching": false,
+          "ordering": false,
+          "info": false,
+          "destroy" : true,
+          "data": arr_produk,
+          "columns": [
+          { "render" : (data,type,row,meta) => {return meta.row + 1} },
+          { "data": "id" , "visible" : false},
+          { "data": "nama" },
+          { "data": "jumlah" },
+          { "data": "harga" },
+          { "render" : (data,type,row,meta) => { return `<button type="button" class="btn btn-sm btn-oren btn-flat" onclick="edit_barang(${meta.row})"><i class="fa fa-pencil"></i></button>
+          <button type="button" class="btn btn-sm btn-merah btn-flat" onclick="del_barang(${meta.row},${row.id})"><i class="fa fa-trash"></i></button>` }},
+          ]
+      });
+  }
+
+  function edit_barang(index) {
+    $('[name="id"]').val(arr_produk[index]['id'])
+    $('[name="namabarang"]').val(arr_produk[index]['nama'])
+    $('[name="kodebrg"]').val(arr_produk[index]['kode'])
+    $('[name="jumlah"]').val(arr_produk[index]['jumlah'])
+    $('[name="harga"]').val(arr_produk[index]['harga'])
+    state_edsatuan()
+    $('#btn-simpan-barang').attr('onclick', 'update_barang(' + index + ')');
+    total_harga()
+  }
+
+  function update_barang(index) {
+    if (state == 'add') {
+      let newval = {
+          'id': $('[name="id"]').val(),
+          'nama': $('[name="namabarang"]').val(),
+          'kode': $('[name="kodebrg"]').val(),
+          'jumlah': $('[name="jumlah"]').val(),
+          'harga': $('[name="harga"]').val()
+      };
+      arr_produk[index] = newval;
+      reloadbarang()
+      // showNotif('', 'Data Diubah', 'success');
+      state_insatuan()
+      clearbarang()
+      total_harga()
+    } else if (state == 'update') {
+        let label_old = $('#btn-simpan-barang').html();
+        cbs('#btn-simpan-barang', "start", "");
+        kodeorder = table.cell(idx, 3).data();
+        $.ajax({
+            url: `${apiurl}/updatebarang`,
+            type: "POST",
+            dataType: "JSON",
+            data: {
+                kodeorder: kodeorder,
+                id: $('[name="id"]').val(),
+                nama: $('[name="namabarang"]').val(),
+                kode: $('[name="kodebrg"]').val(),
+                jumlah: $('[name="jumlah"]').val(),
+                harga: $('[name="harga"]').val(),
+                beratkg: $('[name="beratkg"]').val(),
+            },
+            success: function(data) {
+                if (data.sukses == 'success') {
+                    arr_produk = data.barang
+                    reloadbarang();
+                    clearbarang();
+                    total_harga()
+                    cbs('#btn-simpan-barang', "stop", label_old);
+                } else if (data.sukses == 'fail') {
+                    reloadbarang();
+                    cbs('#btn-simpan-barang', "stop", label_old);
+                }
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                showNotif('Fail', 'Internal Error', 'danger');
+                cbs('#btn-simpan-barang', "stop", label_old);
+            }
+        });
+    }
+  }
+
+  function add_barang() {
+      if (state == 'add') {
+          let label_old = $('#btn-tambah-barang').html();
+          cbs('#btn-tambah-barang', "start", "Memuat");
+          if (ceknull('namabarang')) {
+              return false
+          }
+          if (ceknull('jumlah')) {
+              return false
+          }
+          if (ceknull('harga')) {
+              return false
+          }
+          arr_produk.push({
+              'id': $('[name="id"]').val(),
+              'nama': $('[name="namabarang"]').val(),
+              'kode': $('[name="kodebrg"]').val(),
+              'jumlah': $('[name="jumlah"]').val(),
+              'harga': $('[name="harga"]').val(),
+              'beratkg': $('[name="beratkg"]').val(),
+          });
+          reloadbarang();
+          clearbarang();
+          total_harga()
+          cbs('#btn-tambah-barang', "stop", label_old);
+          console.log(arr_produk)
+      } else if (state == 'update') {
+          let label_old = $('#btn-tambah-barang').html();
+          cbs('#btn-tambah-barang', "start", "Memuat");
+          kodeorder = table.cell(idx, 3).data();
+          $.ajax({
+              url: `${apiurl}/addbarang`,
+              type: "POST",
+              dataType: "JSON",
+              data: {
+                  kodeorder: kodeorder,
+                  id: $('[name="id"]').val(),
+                  nama: $('[name="namabarang"]').val(),
+                  kode: $('[name="kodebrg"]').val(),
+                  jumlah: $('[name="jumlah"]').val(),
+                  harga: $('[name="harga"]').val(),
+                  beratkg: $('[name="beratkg"]').val(),
+              },
+              success: function(data) {
+                  if (data.sukses == 'success') {
+                      arr_produk = data.barang
+                      reloadbarang();
+                      clearbarang();
+                      total_harga()
+                      cbs('#btn-tambah-barang', "stop", label_old);
+                  } else if (data.sukses == 'fail') {
+                      reloadbarang();
+                      cbs('#btn-tambah-barang', "stop", label_old);
+                  }
+              },
+              error: function(jqXHR, textStatus, errorThrown) {
+                  showNotif('Fail', 'Internal Error', 'danger');
+                  cbs('#btn-tambah-barang', "stop", label_old);
+              }
+          });
+      }
+
+  }
+
+  function del_barang(index, id) {
+      if (state == 'add') {
+          arr_produk.splice(index, 1);
+          reloadbarang()
+          state_insatuan()
+          total_harga()
+      } else if (state == 'update') {
+          $.ajax({
+              url: `${apiurl}/deletebarang`,
+              type: "POST",
+              dataType: "JSON",
+              data: {
+                  id: id,
+                  total: $('#input-total-harga').val(),
+              },
+              success: function(data) {
+                  if (data.sukses == 'success') {
+                      arr_produk.splice(index, 1);
+                      total_harga()
+                      reloadbarang();
+                  } else if (data.sukses == 'fail') {
+                      reloadbarang();
+                  }
+              },
+              error: function(jqXHR, textStatus, errorThrown) {
+                  showNotif('Fail', 'Internal Error', 'danger');
+              }
+          });
+      }
+  }
+
+  function batal_barang() {
+    state_insatuan()
+    clearbarang()
+    total_harga()
+  }
+
+  function state_edsatuan() {
+      $('#btn-tambah-barang').addClass('invisible')
+      $('#btn-batal-barang').removeClass('invisible')
+      $('#btn-simpan-barang').removeClass('invisible')
+  }
+
+  function state_insatuan() {
+      $('#btn-tambah-barang').removeClass('invisible')
+      $('#btn-batal-barang').addClass('invisible')
+      $('#btn-simpan-barang').addClass('invisible')
   }
 
   function edit_data() {
+      arr_produk =[]
+      let label_old = $('.edit-btn').html();
+      cbs('.edit-btn',"start","Memuat");
+      tabel_add_barang()
+      state_insatuan()
       $('#btnSimpan').prop('disabled',true);
+      clearbarang()
       kode = table.cell( idx, 3).data();
       $('.box-upload').addClass('invisible');
       if (idx == -1) {
@@ -780,57 +1070,69 @@
           },
           dataType: "JSON",
           success: function(data) {
-              $('[name="kode"]').val(data.kode);
-              $('[name="kodebrg"]').val(data.kodebrg);
-              $('[name="tgl"]').val(data.tgl);
-              $('[name="ref_kirim"]').val(data.ref_kirim);
-              $('[name="ref_cust"]').val(data.ref_cust);
-              $('[name="namacust"]').val(data.mcustomer_nama);
-              $('[name="namabarang"]').val(data.mbarang_nama);
-              $('[name="ref_layanan"]').val(data.ref_layanan);
-              $('[name="kirimke"]').val(data.kirimke);
-              $('[name="ket"]').val(data.ket);
-              $('[name="alamat"]').val(data.alamat);
-              $('[name="jumlah"]').val(data.jumlah);
-              $('[name="harga"]').val(data.harga);
-              $('[name="berat"]').val(data.kgkirim);
-              $('[name="provinsi"]').val(data.kodeprovfrom);
-              $('[name="provinsito"]').val(data.kodeprovto);
-              $('[name="city"]').val(data.kodecityfrom);
+              arr_produk = data.barang
+              reloadbarang();
+              $('[name="kode"]').val(data.po.kode);
+              $('[name="tgl"]').val(data.po.tgl);
+              $('[name="ref_kirim"]').val(data.po.ref_kirim);
+              $('[name="ref_cust"]').val(data.po.ref_cust);
+              $('[name="namacust"]').val(data.po.mcustomer_nama);
+              $('[name="ref_layanan"]').val(data.po.ref_layanan);
+              $('[name="kirimke"]').val(data.po.kirimke);
+              $('[name="ket"]').val(data.po.ket);
+              $('[name="total"]').val(data.po.total - data.po.bykirim);
+              $('#total-harga').html(data.po.total - data.po.bykirim);
+              $('[name="alamat"]').val(data.po.alamat);
+              $('[name="berat"]').val(data.po.kgkirim);
+              $('[name="provinsi"]').val(data.po.kodeprovfrom);
+              $('[name="provinsito"]').val(data.po.kodeprovto);
+              $('[name="city"]').val(data.po.kodecityfrom);
               setTimeout(function(){ 
-                $('[name="cityto"]').val(data.kodecityto);
-                $('[name="kurir"]').val(data.kurir);
+                $('[name="cityto"]').val(data.po.kodecityto);
+                $('[name="kurir"]').val(data.po.kurir);
                 $('[name="kurir"]').trigger('change'); 
                 $('[name="cityto"]').trigger('change'); 
               }, 4000);
               setTimeout(function(){ 
-                $('[name="biaya"]').val(data.bykirim);
-                $('[name="kodekurir"]').val(data.kodekurir);
+                $('[name="biaya"]').val(data.po.bykirim);
+                $('[name="kodekurir"]').val(data.po.kodekurir);
                 $('[name="biaya"], [name="kodekurir"]').trigger('change');
+                $('[name="serv"]').val(`@${data.po.kodekurir}@?${data.po.bykirim / data.po.kgkirim}?`);
+                $('[name="serv"]').trigger('change'); 
                 $('#btnSimpan').prop('disabled',false); 
               }, 5000);
               console.log($('[name="cityto"]').val());
               $('.select2').trigger('change');
               $('#modal-data').modal('show');
               notifLoading();
-              $('.modal-title').text('Edit Data');
+              $('#modal-data .modal-title').text('Edit Data');
+              cbs('.edit-btn',"stop",label_old);
+              $('#btnSimpan').prop('disabled',false);
           },
           error: function(jqXHR, textStatus, errorThrown) {
               showNotif('Fail', 'Internal Error', 'danger');
+              cbs('.edit-btn',"stop",label_old);
+              $('#btnSimpan').prop('disabled',false);
           }
       });
   }
 
   function savedata() {
-      if (ceknull('namabarang')) { return false }
       if (ceknull('tgl')) { return false }
-      if (ceknull('jumlah')) { return false }
       if (state == 'add') {
         if (ceknull('corel')) { return false }
       }
       if (ceknull('ref_kirim')) { return false }
       if (ceknull('kirimke')) { return false }
       if (ceknull('ref_layanan')) { return false }
+      if ($('#select-service').val() == '' || $('#select-service').val() == null) {
+          showNotif('', 'Pilih Service Kurir', 'danger');
+          $('#select-service').focus()
+          $('#select-service').addClass('pulse animated');
+          return false
+      } 
+      let label_old = $('.btn-save').html();
+      cbs('.btn-save',"start","Mengirim");
       $('[name="mask-provinsi"]').val($('[name="provinsi"]  option:selected').html());
       $('[name="mask-city"]').val($('[name="city"]  option:selected').html());
       $('[name="mask-provinsito"]').val($('[name="provinsito"]  option:selected').html());
@@ -841,6 +1143,7 @@
       } else {
           url = `${apiurl}/updatedata`;
       }
+      $('[name="arr_produk"]').val(JSON.stringify(arr_produk));
       var formData = new FormData($('#form-data')[0]);
       $('.btn-save').prop('disabled',true);
       $.ajax({
@@ -864,11 +1167,13 @@
                   showNotif('Sukses', 'Tidak Ada Perubahan', 'success')
                   $('.btn-save').prop('disabled',false);
               }
+            cbs('.btn-save',"stop",label_old);
 
           },
           error: function(jqXHR, textStatus, errorThrown) {
               showNotif('Fail', 'Internal Error', 'danger')
               $('.btn-save').prop('disabled',false);
+              cbs('.btn-save',"stop",label_old);
           }
       });
   }
@@ -981,10 +1286,25 @@
   function setPrice() {
     let s = $('#select-service').val()
     if (s.length > 0) {
+      let b = getbiayakirim(s);
+      let k = kodekurir(s);
+      $('[name="biaya"]').val(b * $('[name="berat"]').val());
+      $('[name="kodekurir"]').val(k);
+      console.log(s);
+    }
+  }
+
+  function getbiayakirim(s) {
+    if (s) {
       let b = s.match((/\?(.*?)\?/g));
+      return parseFloat(b.toString().replace(/\?/g, ''))
+    }
+  }
+
+  function kodekurir(s) {
+    if (s) {
       let k = s.match((/\@(.*?)\@/g));
-      $('[name="biaya"]').val(b.toString().replace(/\?/g, ''));
-      $('[name="kodekurir"]').val(k.toString().replace(/\@/g, ''));
+      return k.toString().replace(/\@/g, '')
     }
   }
 

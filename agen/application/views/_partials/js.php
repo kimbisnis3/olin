@@ -12,6 +12,7 @@
 <script src="<?php echo base_url()?>assets/lte/plugins/ckeditor/ckeditor.js"></script>
 <script src="<?php echo base_url()?>assets/lte/plugins/pace/pace.js"></script>
 <script src="<?php echo base_url()?>assets/numeral.min.js"></script>
+<script src="<?php echo base_url()?>assets/lodash.js"></script>
 <script src="<?php echo base_url()?>assets/lte/plugins/moment/moment.js"></script>
 <script type="text/javascript">
 
@@ -21,17 +22,19 @@
 	var id_action ;
 
 	$(document).ready(function() {
-      // activemenux(grupmenu.toLowerCase(), title.replace(/ /g, "").toLowerCase());
-      $('.fa-refresh').addClass('fa-spin');
-      $('.btn-act').prop('disabled',true);
-      Pace.on('done', function() {
-          $('.btn-act').prop('disabled',false);
-          $('.fa-refresh').removeClass('fa-spin');
-      });
-    $("img").on('error', function(){
-   		$(this).prop('src',`${php_base_url}assets/gambar/noimage.png`) 
-	});
-
+	    // activemenux(grupmenu.toLowerCase(), title.replace(/ /g, "").toLowerCase());
+	    $('.fa-refresh').addClass('fa-spin');
+	    $('.btn-act').prop('disabled', true);
+	    Pace.on('done', function() {
+	        $('.btn-act').prop('disabled', false);
+	        $('.fa-refresh').removeClass('fa-spin');
+	    });
+	    // $("img").on('error', function() {
+	    //     $(this).prop('src', `${php_base_url}assets/gambar/noimage.png`)
+	    // });
+	 //    $('img').on("error", function () {
+		//     this.src = ResolveUrl(`${php_base_url}assets/gambar/noimage.png`);
+		// });
 	})
 
 	function setMonth(name, days, tipe = '') {
@@ -46,7 +49,7 @@
 
 	function nilaimax(id, max) {
 	    $('#' + id).keyup(function() {
-	        if ($('#' + id).val() > max) {
+	        if (parseInt($('#' + id).val()) > max) {
 	            $('#' + id).trigger('contentchanged');
 	        }
 	    });
@@ -116,6 +119,15 @@
 	            exit: 'animated fadeOut'
 	        },
 	    }, );
+	}
+
+	function barloading(param){
+		if (param == 1) {
+			Pace.stop();
+      		Pace.bar.render();
+		} else if (param == 0) {
+            Pace.start();
+		}
 	}
 
 	function getSelect(id, u, classoption, caption) {
@@ -213,10 +225,27 @@
 
 	function imgError(image) {
 	    image.onerror = "";
-	    image.src = "/images/noimage.gif";
+	    image.src = `${php_base_url}assets/gambar/noimage.png`;
 	    return true;
 	}
 
+	function showimage(url) {
+	    return `<img onerror="this.onerror=null; this.src='${php_base_url}assets/gambar/noimage.png'" style="max-width : 60px;" src="${php_base_url}${url}" >`
+	}
+
+	function showcolor(color) {
+	    return `<div style="background-color: ${color}; padding: 10px; border: 1px solid white;">`
+	}
+
+	function cbs(prop, state, label = "Processing") {
+	    if (state == "start") {
+	        $(prop).prop('disabled', true);
+	        $(prop).html(`<i class="fa fa-spinner fa-spin"></i> ${label}`);
+	    } else if (state == "stop") {
+	        $(prop).prop('disabled', false);
+	        $(prop).html(`${label}`);
+	    }
+	}
 
 	function ceknull(x) {
 	    if ($('[name="' + x + '"]').val() == '' || $('[name="' + x + '"]').val() == null) {
@@ -230,12 +259,89 @@
 	    }
 	}
 
-	function formInvalid(a){
-		$('[name="' + a + '"]').addClass('pulse animated');
+	function cekzero(x) {
+	    if ($('[name="' + x + '"]').val() <= '0' || $('[name="' + x + '"]').val() <= 0 || $('[name="' + x + '"]').val() == null) {
+	        showNotif('', 'Kolom Wajib Diisi', 'danger');
+	        $('[name="' + x + '"]').focus()
+	        formInvalid(x);
+	        return true
+			$('.btn-save').prop('disabled',false);
+			clearform();
+	    } else {
+	        return false
+	    }
 	}
 
-	function clearform(){
-		$('input').removeClass('pulse animated');
+	function formInvalid(a) {
+	    $('[name="' + a + '"]').addClass('pulse animated');
+	}
+
+	function clearform() {
+	    $('input').removeClass('pulse animated');
+	}
+
+	function getIndex(arr, val, key = '') {
+	    if (key == '') {
+	        var zzz = arr.indexOf(val);
+	    } else {
+	        var zzz = arr.findIndex(function(s) {
+	            return s[key] == val;
+	        });
+	    }
+	    return zzz;
+	}
+
+	function getObject(arr, val, key) {
+	    var zzz = arr.findIndex(function(s) {
+	        return s[key] == val;
+	    });
+	    return arr[zzz];
+	}
+
+	function removeObject(arr, val, key) {
+	    var zzz = arr.findIndex(function(s) {
+	        return s[key] == val;
+	    });
+	    arr.splice(arr.indexOf(arr[zzz]), 1);
+	    return arr;
+	}
+
+	function replaceObject(arr, val, key, newObj) {
+	    var zzz = arr.findIndex(function(s) {
+	        return s[key] == val;
+	    });
+	    arr[zzz] = newObj;
+	    return arr[zzz];
+	}
+
+	function uniget(u, d, r = function() {}) {
+	    $.ajax({
+	        url: u,
+	        type: "GET",
+	        dataType: "JSON",
+	        data: d,
+	        success: function(data) {
+	            r(data);
+	        },
+	        error: function(jqXHR, textStatus, errorThrown) {
+	            showNotif('Error', 'Failed Get Data', 'danger')
+	        }
+	    });
+	}
+
+	function unipost(u, d, r = function() {}) {
+	    $.ajax({
+	        url: u,
+	        type: "POST",
+	        dataType: "JSON",
+	        data: d,
+	        success: function(data) {
+	            r(data);
+	        },
+	        error: function(jqXHR, textStatus, errorThrown) {
+	            showNotif('Error', 'Failed Get Data', 'danger')
+	        }
+	    });
 	}
 
 </script>
