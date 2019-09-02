@@ -150,7 +150,7 @@
                                 <div class="col-md-4">
                                   <div class="form-group">
                                     <label>Berat (kg)</label>
-                                    <input type="number" class="form-control" name="berat" onkeyup="setService()" id="berat">
+                                    <input type="number" class="form-control" name="berat" onkeyup="setService()" id="berat" readonly>
                                   </div>
                                   <div class="form-group">
                                     <label>Kurir</label>
@@ -638,6 +638,7 @@
           },
           success: function(response) {
               callback($(response)).show();
+              imgError(image)
           },
           error: function() {
               $('#output').html('Bummer: there was an error!');
@@ -802,9 +803,8 @@
 
   function updatefile() {
       var formfile = new FormData($('#form-file')[0]);
-      url = "<?php echo base_url() ?>po/updatefile"
       $.ajax({
-          url: url,
+          url: `${apiurl}/updatefile`,
           type: "POST",
           data: formfile,
           dataType: "JSON",
@@ -850,24 +850,6 @@
       clearbarang();
   }
 
-  function add_barang() {
-      if (ceknull('namabarang')) { return false }
-      if (ceknull('jumlah')) { return false }
-      if (ceknull('harga')) { return false }
-      arr_produk.push({
-          'id': $('[name="id"]').val(),
-          'nama': $('[name="namabarang"]').val(),
-          'kode': $('[name="kodebrg"]').val(),
-          'jumlah': $('[name="jumlah"]').val(),
-          'harga': $('[name="harga"]').val(),
-          'beratkg': $('[name="beratkg"]').val(),
-      });
-      reloadbarang();
-      clearbarang();
-      total_harga()
-      console.log(arr_produk)
-  }
-
   function clearbarang() {
       $('[name="namabarang"]').val('')
       $('[name="kodebrg"]').val('')
@@ -882,12 +864,13 @@
           return parseFloat(o.harga.replace(",", "")) * o.jumlah
       });
       let berat = _.sumBy(arr_produk, function(o) {
-        let b = (o.beratkg == null || o.beratkg == '') ? 0 : parseInt(o.beratkg);
-        return b * o.jumlah
+        return o.beratkg * o.jumlah
       });
       $('#total-harga').html(numeral(total).format('0,0'));
       $('#input-total-harga').val(total);
       $('[name="berat"]').val(berat);
+      let biayaperkilo = getbiayakirim($('[name="serv"]').val());
+      $('[name="biaya"]').val(biayaperkilo * berat);
   }
 
   function reloadbarang() {
@@ -928,28 +911,128 @@
   }
 
   function update_barang(index) {
-    let newval = {
-        'id': $('[name="id"]').val(),
-        'nama': $('[name="namabarang"]').val(),
-        'kode': $('[name="kodebrg"]').val(),
-        'jumlah': $('[name="jumlah"]').val(),
-        'harga': $('[name="harga"]').val()
-    };
-    arr_produk[index] = newval;
-    reloadbarang()
-    // showNotif('', 'Data Diubah', 'success');
-    state_insatuan()
-    clearbarang()
-    total_harga()
+    if (state == 'add') {
+      let newval = {
+          'id': $('[name="id"]').val(),
+          'nama': $('[name="namabarang"]').val(),
+          'kode': $('[name="kodebrg"]').val(),
+          'jumlah': $('[name="jumlah"]').val(),
+          'harga': $('[name="harga"]').val()
+      };
+      arr_produk[index] = newval;
+      reloadbarang()
+      // showNotif('', 'Data Diubah', 'success');
+      state_insatuan()
+      clearbarang()
+      total_harga()
+    } else if (state == 'update') {
+        let label_old = $('#btn-simpan-barang').html();
+        cbs('#btn-simpan-barang', "start", "");
+        kodeorder = table.cell(idx, 3).data();
+        $.ajax({
+            url: `${apiurl}/updatebarang`,
+            type: "POST",
+            dataType: "JSON",
+            data: {
+                kodeorder: kodeorder,
+                id: $('[name="id"]').val(),
+                nama: $('[name="namabarang"]').val(),
+                kode: $('[name="kodebrg"]').val(),
+                jumlah: $('[name="jumlah"]').val(),
+                harga: $('[name="harga"]').val(),
+                beratkg: $('[name="beratkg"]').val(),
+            },
+            success: function(data) {
+                if (data.sukses == 'success') {
+                    arr_produk = data.barang
+                    reloadbarang();
+                    clearbarang();
+                    total_harga()
+                    cbs('#btn-simpan-barang', "stop", label_old);
+                } else if (data.sukses == 'fail') {
+                    reloadbarang();
+                    cbs('#btn-simpan-barang', "stop", label_old);
+                }
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                showNotif('Fail', 'Internal Error', 'danger');
+                cbs('#btn-simpan-barang', "stop", label_old);
+            }
+        });
+    }
+  }
+
+  function add_barang() {
+      if (state == 'add') {
+          let label_old = $('#btn-tambah-barang').html();
+          cbs('#btn-tambah-barang', "start", "Memuat");
+          if (ceknull('namabarang')) {
+              return false
+          }
+          if (ceknull('jumlah')) {
+              return false
+          }
+          if (ceknull('harga')) {
+              return false
+          }
+          arr_produk.push({
+              'id': $('[name="id"]').val(),
+              'nama': $('[name="namabarang"]').val(),
+              'kode': $('[name="kodebrg"]').val(),
+              'jumlah': $('[name="jumlah"]').val(),
+              'harga': $('[name="harga"]').val(),
+              'beratkg': $('[name="beratkg"]').val(),
+          });
+          reloadbarang();
+          clearbarang();
+          total_harga()
+          cbs('#btn-tambah-barang', "stop", label_old);
+          console.log(arr_produk)
+      } else if (state == 'update') {
+          let label_old = $('#btn-tambah-barang').html();
+          cbs('#btn-tambah-barang', "start", "Memuat");
+          kodeorder = table.cell(idx, 3).data();
+          $.ajax({
+              url: `${apiurl}/addbarang`,
+              type: "POST",
+              dataType: "JSON",
+              data: {
+                  kodeorder: kodeorder,
+                  id: $('[name="id"]').val(),
+                  nama: $('[name="namabarang"]').val(),
+                  kode: $('[name="kodebrg"]').val(),
+                  jumlah: $('[name="jumlah"]').val(),
+                  harga: $('[name="harga"]').val(),
+                  beratkg: $('[name="beratkg"]').val(),
+              },
+              success: function(data) {
+                  if (data.sukses == 'success') {
+                      arr_produk = data.barang
+                      reloadbarang();
+                      clearbarang();
+                      total_harga()
+                      cbs('#btn-tambah-barang', "stop", label_old);
+                  } else if (data.sukses == 'fail') {
+                      reloadbarang();
+                      cbs('#btn-tambah-barang', "stop", label_old);
+                  }
+              },
+              error: function(jqXHR, textStatus, errorThrown) {
+                  showNotif('Fail', 'Internal Error', 'danger');
+                  cbs('#btn-tambah-barang', "stop", label_old);
+              }
+          });
+      }
+
   }
 
   function del_barang(index, id) {
-      if (id == '' || id == null) {
+      if (state == 'add') {
           arr_produk.splice(index, 1);
           reloadbarang()
           state_insatuan()
           total_harga()
-      } else {
+      } else if (state == 'update') {
           $.ajax({
               url: `${apiurl}/deletebarang`,
               type: "POST",
@@ -1043,6 +1126,8 @@
                 $('[name="biaya"]').val(data.po.bykirim);
                 $('[name="kodekurir"]').val(data.po.kodekurir);
                 $('[name="biaya"], [name="kodekurir"]').trigger('change');
+                $('[name="serv"]').val(`@${data.po.kodekurir}@?${data.po.bykirim / data.po.kgkirim}?`);
+                $('[name="serv"]').trigger('change'); 
                 $('#btnSimpan').prop('disabled',false); 
               }, 5000);
               console.log($('[name="cityto"]').val());
@@ -1054,13 +1139,12 @@
           },
           error: function(jqXHR, textStatus, errorThrown) {
               showNotif('Fail', 'Internal Error', 'danger');
+              cbs('.edit-btn',"stop",label_old);
           }
       });
   }
 
   function savedata() {
-      let label_old = $('.btn-save').html();
-      cbs('.btn-save',"start","Mengirim");
       if (ceknull('namacust')) { return false }
       if (ceknull('tgl')) { return false }
       if (state == 'add') {
@@ -1069,6 +1153,14 @@
       if (ceknull('ref_kirim')) { return false }
       if (ceknull('kirimke')) { return false }
       if (ceknull('ref_layanan')) { return false }
+      if ($('#select-service').val() == '' || $('#select-service').val() == null) {
+          showNotif('', 'Pilih Service Kurir', 'danger');
+          $('#select-service').focus()
+          $('#select-service').addClass('pulse animated');
+          return false
+      } 
+      let label_old = $('.btn-save').html();
+      cbs('.btn-save',"start","Mengirim");
       $('[name="mask-provinsi"]').val($('[name="provinsi"]  option:selected').html());
       $('[name="mask-city"]').val($('[name="city"]  option:selected').html());
       $('[name="mask-provinsito"]').val($('[name="provinsito"]  option:selected').html());
@@ -1222,10 +1314,25 @@
   function setPrice() {
     let s = $('#select-service').val()
     if (s.length > 0) {
+      let b = getbiayakirim(s);
+      let k = kodekurir(s);
+      $('[name="biaya"]').val(b * $('[name="berat"]').val());
+      $('[name="kodekurir"]').val(k);
+      console.log(s);
+    }
+  }
+
+  function getbiayakirim(s) {
+    if (s) {
       let b = s.match((/\?(.*?)\?/g));
+      return parseFloat(b.toString().replace(/\?/g, ''))
+    }
+  }
+
+  function kodekurir(s) {
+    if (s) {
       let k = s.match((/\@(.*?)\@/g));
-      $('[name="biaya"]').val(parseFloat(b.toString().replace(/\?/g, '')) * $('[name="berat"]').val());
-      $('[name="kodekurir"]').val(k.toString().replace(/\@/g, ''));
+      return k.toString().replace(/\@/g, '')
     }
   }
 

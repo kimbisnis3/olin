@@ -205,7 +205,7 @@ class Po extends CI_Controller {
         echo $tabs;
     }
 
-     public function loadfilelist(){
+    public function loadfilelist(){
         $q = "SELECT
                 xorder.id,
                 xorder.kode,
@@ -365,11 +365,14 @@ class Po extends CI_Controller {
                 xorderd.jumlah,
                 xorderd.harga,
                 mbarang.nama,
-                mbarang.kode
+                mbarang.kode,
+                msatbrg.beratkg
             FROM 
                 xorderd
             LEFT JOIN mbarang ON mbarang.kode = xorderd.ref_brg
+            LEFT JOIN msatbrg ON mbarang.kode = msatbrg.ref_brg
             WHERE xorderd.ref_order = '{$this->input->post('kode')}'";
+        $q_barang .=" AND msatbrg.def = 't'";
         $po         = $this->db->query($q_po)->row();
         $barang     = $this->db->query($q_barang)->result();
         echo json_encode(
@@ -407,74 +410,6 @@ class Po extends CI_Controller {
         }
         $this->db->update('xorder',$a,array('kode' => $kodeorder));
         $kodebrg = $this->input->post('kodebrg');
-        $arr_produk = $this->input->post('arr_produk');
-        foreach (json_decode($arr_produk) as $r) {
-            $Brg = $this->db->query("
-            SELECT 
-                msatbrg.kode msatbrg_kode,
-                msatbrg.ref_brg msatbrg_ref_brg,
-                msatbrg.harga msatbrg_harga,
-                msatbrg.ref_gud msatbrg_ref_gud,
-                msatbrg.ket msatbrg_ket
-            FROM 
-                mbarang 
-            LEFT JOIN msatbrg ON msatbrg.ref_brg = mbarang.kode 
-            WHERE 
-                msatbrg.def = 't' 
-            AND mbarang.kode = '$r->kode'")->row();
-            $b_new =[];
-            $b =[];
-            if ($r->id) {
-                $rowb['useru']     = $this->session->userdata('username');
-                $rowb['dateu']     = 'now()';
-                $rowb['id']        = $r->id;
-                $rowb['ref_order'] = $kodeorder;
-                $rowb['ref_brg']   = $Brg->msatbrg_ref_brg;
-                $rowb['jumlah']    = $r->jumlah;
-                $rowb['harga']     = str_replace(",","",$r->harga);
-                $rowb['ref_satbrg']= $Brg->msatbrg_kode;
-                $rowb['ref_gud']   = $Brg->msatbrg_ref_gud;
-                $rowb['ket']       = $Brg->msatbrg_ket;
-                $b[] = $rowb;
-            } else {
-                $rowb['useru']     = $this->session->userdata('username');
-                $rowb_new['dateu']     = 'now()';
-                $rowb_new['ref_order'] = $kodeorder;
-                $rowb_new['ref_brg']   = $Brg->msatbrg_ref_brg;
-                $rowb_new['jumlah']    = $r->jumlah;
-                $rowb_new['harga']     = str_replace(",","",$r->harga);
-                $rowb_new['ref_satbrg']= $Brg->msatbrg_kode;
-                $rowb_new['ref_gud']   = $Brg->msatbrg_ref_gud;
-                $rowb_new['ket']       = $Brg->msatbrg_ket;
-                $b_new[] = $rowb_new;
-            }
-
-        }
-        if ($b) {
-            $this->db->update_batch('xorderd', $b, 'id');
-        }
-        if ($b_new) {
-            $this->db->insert_batch('xorderd', $b_new);
-        }
-        $idOrderd = $this->db->get_where('xorderd',array('ref_order' => $kodeorder))->result();
-        foreach ($idOrderd as $i) {
-        $kodebarang = $this->db->get_where('xorderd',array('id' => $i->id))->row()->ref_brg;
-        $design = $this->db->get_where('mbarangs',array('ref_brg' => $kodebarang))->result();
-            foreach ($design as $r) {
-                $row    = array(
-                    "useri"         => $this->session->userdata('username'),
-                    "ref_orderd"    => $i->id,
-                    "ref_modesign"  => $r->model,
-                    "ref_warna"     => $r->warna,
-                    "ket"           => $r->ket
-                );
-                $c[] = $row;
-            }
-        $this->db->delete('xorderds',array('ref_orderd' => $i->id));
-        }
-        if (count($design) > 0) {
-            $this->db->insert_batch('xorderds',$c);
-        }
         $d['total'] = $this->input->post('total') + $this->input->post('biaya');
         $this->db->update('xorder',$d,array('kode' => $kodeorder));
         if ($this->db->trans_status() === FALSE)
@@ -493,8 +428,6 @@ class Po extends CI_Controller {
         }
         echo json_encode($r);
     }
-
-
 
     function updatefile()
     {
@@ -562,7 +495,7 @@ class Po extends CI_Controller {
                 msatbrg.konv,
                 msatbrg.ket,
                 msatbrg.harga,
-                msatbrg.beratkg,
+                ( COALESCE( msatbrg.beratkg, 0 )) beratkg,
                 msatbrg.ref_brg,
                 msatbrg.ref_sat,
                 msatbrg.ref_gud,
@@ -620,13 +553,165 @@ class Po extends CI_Controller {
         echo json_encode($r);
     }
 
-    public function deletebarang()
+    public function addbarang()
     {
         $this->db->trans_begin();
+        $kodebarang = $this->input->post('kode');
+        $kodeorder  = $this->input->post('kodeorder');
+        $Brg = $this->db->query("
+            SELECT 
+                msatbrg.kode msatbrg_kode,
+                msatbrg.ref_brg msatbrg_ref_brg,
+                msatbrg.harga msatbrg_harga,
+                msatbrg.ref_gud msatbrg_ref_gud,
+                msatbrg.ket msatbrg_ket
+            FROM 
+                mbarang 
+            LEFT JOIN msatbrg ON msatbrg.ref_brg = mbarang.kode 
+            WHERE 
+                msatbrg.def = 't' 
+            AND mbarang.kode = '$kodebarang'")->row();
+            
+        $a['useri']     = $this->session->userdata('username');
+        $a['ref_order'] = $kodeorder;
+        $a['ref_brg']   = $Brg->msatbrg_ref_brg;
+        $a['jumlah']    = $this->input->post('jumlah');
+        $a['harga']     = str_replace(",","",$this->input->post('harga'));
+        $a['ref_satbrg']= $Brg->msatbrg_kode;
+        $a['ref_gud']   = $Brg->msatbrg_ref_gud;
+        $a['ket']       = $Brg->msatbrg_ket;
+        $this->db->insert('xorderd',$a);
+        $idorderd= $this->db->insert_id();
+        $design  = $this->db->get_where('mbarangs',array('ref_brg' => $kodebarang))->result();
+            foreach ($design as $r) {
+                $row    = array(
+                    "useri"         => $this->session->userdata('username'),
+                    "ref_orderd"    => $idorderd,
+                    "ref_modesign"  => $r->model,
+                    "ref_warna"     => $r->warna,
+                    "ket"           => $r->ket
+                );
+                $c[] = $row;
+            }
+        $this->db->delete('xorderds',array('ref_orderd' => $idorderd));
+        if (count($design) > 0) {
+            $this->db->insert_batch('xorderds',$c);
+        }
+        $q_barang = " SELECT 
+                xorderd.id,
+                xorderd.jumlah,
+                xorderd.harga,
+                mbarang.nama,
+                mbarang.kode,
+                msatbrg.beratkg
+            FROM 
+                xorderd
+            LEFT JOIN mbarang ON mbarang.kode = xorderd.ref_brg
+            LEFT JOIN msatbrg ON mbarang.kode = msatbrg.ref_brg
+            WHERE xorderd.ref_order = '$kodeorder'";
+        $q_barang .=" AND msatbrg.def = 't'";
+        $barang = $this->db->query($q_barang)->result();
+        if ($this->db->trans_status() === FALSE)
+        {
+            $this->db->trans_rollback();
+            $r = array(
+                'sukses' => 'fail', 
+            );
+        }
+        else
+        {
+            $this->db->trans_commit();
+            $r = array(
+                'sukses' => 'success',
+                'barang' => $barang,
+            );
+        }
+        echo json_encode($r);
+    }
+
+    public function updatebarang() {
+        $this->db->trans_begin();
+        $kodebarang = $this->input->post('kode');
+        $idorderd = $this->input->post('id');
+        $kodeorder  = $this->input->post('kodeorder');
+        $Brg = $this->db->query("
+            SELECT 
+                msatbrg.kode msatbrg_kode,
+                msatbrg.ref_brg msatbrg_ref_brg,
+                msatbrg.harga msatbrg_harga,
+                msatbrg.ref_gud msatbrg_ref_gud,
+                msatbrg.ket msatbrg_ket
+            FROM 
+                mbarang 
+            LEFT JOIN msatbrg ON msatbrg.ref_brg = mbarang.kode 
+            WHERE 
+                msatbrg.def = 't' 
+            AND mbarang.kode = '$kodebarang'")->row();
+            
+        $a['useru']     = $this->session->userdata('username');
+        $a['dateu']     = 'now()';
+        $a['ref_order'] = $kodeorder;
+        $a['ref_brg']   = $Brg->msatbrg_ref_brg;
+        $a['jumlah']    = $this->input->post('jumlah');
+        $a['harga']     = str_replace(",","",$this->input->post('harga'));
+        $a['ref_satbrg']= $Brg->msatbrg_kode;
+        $a['ref_gud']   = $Brg->msatbrg_ref_gud;
+        $a['ket']       = $Brg->msatbrg_ket;
+        $w['id']        = $this->input->post('id');
+        $this->db->update('xorderd',$a,$w);
+        $design  = $this->db->get_where('mbarangs',array('ref_brg' => $kodebarang))->result();
+            foreach ($design as $r) {
+                $row    = array(
+                    "useru"         => $this->session->userdata('username'),
+                    "dateu"         => 'now()',
+                    "ref_orderd"    => $idorderd,
+                    "ref_modesign"  => $r->model,
+                    "ref_warna"     => $r->warna,
+                    "ket"           => $r->ket
+                );
+                $c[] = $row;
+            }
+        $this->db->delete('xorderds',array('ref_orderd' => $idorderd));
+        if (count($design) > 0) {
+            $this->db->insert_batch('xorderds',$c);
+        }
+        $q_barang = " SELECT 
+                xorderd.id,
+                xorderd.jumlah,
+                xorderd.harga,
+                mbarang.nama,
+                mbarang.kode,
+                msatbrg.beratkg
+            FROM 
+                xorderd
+            LEFT JOIN mbarang ON mbarang.kode = xorderd.ref_brg
+            LEFT JOIN msatbrg ON mbarang.kode = msatbrg.ref_brg
+            WHERE xorderd.ref_order = '$kodeorder'";
+        $q_barang .=" AND msatbrg.def = 't'";
+        $barang = $this->db->query($q_barang)->result();
+        if ($this->db->trans_status() === FALSE)
+        {
+            $this->db->trans_rollback();
+            $r = array(
+                'sukses' => 'fail', 
+            );
+        }
+        else
+        {
+            $this->db->trans_commit();
+            $r = array(
+                'sukses' => 'success',
+                'barang' => $barang,
+            );
+        }
+        echo json_encode($r);
+    }
+
+    public function deletebarang()
+    {
         $w['id'] = $this->input->post('id');
         $kodeorder = $this->db->get_where('xorderd',array('id' => $this->input->post('id')))->row()->ref_order;
         $z['total'] = $this->input->post('total');
-        $this->db->update('xorder',$z,array('kode' => $kodeorder));
         $result = $this->db->delete('xorderd',$w);
         $r['sukses'] = $result ? 'success' : 'fail' ;
         echo json_encode($r);

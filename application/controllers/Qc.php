@@ -90,5 +90,15 @@ class Qc extends CI_Controller {
         $r['sukses'] = $result > 0 ? 'success' : 'fail' ;
         echo json_encode($r);
     }
+
+    function do_anti_qc() {
+        $sql = "SELECT status FROM xprocorder WHERE id = {$this->input->post('id')}";
+        $s = $this->db->query($sql)->row()->status;
+        $d['status'] = $s - 1;
+        $w['id']    = $this->input->post('id');   
+        $result     = $this->db->update('xprocorder',$d,$w);
+        $r['sukses'] = $result > 0 ? 'success' : 'fail' ;
+        echo json_encode($r);
+    }
     
 }

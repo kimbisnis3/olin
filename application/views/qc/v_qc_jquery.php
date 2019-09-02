@@ -96,9 +96,11 @@
   var state;
   var idx     = -1;
   var table ;
+  var btn_o;
 
   $(document).ready(function() {
       getAkses(title);
+      getbutton(title);
       select2();
       activemenux('transaksi', 'qualitycontrol');
       dpicker();
@@ -111,6 +113,28 @@
       });
 
   });
+
+  function getbutton(m) {
+      $.ajax({
+          url: `${php_base_url}/universe/getAkses`,
+          type: "POST",
+          data: {
+              menu: $.trim(m)
+          },
+          dataType: "JSON",
+          success: function(data) {
+              if (data.super == '1') {
+                  btn_o = 't'
+              } else if ((data.super != '1')) {
+                  (data.res.o == 't') ? btn_o = 't': btn_o = 'f';
+              }
+          },
+          error: function(jqXHR, textStatus, errorThrown) {
+              console.log('Error Get Akses');
+              showNotif("", 'Error Get Akses', 'danger')
+          }
+      });
+  }
 
   function refresh() {
     getall();
@@ -166,16 +190,16 @@
                       <li><a href="#">Siap Kirim <span class="pull-right badge ${badge_e}">${label_e}</span></a></li>
                     </ul>
                     </div>
-                    <div class="box-footer no-padding">
-                    <button class="btn btn-success btn-block" ${v.status >= 4 ? "Disabled" : ""} onclick="qc_data(${v.id},${v.status})">${ v.status >= 4 ? "Selesai" : "QC"}</button>
+                    <div class="box-footer no-padding not-o">
+                    <button class="btn btn-success btn-block btn-flat" ${v.status >= 4 ? "Disabled" : ""} onclick="qc_data(${v.id},${v.status})">${ v.status >= 4 ? "Selesai" : "QC"}</button>
                     </div>
-                    <div class="box-footer no-padding option-btn">
+                    <div class="box-footer no-padding is-o">
                     <div class="row">
                       <div class="col-md-6">
-                      <button class="btn btn-success btn-block" ${v.status <= 0 ? "Disabled" : ""} onclick="qc_data(${v.id},${v.status})">${ v.status <= 4 ? "Mundur" : "-"}</button>
+                        <button class="btn btn-warning btn-block btn-flat" ${v.status <= 0 ? "Disabled" : ""} onclick="anti_qc_data(${v.id},${v.status})">${ v.status <= 4 ? "Back Step" : "Back Step"}</button>
                       </div>
                       <div class="col-md-6">
-                        <button class="btn btn-success btn-block" ${v.status >= 4 ? "Disabled" : ""} onclick="qc_data(${v.id},${v.status})">${ v.status >= 4 ? "Selesai" : "QC"}</button>
+                        <button class="btn btn-success btn-block btn-flat" ${v.status >= 4 ? "Disabled" : ""} onclick="qc_data(${v.id},${v.status})">${ v.status >= 4 ? "Selesai" : "QC"}</button>
                       </div>
                     </div>
                     
@@ -183,6 +207,11 @@
                     </div>
                     </div>`)
               });
+              if (btn_o == 't') {
+                $('.not-o').remove();
+              } else if(btn_o == 'f') {
+                $('.is-o').remove();
+              }
           },
           error: function() {
               console.log('error')
@@ -215,9 +244,39 @@
       $('#btnHapus').attr('onclick', 'do_qc(' + id + ')');
   }
 
+  function anti_qc_data(id,status) {
+      $('.modal-title-konfirmasi').text('Kembali Ke Step Sebelumnya');
+      $('#modal-konfirmasi').modal('show');
+      $('#btnHapus').attr('onclick', 'do_anti_qc(' + id + ')');
+  }
+
   function do_qc(id) {
       $.ajax({
           url: `${apiurl}/do_qc`,
+          type: "POST",
+          dataType: "JSON",
+          data: {
+              id: id,
+          },
+          success: function(data) {
+              $('#modal-konfirmasi').modal('hide');
+              if (data.sukses == 'success') {
+                  refresh();
+                  showNotif('', 'QC Sukses', 'success')
+              } else if (data.sukses == 'fail') {
+                  refresh();
+                  showNotif('', 'QC Error', 'danger')
+              }
+          },
+          error: function(jqXHR, textStatus, errorThrown) {
+              showNotif('Fail', 'Internal Error', 'danger');
+          }
+      });
+  }
+
+  function do_anti_qc(id) {
+      $.ajax({
+          url: `${apiurl}/do_anti_qc`,
           type: "POST",
           dataType: "JSON",
           data: {

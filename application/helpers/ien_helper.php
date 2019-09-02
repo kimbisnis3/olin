@@ -110,7 +110,7 @@ if (!function_exists('status')) {
             $i = "(Noimage)";
         } else {
             $img = base_url().''.$i;
-            $i = "<img style='max-width : 60px;' src='".$img."'>";
+            $i = "<img onerror='imgError(this)' style='max-width : 60px;' src='".$img."'>";
         }
 
         return $i;
