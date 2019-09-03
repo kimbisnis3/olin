@@ -29,6 +29,7 @@ class Pembayaran extends CI_Controller {
                 xpelunasan.posted,
                 xpelunasan.ket,
                 xpelunasan.ref_jual,
+                xpelunasan.kodeunik,
                 mcustomer.nama mcustomer_nama,
                 mgudang.nama mgudang_nama,
                 mjenbayar.nama mjenbayar_nama
@@ -59,7 +60,8 @@ class Pembayaran extends CI_Controller {
             $row['kurang']          = number_format($r->kurang);
             $row['ket']             = $r->ket;
             $row['posted']          = $r->posted;
-            $row['ref_jual']          = $r->ref_jual;
+            $row['ref_jual']        = $r->ref_jual;
+            $row['kodeunik']        = $r->kodeunik;
 
             $list[] = $row;
         }
@@ -328,6 +330,7 @@ class Pembayaran extends CI_Controller {
         $result = $this->db->insert('xpelunasan',$a);
         $idpelun = $this->db->insert_id();
         $kodepelun = $this->db->get_where('xpelunasan',array('id' => $idpelun))->row()->kode;
+        $kodeunik = $this->db->get_where('xpelunasan',array('id' => $idpelun))->row()->kodeunik;
         $dataOrderd = $this->db->get_where('xorderd',array('ref_order' => $this->input->post('ref_order')))->result();
         foreach ($dataOrderd as $r) {
             $row    = array(
@@ -351,7 +354,8 @@ class Pembayaran extends CI_Controller {
         else {
             $this->db->trans_commit();
             $r = array(
-                'sukses' => 'success'
+                'sukses' => 'success',
+                'kodeunik' => $kodeunik
                 );
         }
         echo json_encode($r);

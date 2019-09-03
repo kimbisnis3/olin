@@ -210,6 +210,7 @@
                               <th>Jenis Bayar</th>
                               <th>Bayar</th>
                               <th>Keterangan</th>
+                              <th>Kode Unik</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -276,6 +277,7 @@
           { "data": "mjenbayar_nama" },
           { "data": "bayar" },
           { "data": "ket" },
+          { "data": "kodeunik" },
           ]
       });
 
@@ -472,6 +474,7 @@
                   $('#modal-data').modal('hide');
                   refresh();
                   state == 'add' ? showNotif('Sukses', 'Data Berhasil Ditambahkan', 'success') : showNotif('Sukses', 'Data Berhasil Diubah', 'success')
+                  state == 'add' ? showNotif('', 'Kode Unik Anda '+data.kodeunik, 'success') : ''
               } else if (data.sukses == 'fail') {
                   $('#modal-data').modal('hide');
                   refresh();
