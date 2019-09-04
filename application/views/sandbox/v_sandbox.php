@@ -259,6 +259,25 @@
       loopx()
   });
 
+  kirimdata = () => {
+    // let label_old = $('#btn-submit').html();
+    // cbs('#btn-submit',"start");
+    // setTimeout(function(){ cbs('#btn-submit',"stop",label_old); }, 3000);
+    btnproc('#btn-submit',1)
+    setTimeout(function(){ btnproc('#btn-submit',0) }, 1500);
+  }
+
+  function btnproc(prop, tipe, label = 'Processing') {
+      if (tipe == 1) {
+          label_old_btn = ($(prop).html());
+          $(prop).prop('disabled', true);
+          $(prop).html(`<i class="fa fa-spinner fa-spin"></i> ${label}`);
+      } else if (tipe == 0) {
+          $(prop).prop('disabled', false);
+          $(prop).html(`${label_old_btn}`);
+      }
+  }
+
   const aa = () => {
       unig('https://jsonplaceholder.typicode.com/users', {}, function(res) {
           // $.each(res.data, function(i, v) {
@@ -303,11 +322,7 @@
       });
   }
 
-  kirimdata = () => {
-    let label_old = $('#btn-submit').html();
-    cbs('#btn-submit',"start");
-    setTimeout(function(){ cbs('#btn-submit',"stop",label_old); }, 3000);
-  }
+  
 
   cbs = (prop, state, label = "Processing") => {
     if (state == "start") {
