@@ -770,6 +770,7 @@ class Po_agen extends CI_Controller {
                 xorder.pathcorel,
                 xorder.pathimage,
                 xorder.alamat,
+                xorder.total,
                 mcustomer.telp,
                 mcustomer.nama namacust,
                 mkirim.nama mkirim_nama,
@@ -782,11 +783,11 @@ class Po_agen extends CI_Controller {
             WHERE xorder.kode = '$kode'";
 
         $barang = "SELECT
-                mbarang.id,
+                mbarang. ID,
                 mbarang.kode,
                 mbarang.nama,
                 mbarang.ket,
-                msatbrg.id idsatbarang,
+                msatbrg. ID idsatbarang,
                 msatbrg.konv,
                 msatbrg.ket ketsat,
                 msatbrg.harga,
@@ -796,7 +797,15 @@ class Po_agen extends CI_Controller {
                 mgudang.nama gudang,
                 xorderd.jumlah,
                 xorderd.jumlah * xorderd.harga subtotal,
-                mbarangs.sn
+                mbarangs.sn,
+                xorderds. ID,
+                xorderds.ket,
+                mbarang.nama,
+                mmodesign.kode mmodesign_kode,
+                mmodesign.nama mmodesign_nama,
+                mmodesign.gambar mmodesign_gambar,
+                mwarna.nama mwarna_nama,
+                mwarna.colorc mwarna_colorc
             FROM
                 xorderd
             LEFT JOIN mbarang ON mbarang.kode = xorderd.ref_brg
@@ -804,6 +813,9 @@ class Po_agen extends CI_Controller {
             LEFT JOIN msatbrg ON msatbrg.kode = xorderd.ref_satbrg
             LEFT JOIN msatuan ON msatuan.kode = msatbrg.ref_sat
             LEFT JOIN mgudang ON mgudang.kode = msatbrg.ref_gud
+            LEFT JOIN xorderds ON xorderds.ref_orderd = xorderd. ID
+            LEFT JOIN mmodesign ON mmodesign.kode = xorderds.ref_modesign
+            LEFT JOIN mwarna ON mwarna.kode = xorderds.ref_warna
             WHERE xorderd.ref_order = '$kode'";
 
         $spek = "SELECT
@@ -825,8 +837,8 @@ class Po_agen extends CI_Controller {
             WHERE xorder.kode = '$kode'";
 
         $resorder   = $this->db->query($order)->row();
-        $resbarang  = $this->db->query($barang)->row();
-        $resspek  = $this->db->query($spek)->row();
+        $resbarang  = $this->db->query($barang)->result();
+        $resspek    = $this->db->query($spek)->row();
 
         $data['title']  = "Purchase Order";
         $data['order']  = $resorder;
