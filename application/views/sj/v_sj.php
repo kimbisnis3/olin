@@ -205,7 +205,7 @@
                       </div>
                       <div class="pull-right">
                         <button class="btn btn-act btn-warning btn-flat edit-btn invisible" onclick="edit_data()"><i class="fa fa-pencil"></i> Ubah</button>
-                        <button class="btn btn-act btn-success btn-flat option-btn invisible" onclick="valid_data()"><i class="fa fa-check"></i> Validasi</button>
+                        <button class="btn btn-act btn-success btn-flat option-btn invisible" id="btn-valid" onclick="valid_data()"><i class="fa fa-check"></i> Validasi</button>
                         <button class="btn btn-act btn-danger btn-flat delete-btn invisible" onclick="void_data()" ><i class="fa fa-trash"></i> Void</button>
                         <button class="btn btn-act bg-olive btn-flat" onclick="cetak_data()" ><i class="fa fa-print"></i> Cetak</button>
                       </div>
@@ -516,27 +516,50 @@
   }
 
   function valid_data() {
-      id = table.cell( idx, 2).data();
-      let validasiValue = table.cell( idx, 4).data();
-      if (validasiValue == 't') {
-        showNotif('Perhatian', 'Data Sudah Tervalidasi', 'warning')
-        return false;
-      }
+      btnproc('#btn-valid',1)
+      kode = table.cell(idx, 3).data();
       if (idx == -1) {
           return false;
+          btnproc('#btn-valid',0)
       }
-      $('.modal-title').text('Validasi Data ?');
-      $('#modal-konfirmasi').modal('show');
-      $('#btnHapus').attr('onclick', 'validation_data(' + id + ')');
+      let validasiValue = table.cell(idx, 4).data();
+      if (validasiValue == 't') {
+          showNotif('Perhatian', 'Data Sudah Tervalidasi', 'warning')
+          btnproc('#btn-valid',0)
+          return false;
+      }
+      $.ajax({
+          url: `${apiurl}/ceklunas`,
+          type: "POST",
+          dataType: "JSON",
+          data: {
+              kode: kode,
+          },
+          success: function(data) {
+              if (data.lunas == 'L') {
+                  $('.modal-title').text('Validasi Data ?');
+                  $('#modal-konfirmasi').modal('show');
+                  $('#btnHapus').attr('onclick', `validation_data('${kode}')`);
+                  btnproc('#btn-valid',0)
+              } else {
+                  showNotif('Perhatian', 'PEmbayaran Belum Lunas ', 'warning')
+                  btnproc('#btn-valid',0)
+              }
+          },
+          error: function(jqXHR, textStatus, errorThrown) {
+              showNotif('Fail', 'Internal Error', 'danger');
+          }
+      });
+
   }
 
-  function validation_data(id) {
+  function validation_data(kode) {
       $.ajax({
           url: `${apiurl}/validdata`,
           type: "POST",
           dataType: "JSON",
           data: {
-              id: id,
+              kode: kode,
           },
           success: function(data) {
               if (data.sukses == 'success') {

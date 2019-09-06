@@ -21,7 +21,7 @@ class Qc extends CI_Controller {
         $filterakhir = date('Y-m-d', strtotime($this->input->post('filterakhir')));
         $filterstatus = $this->input->post('filterstatus');
         $filteragen = $this->input->post('filteragen');
-        $q = "SELECT 
+        $q = "SELECT DISTINCT
                 xprocorder.id,
                 xprocorder.kode,
                 xprocorder.tgl,

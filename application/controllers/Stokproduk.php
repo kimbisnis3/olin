@@ -21,6 +21,7 @@ class Stokproduk extends CI_Controller {
                 mbarang.nama,
                 mbarang.kode,
                 dinventot.jumlah,
+                dinventot.minstok,
                 msatuan.nama msatuan_nama
             FROM
                 dinventot
@@ -148,6 +149,51 @@ class Stokproduk extends CI_Controller {
                 );
         }
         echo json_encode($r);
+    }
+
+    function updatestokaman() {
+        $jumlah    = $this->input->post('jumlah');
+        $kode      = $this->input->post('kode');
+        $sat       = $this->input->post('ref_sat');
+
+        $q = "SELECT
+                MIN (konv) konvmin,
+                ref_sat
+            FROM
+                msatbrg
+            WHERE
+                msatbrg.ref_brg = '$kode'
+            AND ref_sat = '$sat'
+            GROUP BY
+                ref_sat";
+
+        $konvmin = $this->db->query($q)->row()->konvmin;
+        $jumlahkonv = $jumlah * $konvmin;
+
+        $a['minstok']   = $jumlahkonv;
+        $w['ref_brg']   = $kode;
+
+        $result = $this->db->update('dinventot',$a,$w);
+        $r['sukses'] = $result > 0 ? 'success' : 'fail' ;
+        $r['minstok'] = $jumlahkonv; ;
+        echo json_encode($r);
+    }
+
+    function getsatuanbarang() {
+        $kode   = $this->input->post('kode');
+
+        $q = "SELECT
+                msatuan.nama msatuan_nama,
+                msatuan.kode msatuan_kode
+            FROM
+                msatbrg
+            LEFT JOIN msatuan ON msatuan.kode = msatbrg.ref_sat
+            LEFT JOIN mbarang ON mbarang.kode = msatbrg.ref_brg
+            WHERE
+                mbarang.kode = '$kode'";
+
+        $result = $this->db->query($q)->result();
+        echo json_encode($result);
     }
     
 }

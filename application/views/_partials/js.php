@@ -148,7 +148,6 @@
 	            console.log('Error on process');
 	        }
 	    });
-
 	}
 
 	function getSelectcustom(id, u, classoption, val, caption) {
@@ -246,6 +245,17 @@
 	        $(prop).html(`${label}`);
 	    }
 	}
+
+	function btnproc(prop, tipe, label = 'Processing') {
+      if (tipe == 1) {
+          label_old_btn = ($(prop).html());
+          $(prop).prop('disabled', true);
+          $(prop).html(`<i class="fa fa-spinner fa-spin"></i> ${label}`);
+      } else if (tipe == 0) {
+          $(prop).prop('disabled', false);
+          $(prop).html(`${label_old_btn}`);
+      }
+  }
 
 	function ceknull(x) {
 	    if ($('[name="' + x + '"]').val() == '' || $('[name="' + x + '"]').val() == null) {

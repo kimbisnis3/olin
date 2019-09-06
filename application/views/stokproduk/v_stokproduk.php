@@ -117,6 +117,47 @@
               </div>
             </div>
             </div>  <!-- END MODAL SPEK-->
+            <div class="modal fade" id="modal-satuan" role="dialog" data-backdrop="static">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title"></h4>
+                  </div>
+                  <div class="modal-body">
+                    <div class="box-body pad">
+                      <form id="form-data">
+                        <div class="row">
+                          <div class="col-md-12">
+                            <div class="row">
+                              <div class="col-md-6">
+                                <div class="form-group">
+                                  <label>Jumlah</label>
+                                  <input type="hidden" class="form-control" name="kodebarang">
+                                  <input type="number" class="form-control" name="jumlahstok">
+                                </div>
+                              </div>
+                              <div class="col-md-6">
+                                <div class="form-group">
+                                  <label>Satuan</label>
+                                  <select class="form-control select2" id="select-satuan" name="satuan">
+                                    <option class="class-select-satuan"></option>
+                                  </select>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-warning btn-flat" data-dismiss="modal">Batal</button>
+                    <button type="button" id="btnSave" onclick="updatestokaman()" class="btn btn-primary btn-flat">Simpan</button>
+                  </div>
+                </div>
+              </div>
+              </div>  <!-- END MODAL INPUT-->
             <div id="modal-konfirmasi" class="modal fade" role="dialog">
               <div class="modal-dialog modal-sm">
                 <div class="modal-content">
@@ -140,6 +181,7 @@
                         <button class="btn btn-act btn-success btn-flat refresh-btn" onclick="refresh()"><i class="fa fa-refresh"></i> Refresh</button>
                       </div>
                       <div class="pull-right">
+                        <button class="btn btn-act btn-oren btn-flat edit-btn" id="btn-stok-aman" onclick="stokaman()" ><i class="fa fa-balance-scale"></i> Stok Aman</button>
                         <button class="btn btn-act btn-primary btn-flat add-btn invisible" onclick="add_data('in')" ><i class="fa fa-sign-in"></i> Barang Masuk</button>
                         <button class="btn btn-act btn-danger btn-flat add-btn invisible" onclick="add_data('out')" ><i class="fa fa-sign-out"></i> Barang Keluar</button>
                       </div>
@@ -155,6 +197,7 @@
                               <th>Nama Barang</th>
                               <th>Jumlah</th>
                               <th>Satuan</th>
+                              <th>Stok Aman</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -190,6 +233,14 @@
 
       table = $('#table').DataTable({
           "processing": true,
+          "createdRow": function( row, data, dataIndex ) 
+          {
+            if ( data.jumlah <= data.minstok ) {        
+              $(row).addClass('uni-red');
+            }else {        
+              $(row).addClass('uni-green');
+            }
+          },
           "ajax": {
               "url": `${apiurl}/getall`,
               "type": "POST",
@@ -200,8 +251,9 @@
           { "data": "id" , "visible" : false},
           { "data": "kode" },
           { "data": "nama" },
-          { "data": "msatuan_nama" },
           { "data": "jumlah" },
+          { "data": "msatuan_nama" }, 
+          { "data": "minstok" },
           ]
       });
 
@@ -334,8 +386,82 @@
       });
   }
 
+  function stokaman() {
+      kode = table.cell(idx, 2).data();
+      if (idx == -1) {
+          return false;
+      }
+      btnproc('#btn-stok-aman', 1)
+      $('#select-satuan').select2({
+          disabled: true
+      });
+      $('#select-satuan').after(function() {
+          $('.class-select-satuan').remove()
+      });
+      $('#select-satuan').val('');
+      $('#select-satuan').trigger('change');
+      $.ajax({
+          url: `${apiurl}/getsatuanbarang`,
+          type: "POST",
+          data: {
+              kode: kode
+          },
+          dataType: "JSON",
+          success: function(data) {
+              $('#select-satuan').select2({
+                  disabled: false
+              });
+              inintSelect2('select-satuan');
+              $('#select-satuan').append(`<option class="class-select-satuan" value=""></option>`);
+              $.each(data, function(i, v) {
+                  $('#select-satuan').append(`<option class="class-select-satuan" value="${v['msatuan_kode']}">${v['msatuan_nama']}</option>`);
+              })
+              $('[name="jumlahstok"]').val(''),
+              $('[name="satuan"]').val(''),
+              $('[name="kodebarang"]').val(''),
+              $('#modal-satuan .modal-title').text('Stok Aman');
+              $('#modal-satuan').modal('show');
+              $('[name="kodebarang"]').val(kode)
+              btnproc('#btn-stok-aman', 0)
+          },
+          error: function(jqXHR, textStatus, errorThrown) {
+              console.log('Error on process');
+              $('#select-satuan').select2({
+                  disabled: false
+              });
+              btnproc('#btn-stok-aman', 0)
+          }
+      });
+  }
 
-
+  function updatestokaman() {
+      // if (ceknull('jumlah')) { return false }
+      // if (ceknull('satuan')) { return false }
+      $.ajax({
+          url: `${apiurl}/updatestokaman`,
+          type: "POST",
+          data: {
+            jumlah : $('[name="jumlahstok"]').val(),
+            ref_sat : $('[name="satuan"]').val(),
+            kode : $('[name="kodebarang"]').val(),
+          },
+          dataType: "JSON",
+          success: function(data) {
+              if (data.sukses == 'success') {
+                  $('#modal-satuan').modal('hide');
+                  refresh();
+                  showNotif('Sukses', 'Data Berhasil Ditambahkan', 'success')
+              } else if (data.sukses == 'fail') {
+                  $('#modal-satuan').modal('hide');
+                  refresh();
+                  showNotif('Sukses', 'Tidak Ada Perubahan', 'success')
+              }
+          },
+          error: function(jqXHR, textStatus, errorThrown) {
+              showNotif('Fail', 'Internal Error', 'danger')
+          }
+      });
+  }
   </script>
 </body>
 </html>

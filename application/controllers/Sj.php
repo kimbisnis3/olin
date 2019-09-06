@@ -249,12 +249,46 @@ class Sj extends CI_Controller {
         echo json_encode($r);
     }
 
+    function ceklunas() {
+        $kode = $this->input->post('kode');
+        $q = "SELECT
+                COALESCE(xpelunasan.total,0) total,
+                COALESCE(SUM (xpelunasan.bayar),0) bayar,
+                xsuratjalan.ref_order
+            FROM
+                xsuratjalan
+            LEFT JOIN xpelunasan ON xpelunasan.ref_jual = xsuratjalan.ref_order
+            WHERE
+                xsuratjalan.kode = '$kode'
+            GROUP BY
+                total,
+                xsuratjalan.ref_order";
+        $s = $this->db->query($q)->row();
+        $total  = $s->total;
+        $bayar  = $s->bayar;
+        $kurang = $total - $bayar;
+        $res;
+        if ($kurang <= 0) {
+            $res = 'L';
+        } else {
+            $res = 'TL';
+        }
+        echo json_encode(array(
+            'lunas' => $res, 
+            'total' => $total, 
+            'bayar' => $bayar, 
+            'kurang' => $kurang, 
+        ));
+
+
+    }
+
     function validdata() {
-        $sql = "SELECT posted FROM {$this->table} WHERE id = {$this->input->post('id')}";
+        $sql = "SELECT posted FROM {$this->table} WHERE kode = '{$this->input->post('kode')}'";
         $s = $this->db->query($sql)->row()->posted;
         (($s == 'f') || ($s == '') || ($s == null)) ? $status = 't' : $status = 'f';
         $d['posted'] = $status;
-        $w['id'] = $this->input->post('id');   
+        $w['kode'] = $this->input->post('kode');   
         $result = $this->db->update($this->table,$d,$w);
         $r['sukses'] = $result > 0 ? 'success' : 'fail' ;
         echo json_encode($r);
