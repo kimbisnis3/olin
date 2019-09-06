@@ -40,6 +40,7 @@
                             <div class="form-group">
                               <label>Total</label>
                               <input type="text" class="form-control" name="total" readonly="true">
+                              <input type="text" class="form-control invisible" name="kurang" readonly="true">
                             </div>
                             <div class="form-group">
                               <label>Jenis Bayar</label>
@@ -315,7 +316,7 @@
 
   function jenisbayar() {
     let ref_jenbayar = $('[name="ref_jenbayar"]').val()
-    let total = $('[name="total"]').val()
+    let total = $('[name="kurang"]').val()
     if (ref_jenbayar == 'GX0003') {
       $('#bayar').val(total / 2)
     } else if (ref_jenbayar == 'GX0001') {
@@ -375,6 +376,7 @@
           $('[name="ref_cust"]').val(data.ref_cust);
           $('[name="mcustomer_nama"]').val(data.mcustomer_nama);
           $('[name="ref_order"]').val(data.kode);
+          $('[name="kurang"]').val(data.kurang);
           $('[name="total"]').val(data.total);
           $('[name="bayar"]').val(parseInt(data.kurang));
           // nilaimax('bayar',data.kurang)
