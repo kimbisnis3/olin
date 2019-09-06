@@ -66,64 +66,35 @@
         <thead>
           <tr>
             <th>Produk</th>
-            <th>Spesifikasi</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td style="width: 50%">
-              <div>
-                <div class="row">
-                  <div class="col-xs-3">
-                    <p>Kode </p>
-                    <p>Produk</p>
-                    <p>Jumlah</p>
-                    <p>Harga</p>
-                    <p>Total</p>
-                  </div>
-                  <div class="col-xs-1">
-                    <p>:</p>
-                    <p>:</p>
-                    <p>:</p>
-                    <p>:</p>
-                    <p>:</p>
-                  </div>
-                  <div class="col-xs-4">
-                    <p><?php echo $barang->sn ?></p>
-                    <p><?php echo $barang->nama ?></p>
-                    <p><?php echo $barang->jumlah ?> <?php echo $barang->satuan ?></p>
-                    <p><?php echo number_format($barang->harga) ?></p>
-                    <p><strong><?php echo number_format($barang->subtotal) ?></strong></p>
-                  </div>
-                </div>
-              </div>
-            </td>
-            <td style="width: 50%">
-              <div>
-                <div class="row">
-                  <div class="col-xs-5">
-                    <div style="padding: 10px;">
-                      <?php echo imghandler($order->pathimage,'100') ?>
-                    </div>
-                  </div>
-                  <div class="col-xs-7">
-                    <div class="row">
-                      <div class="col-xs-5">
-                        <p>Design </p>
-                        <p>Warna<p>
-                      </div>
-                      <div class="col-xs-1">
-                        <p>:</p>
-                        <p>:</p>
-                      </div>
-                      <div class="col-xs-3">
-                        <p><?php echo $spek->mmodesign_nama ?></p>
-                        <p><?php echo $spek->mwarna_nama ?></p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>  
+            <td>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Kode</th>
+                    <th>Nama Produk</th>
+                    <th>Jumlah</th>
+                    <th>Harga</th>
+                    <th>Total</th>
+                    <th>Design</th>
+                    <th>Warna</th>
+                  </tr>
+                  <?php foreach ($barang as $i => $v): ?>
+                  <tr>
+                      <td><?php echo $v->kode ?></td>
+                      <td><?php echo $v->nama ?></td>
+                      <td><?php echo $v->jumlah ?> <?php echo $v->satuan ?></td>
+                      <td><?php echo number_format($v->harga) ?></td>
+                      <td><?php echo number_format($v->subtotal) ?></td>
+                      <td><?php echo $v->mmodesign_nama ?></td>
+                      <td><?php echo $v->mwarna_nama ?></td>
+                  </tr>
+                  <?php endforeach ?>
+                </thead>
+              </table>
             </td>
           </tr>
           <tr>
@@ -169,7 +140,7 @@
                             :
                           </div>
                           <div class="col-xs-5">
-                            <?php echo number_format($barang->subtotal + $order->bykirim) ?>
+                            <?php echo number_format($order->total ) ?>
                           </div>
                         </div>
                       </div>
