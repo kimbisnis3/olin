@@ -638,7 +638,7 @@
           dataType: "JSON",
           success: function(data) {
               //barang
-              $('[name="idbarang"]').val(data.barang.idbarang);
+              $('[name="idbarang"]').val(data.barang.id);
               $('[name="nama"]').val(data.barang.nama);
               $('[name="ket"]').val(data.barang.ket);
               $('[name="ref_ktg"]').val(data.barang.ref_ktg);
@@ -697,7 +697,7 @@
 
   function savedata() {
       if (ceknull('nama')) { return false }
-      if (ceknull('ket')) { return false }
+      // if (ceknull('ket')) { return false }
       var url;
       if (state == 'add') {
           url = `${apiurl}/savedata`;

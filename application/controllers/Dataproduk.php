@@ -339,7 +339,8 @@ class Dataproduk extends CI_Controller {
         $a['ket']       = $this->input->post('ket');
         $a['ref_ktg']   = $this->input->post('ref_ktg');
         $kodeBrg        = $this->input->post('kode');
-        $this->db->update('mbarang',$a,array('kode' => $kodeBrg ));
+        $idBrg          = $this->input->post('idbarang');
+        $this->db->update('mbarang',$a,array('id' => $idBrg ));
         $c['ref_brg']   = $kodeBrg;
         $c['sn']        = null;
         $c['model']     = $this->input->post('model');
