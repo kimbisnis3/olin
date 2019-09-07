@@ -1,6 +1,6 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-class Pembayaran_agen extends CI_Controller {
+class Pembayaran extends CI_Controller {
     
     public $table       = 'xpelunasan';
     public $foldername  = 'xpelunasan';

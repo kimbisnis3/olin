@@ -507,8 +507,8 @@
       </html>
   <?php $this->load->view('_partials/js'); ?>
   <script type="text/javascript">
-  var path = 'po_agen';
-  var title = 'Purchase Order Agen';
+  var path = 'po';
+  var title = 'Purchase Order';
   var grupmenu = 'Transaksi';
   var apiurl = "<?php echo base_url('') ?>" + path;
   var state;
@@ -521,7 +521,7 @@
       setMonth('filterawal',30);
       setMonth('filterakhir',0);
       select2();
-      activemenux('transaksi', 'purchaseorderagen');
+      activemenux('transaksi', 'purchaseorder');
       dpicker();
       setProvince();
       $('#select-city').select2({ disabled: true });

@@ -82,25 +82,12 @@
       echo '</li>';
 
       ?> 
-      <?php
-      if ($this->session->userdata('issuper') == 1) 
-      {  echo '
-      <li class="header menu-dev-list">DEVELOPMENT</li>
-      <li class="treeview menu-dev">
-        <a href="#">
-          <i class="fa fa-dashboard"></i> <span>Development</span>
-          <span class="pull-right-container">
-            <i class="fa fa-angle-left pull-right"></i>
-          </span>
-        </a>
-        <ul class="treeview-menu">
-          <li class="menu-dev-fitur"><a href="'.base_url().'cpanel/fitur"><i class="fa fa-circle-o"></i> Fitur Aplikasi</a></li>
-          <li class="menu-dev-level"><a href="'.base_url().'cpanel/level"><i class="fa fa-circle-o"></i> Level Pengguna</a></li>
-          <li class="menu-dev-masterakses"><a href="'.base_url().'cpanel/masterakses"><i class="fa fa-circle-o"></i> Master Akses</a></li>
-        </ul>
-      </li>';
-      }
-      ?>
+    <li class="header">FRONT END WEBSITE</li>
+    <li class="slideshow">
+      <a href="<?php echo base_url() ?>slide">
+        <i class="fa fa-sliders"></i> <span>Slideshow</span>
+      </a>
+    </li>
 
     </ul>
   </section>

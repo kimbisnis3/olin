@@ -1,6 +1,6 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-class Po_agen extends CI_Controller {
+class Po extends CI_Controller {
     
     public $table       = 'xorder';
     public $foldername  = 'po';

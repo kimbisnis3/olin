@@ -219,8 +219,8 @@
       </html>
   <?php $this->load->view('_partials/js'); ?>
   <script type="text/javascript">
-  var path = 'pembayaran_agen';
-  var title = 'Pembayaran Agen';
+  var path = 'pembayaran';
+  var title = 'Pembayaran';
   var grupmenu = 'Transaksi';
   var apiurl = "<?php echo base_url('') ?>" + path;
   var state;
@@ -230,7 +230,7 @@
   $(document).ready(function() {
       getAkses(title);
       select2();
-      activemenux('transaksi', 'pembayaranagen');
+      activemenux('transaksi', 'pembayaran');
       dpicker();
       setMonth('filterawal',30);
       setMonth('filterakhir',0);

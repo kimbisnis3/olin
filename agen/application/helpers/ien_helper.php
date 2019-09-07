@@ -2,6 +2,11 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 /** If empty null helper **/
 if (!function_exists('status')) {
+
+    function view_front() {
+        return '_frontend/';
+    }
+
     function ien($text)
     {
         if ($text=='') {
