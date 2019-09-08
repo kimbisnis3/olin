@@ -108,73 +108,52 @@
       <div class="row">
         <div class="col-xs-5">
           <div class="row">
-            <!-- <div class="col-xs-4">
+            <div class="col-xs-<?php echo $colkiri ?>">
+              <p>Kode Produk</p>
+            </div>
+            <div class="col-xs-<?php echo $coltengah ?>">
+              <p>:</p>
+            </div>
+            <div class="col-xs-<?php echo $colkanan ?>">
+              <p><?php echo $barang->mbarang_kode ?></p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-<?php echo $colkiri ?>">
               <p>Produk</p>
+            </div>
+            <div class="col-xs-<?php echo $coltengah ?>">
+              <p>:</p>
+            </div>
+            <div class="col-xs-<?php echo $colkanan ?>">
+              <p><?php echo $barang->mbarang_nama ?></p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-<?php echo $colkiri ?>">
               <p>Model</p>
+            </div>
+            <div class="col-xs-<?php echo $coltengah ?>">
+              <p>:</p>
+            </div>
+            <div class="col-xs-<?php echo $colkanan ?>">
+              <p><?php echo $barang->mmodesign_nama ?></p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-<?php echo $colkiri ?>">
               <p>Jumlah</p>
-              <p>Kode Design</p>
+            </div>
+            <div class="col-xs-<?php echo $coltengah ?>">
+              <p>:</p>
+            </div>
+            <div class="col-xs-<?php echo $colkanan ?>">
+              <p><?php echo $barang->jumlah ?> <?php echo $barang->satuan ?></p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-<?php echo $colkiri ?>">
               <p>Warna</p>
-            </div>
-            <div class="col-xs-1">
-              <p>:</p>
-              <p>:</p>
-              <p>:</p>
-              <p>:</p>
-              <p>:</p>
-            </div>
-            <div class="col-xs-4">
-              <p><?php echo $barang->mbarang_nama ?></p>
-              <p><?php echo $barang->mmodesign_nama ?></p>
-              <p><?php echo $barang->jumlah ?> <?php echo $barang->satuan ?></p>
-              <p><?php echo $barang->mmodesign_kode ?></p>
-              <p><?php echo $barang->mwarna_nama ?></p>
-            </div> -->
-            <div class="col-xs-<?php echo $colkiri ?>">
-              <p>Produk</p>
-            </div>
-            <div class="col-xs-<?php echo $coltengah ?>">
-              <p>:</p>
-            </div>
-            <div class="col-xs-<?php echo $colkanan ?>">
-              <p><?php echo $barang->mbarang_nama ?></p>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-xs-<?php echo $colkiri ?>">
-              <p>Model</p>
-            </div>
-            <div class="col-xs-<?php echo $coltengah ?>">
-              <p>:</p>
-            </div>
-            <div class="col-xs-<?php echo $colkanan ?>">
-              <p><?php echo $barang->mmodesign_nama ?></p>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-xs-<?php echo $colkiri ?>">
-              <p>Jumlah</p>
-            </div>
-            <div class="col-xs-<?php echo $coltengah ?>">
-              <p>:</p>
-            </div>
-            <div class="col-xs-<?php echo $colkanan ?>">
-              <p><?php echo $barang->jumlah ?> <?php echo $barang->satuan ?></p>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-xs-<?php echo $colkiri ?>">
-              <p>Kode Design</p>
-            </div>
-            <div class="col-xs-<?php echo $coltengah ?>">
-              <p>:</p>
-            </div>
-            <div class="col-xs-<?php echo $colkanan ?>">
-              <p><?php echo $barang->mmodesign_kode ?></p>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-xs-<?php echo $colkiri ?>">
-              <p>Kode Design</p>
             </div>
             <div class="col-xs-<?php echo $coltengah ?>">
               <p>:</p>
@@ -197,10 +176,10 @@
       <table>
         <thead>
           <tr>
-            <th>Printing</th>
-            <th>Cutting</th>
-            <th>Sewing</th>
-            <th>Finishing</th>
+            <th style="text-align: center !important;">Printing</th>
+            <th style="text-align: center !important;">Cutting</th>
+            <th style="text-align: center !important;">Sewing</th>
+            <th style="text-align: center !important;">Finishing</th>
           </tr>
         </thead>
         <tbody>
