@@ -460,6 +460,13 @@
       if (ceknull('tgl')) { return false }
       if (ceknull('ref_jenbayar')) { return false }
       if (cekzero('bayar')) { return false }
+
+      let ref_jenbayar = $('[name="ref_jenbayar"]').val()
+      let total = $('[name="kurang"]').val()
+      if (ref_jenbayar == 'GX0003' && $('#bayar').val() < (total / 2)) {
+        showNotif('Perhatian', 'Pembayaran Tidak Boleh Kurang dari 50%', 'danger');
+        return false
+      }
       var url;
       if (state == 'add') {
           url = `${apiurl}/savedata`;

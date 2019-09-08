@@ -146,7 +146,7 @@
               <p>:</p>
             </div>
             <div class="col-xs-4  ">
-              <p><?php echo substr($sj->lokasidari, strpos($sj->lokasidari, "-") + 1);?></p>
+              <p><?php echo substr($sj->lokasike, strpos($sj->lokasike, "-") + 1);?></p>
             </div>
           </div>
           <div class="row">
@@ -157,7 +157,7 @@
               <p>:</p>
             </div>
             <div class="col-xs-4  ">
-              <p><?php echo strtok($sj->lokasidari, '-') ?></p>
+              <p><?php echo strtok($sj->lokasike, '-') ?></p>
             </div>
           </div>
         </div>
