@@ -82,12 +82,12 @@
       echo '</li>';
 
       ?> 
-    <li class="header">FRONT END WEBSITE</li>
+    <!-- <li class="header">FRONT END WEBSITE</li>
     <li class="slideshow">
       <a href="<?php echo base_url() ?>slide">
         <i class="fa fa-sliders"></i> <span>Slideshow</span>
       </a>
-    </li>
+    </li> -->
 
     </ul>
   </section>

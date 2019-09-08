@@ -20,19 +20,35 @@
       <div class="row">
         <div class="col-xs-5">
           <div class="row">
-            <div class="col-xs-3">
+            <div class="col-xs-5">
               <p>Kepada</p>
+            </div>
+            <div class="col-xs-2">
+              <p>:</p>
+            </div>
+            <div class="col-xs-5">
+              <p><?php echo $this->libre->companydata()->nama ?></p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-5">
               <p>Alamat</p>
+            </div>
+            <div class="col-xs-2">
+              <p>:</p>
+            </div>
+            <div class="col-xs-5">
+              <p><?php echo $this->libre->companydata()->alamat ?></p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-5">
               <p>Telp</p>
             </div>
-            <div class="col-xs-1">
-              <p>:</p>
-              <p>:</p>
+            <div class="col-xs-2">
               <p>:</p>
             </div>
-            <div class="col-xs-4">
-              <p><?php echo $this->libre->companydata()->nama ?></p>
-              <p><?php echo $order->alamat ?></p>
+            <div class="col-xs-5">
               <p><?php echo $order->telp ?></p>
             </div>
           </div>
@@ -41,19 +57,35 @@
         </div>
         <div class="col-xs-5">
           <div class="row">
-            <div class="col-xs-3">
+            <div class="col-xs-5">
               <p>Kode</p>
-              <p>Tanggal</p>
-              <p>Layanan</p>
             </div>
-            <div class="col-xs-1">
-              <p>:</p>
-              <p>:</p>
+            <div class="col-xs-2">
               <p>:</p>
             </div>
             <div class="col-xs-5">
               <p><?php echo $order->kode ?></p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-5">
+              <p>Tanggal</p>
+            </div>
+            <div class="col-xs-2">
+              <p>:</p>
+            </div>
+            <div class="col-xs-5">
               <p><?php echo normal_date($order->tgl) ?></p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-5">
+              <p>Layanan</p>
+            </div>
+            <div class="col-xs-2">
+              <p>:</p>
+            </div>
+            <div class="col-xs-5">
               <p><?php echo $order->mlayanan_nama ?></p>
             </div>
           </div>
@@ -105,26 +137,67 @@
               <div>
                 <div class="row">
                   <div class="col-xs-8">
+                    <?php 
+                      $colkiri = '4';
+                      $coltengah = '2';
+                      $colkanan = '6';
+                    ?>  
                     <div class="row">
-                      <div class="col-xs-5">
+                      <div class="col-xs-<?php echo $colkiri ?>">
                         <p>Jasa Pengiriman </p>
+                      </div>
+                      <div class="col-xs-<?php echo $coltengah ?>">
+                         <p>:</p>
+                      </div>
+                      <div class="col-xs-<?php echo $colkanan ?>">
+                         <p><?php echo $order->kurir ?>  <?php echo "(". $order->kodekurir ?> )</p>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-xs-<?php echo $colkiri ?>">
                         <p>Alamat Kirim</p>
+                      </div>
+                      <div class="col-xs-<?php echo $coltengah ?>">
+                        <p>:</p>
+                      </div>
+                      <div class="col-xs-<?php echo $colkanan ?>">
+                        <p><?php echo $order->alamat ?></p>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-xs-<?php echo $colkiri ?>">
                         <p>Kota</p>
+                      </div>
+                      <div class="col-xs-<?php echo $coltengah ?>">
+                        <p>:</p>
+                      </div>
+                      <div class="col-xs-<?php echo $colkanan ?>">
+                        <p><?php echo substr($order->lokasidari, strpos($order->lokasidari, "-") + 1);?></p>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-xs-<?php echo $colkiri ?>">
                         <p>Provinsi</p>
+                      </div>
+                      <div class="col-xs-<?php echo $coltengah ?>">
+                        <p>:</p>
+                      </div>
+                      <div class="col-xs-<?php echo $colkanan ?>">
+                        <p><?php echo strtok($order->lokasidari, '-') ?></p>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-xs-<?php echo $colkiri ?>">
                         <p>Biaya Kirim</p>
                       </div>
-                      <div class="col-xs-1">
-                        <p>:</p>
-                        <p>:</p>
-                        <p>:</p>
-                        <p>:</p>
+                      <div class="col-xs-<?php echo $coltengah ?>">
                         <p>:</p>
                       </div>
-                      <div class="col-xs-5">
-                        <p><?php echo $order->kurir ?>  <?php echo "(". $order->kodekurir ?> )</p>
-                        <p><?php echo $order->alamat ?></p>
-                        <p><?php echo substr($order->lokasidari, strpos($order->lokasidari, "-") + 1);?></p>
-                        <p><?php echo strtok($order->lokasidari, '-') ?></p>
+                      <div class="col-xs-<?php echo $colkanan ?>">
                         <p><?php echo number_format($order->bykirim) ?></p>
                       </div>
                     </div>

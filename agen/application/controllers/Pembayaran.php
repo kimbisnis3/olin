@@ -29,6 +29,7 @@ class Pembayaran extends CI_Controller {
                 xpelunasan.posted,
                 xpelunasan.ket,
                 xpelunasan.ref_jual,
+                xpelunasan.kodeunik,
                 mcustomer.nama mcustomer_nama,
                 mgudang.nama mgudang_nama,
                 mjenbayar.nama mjenbayar_nama
@@ -59,7 +60,8 @@ class Pembayaran extends CI_Controller {
             $row['kurang']          = number_format($r->kurang);
             $row['ket']             = $r->ket;
             $row['posted']          = $r->posted;
-            $row['ref_jual']          = $r->ref_jual;
+            $row['ref_jual']        = $r->ref_jual;
+            $row['kodeunik']        = $r->kodeunik;
 
             $list[] = $row;
         }
@@ -114,187 +116,30 @@ class Pembayaran extends CI_Controller {
 
     public function getorder(){
         $kodecust = $this->session->userdata('kodecust');
-        $q = "SELECT DISTINCT
-                xorder. ID,
-                xorder.kode,
-                xorder.tgl,
-                xorder.ket,
-                xorder.pic,
-                xorder.kgkirim,
-                xorder.bykirim,
-                xorder.ref_cust,
-                xorder.ref_kirim,
-                mcustomer.nama mcustomer_nama,
-                (
-                    SELECT
-                        SUM (
-                            xorderd.harga * xorderd.jumlah
-                        )
-                    FROM
-                        xorderd
-                    WHERE
-                        xorderd.ref_order = xorder.kode
-                ) + xorder.bykirim total,
-                COALESCE (
-                    (
-                        SELECT
-                            SUM (xpelunasan.bayar)
-                        FROM
-                            xpelunasan
-                        WHERE
-                            xpelunasan.ref_jual = xorder.kode
-                    ),
-                    0
-                ) dibayar,
-                (
-                    COALESCE (
-                        (
-                            SELECT
-                                SUM (
-                                    xorderd.harga * xorderd.jumlah
-                                )
-                            FROM
-                                xorderd
-                            WHERE
-                                xorderd.ref_order = xorder.kode
-                        ),
-                        0
-                    ) + xorder.bykirim
-                ) - COALESCE (
-                    (
-                        SELECT
-                            SUM (xpelunasan.bayar)
-                        FROM
-                            xpelunasan
-                        WHERE
-                            xpelunasan.ref_jual = xorder.kode
-                    ),
-                    0
-                ) kurang
-            FROM
-                xorder
-            LEFT JOIN mcustomer ON mcustomer.kode = xorder.ref_cust
-            LEFT JOIN xpelunasan ON xorder.kode = xpelunasan.ref_jual
-            WHERE
-                xorder.void IS NOT TRUE
-            AND (
-                COALESCE (
-                    (
-                        SELECT
-                            SUM (
-                                xorderd.harga * xorderd.jumlah
-                            )
-                        FROM
-                            xorderd
-                        WHERE
-                            xorderd.ref_order = xorder.kode
-                    ),
-                    0
-                ) + xorder.bykirim
-            ) - COALESCE (
-                (
-                    SELECT
-                        SUM (xpelunasan.bayar)
-                    FROM
-                        xpelunasan
-                    WHERE
-                        xpelunasan.ref_jual = xorder.kode
-                ),
-                0
-            ) != 0
-            AND ref_kirim = 'GX0002'
-            AND xorder.ref_cust = '$kodecust'
-            UNION 
-            SELECT DISTINCT
-                xorder. ID,
-                xorder.kode,
-                xorder.tgl,
-                xorder.ket,
-                xorder.pic,
-                xorder.kgkirim,
-                xorder.bykirim,
-                xorder.ref_cust,
-                xorder.ref_kirim,
-                mcustomer.nama mcustomer_nama,
-                (
-                    SELECT
-                        SUM (
-                            xorderd.harga * xorderd.jumlah
-                        )
-                    FROM
-                        xorderd
-                    WHERE
-                        xorderd.ref_order = xorder.kode
-                ) total,
-                COALESCE (
-                    (
-                        SELECT
-                            SUM (xpelunasan.bayar)
-                        FROM
-                            xpelunasan
-                        WHERE
-                            xpelunasan.ref_jual = xorder.kode
-                    ),
-                    0
-                ) dibayar,
-                (
-                    COALESCE (
-                        (
-                            SELECT
-                                SUM (
-                                    xorderd.harga * xorderd.jumlah
-                                )
-                            FROM
-                                xorderd
-                            WHERE
-                                xorderd.ref_order = xorder.kode
-                        ),
-                        0
-                    )
-                ) - COALESCE (
-                    (
-                        SELECT
-                            SUM (xpelunasan.bayar)
-                        FROM
-                            xpelunasan
-                        WHERE
-                            xpelunasan.ref_jual = xorder.kode
-                    ),
-                    0
-                ) kurang
-            FROM
-                xorder
-            LEFT JOIN mcustomer ON mcustomer.kode = xorder.ref_cust
-            LEFT JOIN xpelunasan ON xorder.kode = xpelunasan.ref_jual
-            WHERE
-                xorder.void IS NOT TRUE
-            AND (
-                COALESCE (
-                    (
-                        SELECT
-                            SUM (
-                                xorderd.harga * xorderd.jumlah
-                            )
-                        FROM
-                            xorderd
-                        WHERE
-                            xorderd.ref_order = xorder.kode
-                    ),
-                    0
-                )
-            ) - COALESCE (
-                (
-                    SELECT
-                        SUM (xpelunasan.bayar)
-                    FROM
-                        xpelunasan
-                    WHERE
-                        xpelunasan.ref_jual = xorder.kode
-                ),
-                0
-            ) != 0
-            AND ref_kirim = 'GX0001' 
-            AND xorder.ref_cust = '$kodecust'";
+        $q = "select qr.*, (qr.total - qr.dibayar) kurang from (
+            select 
+            xorder.id,
+            xorder.kode,
+            xorder.tgl,
+            xorder.ket,
+            xorder.pic,
+            xorder.kgkirim,
+            xorder.bykirim,
+            xorder.ref_cust,
+            xorder.ref_kirim,
+            mcustomer.nama mcustomer_nama,
+            case xorder.ref_kirim 
+            when 'GX0002' then xorder.total
+            when 'GX0001' then xorder.total - xorder.bykirim
+            end as total,
+            (select sum(xpelunasan.bayar) from xpelunasan
+            where xpelunasan.void is not true 
+            and xpelunasan.ref_jual = xorder.kode) dibayar
+            from xorder
+            join mcustomer on mcustomer.kode = xorder.ref_cust
+            ) qr
+            where (qr.total - qr.dibayar) > 0
+            AND qr.ref_cust ='$kodecust'";
             
         $result     = $this->db->query($q)->result();
         $list       = [];
@@ -332,6 +177,7 @@ class Pembayaran extends CI_Controller {
         $result = $this->db->insert('xpelunasan',$a);
         $idpelun = $this->db->insert_id();
         $kodepelun = $this->db->get_where('xpelunasan',array('id' => $idpelun))->row()->kode;
+        $kodeunik = $this->db->get_where('xpelunasan',array('id' => $idpelun))->row()->kodeunik;
         $dataOrderd = $this->db->get_where('xorderd',array('ref_order' => $this->input->post('ref_order')))->result();
         foreach ($dataOrderd as $r) {
             $row    = array(
@@ -350,6 +196,7 @@ class Pembayaran extends CI_Controller {
             $this->db->trans_rollback();
             $r = array(
                 'sukses' => 'fail', 
+                'kodeunik' => $kodeunik
             );
         }
         else {

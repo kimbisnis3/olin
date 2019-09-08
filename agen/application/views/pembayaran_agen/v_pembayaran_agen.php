@@ -201,6 +201,7 @@
                               <th>Jenis Bayar</th>
                               <th>Bayar</th>
                               <th>Keterangan</th>
+                              <th>Kode Unik</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -265,6 +266,7 @@
           { "data": "mjenbayar_nama" },
           { "data": "bayar" },
           { "data": "ket" },
+          { "data": "kodeunik" },
           ]
       });
 
@@ -444,6 +446,12 @@
       if (ceknull('ref_order')) { return false }
       if (ceknull('tgl')) { return false }
       if (ceknull('ref_jenbayar')) { return false }
+      let ref_jenbayar = $('[name="ref_jenbayar"]').val()
+      let total = $('[name="kurang"]').val()
+      if (ref_jenbayar == 'GX0003' && $('#bayar').val() < (total / 2)) {
+        showNotif('Perhatian', 'Pembayaran Tidak Boleh Kurang dari 50%', 'danger');
+        return false
+      }
       var url;
       if (state == 'add') {
           url = `${apiurl}/savedata`;
@@ -460,6 +468,7 @@
                   $('#modal-data').modal('hide');
                   refresh();
                   state == 'add' ? showNotif('Sukses', 'Data Berhasil Ditambahkan', 'success') : showNotif('Sukses', 'Data Berhasil Diubah', 'success')
+                  state == 'add' ? showNotif('', 'Kode Unik Anda '+data.kodeunik, 'success') : ''
               } else if (data.sukses == 'fail') {
                   $('#modal-data').modal('hide');
                   refresh();
