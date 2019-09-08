@@ -20,7 +20,7 @@ class Po extends CI_Controller {
     public function getall(){
         $filterawal = date('Y-m-d', strtotime($this->input->post('filterawal')));
         $filterakhir = date('Y-m-d', strtotime($this->input->post('filterakhir')));
-        $kodecust   = $this->session->userdata('kodecust');
+        $kodecust   = $this->session->userdata(prefix_sess().'kodecust');
         $q = "SELECT
                 xorder.id,
                 xorder.kode,
@@ -229,8 +229,8 @@ class Po extends CI_Controller {
         $this->db->trans_begin();
         $a['pathcorel'] = '/agen'.$upcorel;
         $a['pathimage'] = '/agen'.$upimage;
-        $a['useri']     = $this->session->userdata('username');
-        $a['ref_cust']  = $this->session->userdata('kodecust');
+        $a['useri']     = $this->session->userdata(prefix_sess().'username');
+        $a['ref_cust']  = $this->session->userdata(prefix_sess().'kodecust');
         $a['tgl']       = date('Y-m-d', strtotime($this->input->post('tgl')));
         $a['ref_gud']   = $this->libre->gud_def();
         $a['ket']       = $this->input->post('ket');
@@ -270,7 +270,7 @@ class Po extends CI_Controller {
             WHERE 
                 msatbrg.def = 't' 
             AND mbarang.kode = '$r->kode'")->row();
-            $rowb['useri']     = $this->session->userdata('username');
+            $rowb['useri']     = $this->session->userdata(prefix_sess().'username');
             $rowb['ref_order'] = $kodeOrder;
             $rowb['ref_brg']   = $Brg->msatbrg_ref_brg;
             $rowb['jumlah']    = $r->jumlah;
@@ -288,7 +288,7 @@ class Po extends CI_Controller {
         $design = $this->db->get_where('mbarangs',array('ref_brg' => $kodebarang))->result();
             foreach ($design as $r) {
                 $row    = array(
-                    "useri"         => $this->session->userdata('username'),
+                    "useri"         => $this->session->userdata(prefix_sess().'username'),
                     "ref_orderd"    => $i->id,
                     "ref_modesign"  => $r->model,
                     "ref_warna"     => $r->warna,
@@ -379,9 +379,9 @@ class Po extends CI_Controller {
     {
         $this->db->trans_begin();
         $kodeorder      = $this->input->post('kode');
-        $a['useru']     = $this->session->userdata('username');
+        $a['useru']     = $this->session->userdata(prefix_sess().'username');
         $a['dateu']     = 'now()';
-        $a['ref_cust']  = $this->session->userdata('kodecust');
+        $a['ref_cust']  = $this->session->userdata(prefix_sess().'kodecust');
         $a['tgl']       = date('Y-m-d', strtotime($this->input->post('tgl')));
         $a['ref_gud']   = $this->libre->gud_def();
         $a['ket']       = $this->input->post('ket');
@@ -565,7 +565,7 @@ class Po extends CI_Controller {
                 msatbrg.def = 't' 
             AND mbarang.kode = '$kodebarang'")->row();
             
-        $a['useri']     = $this->session->userdata('username');
+        $a['useri']     = $this->session->userdata(prefix_sess().'username');
         $a['ref_order'] = $kodeorder;
         $a['ref_brg']   = $Brg->msatbrg_ref_brg;
         $a['jumlah']    = $this->input->post('jumlah');
@@ -578,7 +578,7 @@ class Po extends CI_Controller {
         $design  = $this->db->get_where('mbarangs',array('ref_brg' => $kodebarang))->result();
             foreach ($design as $r) {
                 $row    = array(
-                    "useri"         => $this->session->userdata('username'),
+                    "useri"         => $this->session->userdata(prefix_sess().'username'),
                     "ref_orderd"    => $idorderd,
                     "ref_modesign"  => $r->model,
                     "ref_warna"     => $r->warna,
@@ -641,7 +641,7 @@ class Po extends CI_Controller {
                 msatbrg.def = 't' 
             AND mbarang.kode = '$kodebarang'")->row();
             
-        $a['useru']     = $this->session->userdata('username');
+        $a['useru']     = $this->session->userdata(prefix_sess().'username');
         $a['dateu']     = 'now()';
         $a['ref_order'] = $kodeorder;
         $a['ref_brg']   = $Brg->msatbrg_ref_brg;
@@ -655,7 +655,7 @@ class Po extends CI_Controller {
         $design  = $this->db->get_where('mbarangs',array('ref_brg' => $kodebarang))->result();
             foreach ($design as $r) {
                 $row    = array(
-                    "useru"         => $this->session->userdata('username'),
+                    "useru"         => $this->session->userdata(prefix_sess().'username'),
                     "dateu"         => 'now()',
                     "ref_orderd"    => $idorderd,
                     "ref_modesign"  => $r->model,

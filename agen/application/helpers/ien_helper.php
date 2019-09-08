@@ -3,6 +3,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 /** If empty null helper **/
 if (!function_exists('status')) {
 
+    function prefix_sess() {
+        return '_olinagen_';
+    }
+
     function view_front() {
         return '_frontend/';
     }

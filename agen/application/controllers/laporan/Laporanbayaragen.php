@@ -56,7 +56,7 @@ class Laporanbayaragen extends CI_Controller {
                     qr.tgl 
                 BETWEEN '$st' AND '$en'";
         }
-        $q  .=" AND qr.ref_cust = '{$this->session->userdata('kodecust')}'";
+        $q  .=" AND qr.ref_cust = '{$this->session->userdata(prefix_sess().'kodecust')}'";
         $q .=" ORDER BY ";
         if ($this->input->post('gb')) {
             $q .=" {$this->input->post('gb')}, ";

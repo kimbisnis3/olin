@@ -17,8 +17,8 @@
 <script type="text/javascript">
 
 	var php_base_url = '<?php echo base_url() ?>';
-	var php_session_nama = '<?php echo $this->session->userdata("nama") ?>';
-	var php_session_id = '<?php echo $this->session->userdata("id") ?>';
+	var php_session_nama = '<?php echo $this->session->userdata(prefix_sess()."nama") ?>';
+	var php_session_id = '<?php echo $this->session->userdata(prefix_sess()."id") ?>';
 	var id_action ;
 
 	$(document).ready(function() {
