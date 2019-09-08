@@ -16,50 +16,87 @@
       </div>
     </section>
     <section class="initial-report">
+      <?php 
+        $colkiri = '4';
+        $coltengah = '2';
+        $colkanan = '6';
+      ?>  
       <div class="row">
         <div class="col-xs-5">
           <div class="row">
-            <div class="col-xs-3">
+            <div class="col-xs-<?php echo $colkiri ?>">
               <p>Ref. PO</p>
+            </div>
+            <div class="col-xs-<?php echo $coltengah ?>">
+              <p>:</p>
+            </div>
+            <div class="col-xs-<?php echo $colkanan ?>">
+              <p><?php echo $spk->ref_order ?></p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-<?php echo $colkiri ?>">
               <p>Layanan</p>
+            </div>
+            <div class="col-xs-<?php echo $coltengah ?>">
+              <p>:</p>
+            </div>
+            <div class="col-xs-<?php echo $colkanan ?>">
+              <p><?php echo $spk->mlayanan_nama ?></p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-<?php echo $colkiri ?>">
               <p>Lama Pengerjaan</p>
             </div>
-            <div class="col-xs-1">
-              <p>:</p>
-              <p>:</p>
+            <div class="col-xs-<?php echo $coltengah ?>">
               <p>:</p>
             </div>
-            <div class="col-xs-4">
-              <p><?php echo $spk->ref_order ?></p>
-              <p><?php echo $spk->mlayanan_nama ?></p>
+            <div class="col-xs-<?php echo $colkanan ?>">
               <p><?php 
               if ($spk->mlayanan_nama == "Normal") {
                   echo "10 Hari";
               }elseif ($spk->mlayanan_nama == "ONE DAY SERVICES") {
                   echo "1 Hari"; 
                 }
-              ?>
-            </p>
+              ?></p>
             </div>
           </div>
         </div>
+
         <div class="col-xs-2">
         </div>
         <div class="col-xs-5">
           <div class="row">
-            <div class="col-xs-3">
+            <div class="col-xs-<?php echo $colkiri ?>">
               <p>Kode</p>
+            </div>
+            <div class="col-xs-<?php echo $coltengah ?>">
+              <p>:</p>
+            </div>
+            <div class="col-xs-<?php echo $colkanan ?>">
+              <p><?php echo $spk->kode ?></p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-<?php echo $colkiri ?>">
               <p>Tanggal</p>
+            </div>
+            <div class="col-xs-<?php echo $coltengah ?>">
+              <p>:</p>
+            </div>
+            <div class="col-xs-<?php echo $colkanan ?>">
+              <p><?php echo normal_date($spk->tgl) ?></p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-<?php echo $colkiri ?>">
               <p>Dateline</p>
             </div>
-            <div class="col-xs-1">
-              <p>:</p>
-              <p>:</p>
+            <div class="col-xs-<?php echo $coltengah ?>">
               <p>:</p>
             </div>
-            <div class="col-xs-5">
-              <p><?php echo $spk->kode ?></p>
-              <p><?php echo normal_date($spk->tgl) ?></p>
+            <div class="col-xs-<?php echo $colkanan ?>">
               <p><?php echo normal_date(date('Y-m-d', strtotime($spk->tgl. ' + 10 days'))) ?></p>
             </div>
           </div>
@@ -71,7 +108,7 @@
       <div class="row">
         <div class="col-xs-5">
           <div class="row">
-            <div class="col-xs-4">
+            <!-- <div class="col-xs-4">
               <p>Produk</p>
               <p>Model</p>
               <p>Jumlah</p>
@@ -90,6 +127,59 @@
               <p><?php echo $barang->mmodesign_nama ?></p>
               <p><?php echo $barang->jumlah ?> <?php echo $barang->satuan ?></p>
               <p><?php echo $barang->mmodesign_kode ?></p>
+              <p><?php echo $barang->mwarna_nama ?></p>
+            </div> -->
+            <div class="col-xs-<?php echo $colkiri ?>">
+              <p>Produk</p>
+            </div>
+            <div class="col-xs-<?php echo $coltengah ?>">
+              <p>:</p>
+            </div>
+            <div class="col-xs-<?php echo $colkanan ?>">
+              <p><?php echo $barang->mbarang_nama ?></p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-<?php echo $colkiri ?>">
+              <p>Model</p>
+            </div>
+            <div class="col-xs-<?php echo $coltengah ?>">
+              <p>:</p>
+            </div>
+            <div class="col-xs-<?php echo $colkanan ?>">
+              <p><?php echo $barang->mmodesign_nama ?></p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-<?php echo $colkiri ?>">
+              <p>Jumlah</p>
+            </div>
+            <div class="col-xs-<?php echo $coltengah ?>">
+              <p>:</p>
+            </div>
+            <div class="col-xs-<?php echo $colkanan ?>">
+              <p><?php echo $barang->jumlah ?> <?php echo $barang->satuan ?></p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-<?php echo $colkiri ?>">
+              <p>Kode Design</p>
+            </div>
+            <div class="col-xs-<?php echo $coltengah ?>">
+              <p>:</p>
+            </div>
+            <div class="col-xs-<?php echo $colkanan ?>">
+              <p><?php echo $barang->mmodesign_kode ?></p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-<?php echo $colkiri ?>">
+              <p>Kode Design</p>
+            </div>
+            <div class="col-xs-<?php echo $coltengah ?>">
+              <p>:</p>
+            </div>
+            <div class="col-xs-<?php echo $colkanan ?>">
               <p><?php echo $barang->mwarna_nama ?></p>
             </div>
           </div>

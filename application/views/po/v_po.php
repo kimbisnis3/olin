@@ -1081,7 +1081,7 @@
       cbs('.edit-btn',"start","Memuat");
       tabel_add_barang()
       state_insatuan()
-      $('#btnSimpan').prop('disabled',true);
+      // $('#btnSimpan').prop('disabled',true);
       clearbarang()
       kode = table.cell( idx, 3).data();
       $('.box-upload').addClass('invisible');
@@ -1153,12 +1153,12 @@
       if (ceknull('ref_kirim')) { return false }
       if (ceknull('kirimke')) { return false }
       if (ceknull('ref_layanan')) { return false }
-      if ($('#select-service').val() == '' || $('#select-service').val() == null) {
+      if (state == 'update' && ($('#ref_kirim').val() == 'GX0002') && ($('#select-service').val() == '' || $('#select-service').val() == null)) {
           showNotif('', 'Pilih Service Kurir', 'danger');
           $('#select-service').focus()
           $('#select-service').addClass('pulse animated');
           return false
-      } 
+      }
       let label_old = $('.btn-save').html();
       cbs('.btn-save',"start","Mengirim");
       $('[name="mask-provinsi"]').val($('[name="provinsi"]  option:selected').html());

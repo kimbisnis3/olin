@@ -174,7 +174,7 @@
                         <p>:</p>
                       </div>
                       <div class="col-xs-<?php echo $colkanan ?>">
-                        <p><?php echo substr($order->lokasidari, strpos($order->lokasidari, "-") + 1);?></p>
+                        <p><?php echo substr($order->lokasike, strpos($order->lokasike, "-") + 1);?></p>
                       </div>
                     </div>
 
@@ -186,7 +186,7 @@
                         <p>:</p>
                       </div>
                       <div class="col-xs-<?php echo $colkanan ?>">
-                        <p><?php echo strtok($order->lokasidari, '-') ?></p>
+                        <p><?php echo strtok($order->lokasike, '-') ?></p>
                       </div>
                     </div>
 
