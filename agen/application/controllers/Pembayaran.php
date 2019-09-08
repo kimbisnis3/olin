@@ -195,14 +195,14 @@ class Pembayaran extends CI_Controller {
         if ($this->db->trans_status() === FALSE) {
             $this->db->trans_rollback();
             $r = array(
-                'sukses' => 'fail', 
-                'kodeunik' => $kodeunik
+                'sukses' => 'fail'
             );
         }
         else {
             $this->db->trans_commit();
             $r = array(
-                'sukses' => 'success'
+                'sukses' => 'success',
+                'kodeunik' => $kodeunik
                 );
         }
         echo json_encode($r);

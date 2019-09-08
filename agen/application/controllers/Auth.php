@@ -66,7 +66,18 @@ class Auth extends CI_Controller{
     }
     
     function logout(){
-        $this->session->sess_destroy();
+        // $this->session->sess_destroy();
+        $arr = array(
+            prefix_sess().'status', 
+            prefix_sess().'in_cl',
+            prefix_sess().'id',
+            prefix_sess().'nama',
+            prefix_sess().'user',
+            prefix_sess().'kodecust',
+            prefix_sess().'access',
+            prefix_sess().'mjencust_nama',
+        );
+        $this->session->unset_userdata($arr);
         redirect(base_url('auth'));
     }
 }
