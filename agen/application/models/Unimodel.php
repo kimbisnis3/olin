@@ -6,8 +6,8 @@ class Unimodel extends CI_Model{
     }
 
     function getaksesmenu_new(){
-        $access     = $this->session->userdata(prefix_sess()."access");
-        $issuper    = $this->session->userdata(prefix_sess()."issuper");
+        $access     = $this->session->userdata("access");
+        $issuper    = $this->session->userdata("issuper");
         $sql    = 
             "SELECT 
             taction_group.group_action,
