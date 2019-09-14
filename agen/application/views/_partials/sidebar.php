@@ -6,7 +6,7 @@
         <img src="<?php echo base_url()?>assets/gambar/logo.png" class="img-circle" alt="User Image">
       </div>
       <div class="pull-left info">
-        <p><?php echo $this->session->userdata(prefix_sess()."nama"); ?></p>
+        <p><?php echo $this->session->userdata("nama"); ?></p>
         <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
       </div>
     </div>

@@ -115,7 +115,7 @@ class Dataproduk extends CI_Controller {
 
     public function addharga() {
         $d = array(
-                "useri"     => $this->session->userdata(prefix_sess().'username'),
+                "useri"     => $this->session->userdata('username'),
                 "ref_brg"   => $this->input->post('ref_brg'),
                 "ref_sat"   => $this->input->post('ref_sat'),
                 "konv"      => $this->input->post('konv'),
@@ -130,7 +130,7 @@ class Dataproduk extends CI_Controller {
 
     public function updateharga() {
         $d = array(
-                "useru"     => $this->session->userdata(prefix_sess().'username'),
+                "useru"     => $this->session->userdata('username'),
                 "dateu"     => 'now()',
                 "ref_sat"   => $this->input->post('ref_sat'),
                 "konv"      => $this->input->post('konv'),
@@ -239,7 +239,7 @@ class Dataproduk extends CI_Controller {
     public function savedata()
     {   
         $this->dbtwo->trans_begin();
-        $a['useri']     = $this->session->userdata(prefix_sess().'username');
+        $a['useri']     = $this->session->userdata('username');
         $a['nama']      = $this->input->post('nama');
         $a['kode']      = $this->input->post('kode');
         $a['ket']       = $this->input->post('ket');
@@ -250,7 +250,7 @@ class Dataproduk extends CI_Controller {
         $arrHarga = json_decode($this->input->post('arrHarga'));
         foreach ($arrHarga as $r) {
             $row    = array(
-                "useri"     => $this->session->userdata(prefix_sess().'username'),
+                "useri"     => $this->session->userdata('username'),
                 "ref_brg"   => $kodeBrg,
                 "ref_sat"   => $r->ref_sat,
                 "konv"      => $r->konv,
@@ -333,7 +333,7 @@ class Dataproduk extends CI_Controller {
 
     function updatedata(){
         $this->dbtwo->trans_begin();
-        $a['useru']     = $this->session->userdata(prefix_sess().'username');
+        $a['useru']     = $this->session->userdata('username');
         $a['dateu']     = 'now()';
         $a['nama']      = $this->input->post('nama');
         $a['kode']      = $this->input->post('kode');

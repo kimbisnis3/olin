@@ -58,7 +58,7 @@ class Laporanpoagen extends CI_Controller {
                     xorder.tgl 
                 BETWEEN '$st' AND '$en'";
         }
-        $q  .=" AND xorder.ref_cust = '{$this->session->userdata(prefix_sess().'kodecust')}'";
+        $q  .=" AND xorder.ref_cust = '{$this->session->userdata('kodecust')}'";
         if ($this->input->post('gb')) {
             $q .=" ORDER BY {$this->input->post('gb')}";
         }

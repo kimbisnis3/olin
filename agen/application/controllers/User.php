@@ -49,7 +49,7 @@ class User extends CI_Controller {
 
     public function tambah()
     {
-        $d['useri']     = $this->session->userdata(prefix_sess().'username');
+        $d['useri']     = $this->session->userdata('username');
         $d['username']  = $this->input->post('username');
         $d['password']  = $this->input->post('password');
         $d['nama']      = $this->input->post('nama');
@@ -69,7 +69,7 @@ class User extends CI_Controller {
     }
     public function update()
     {
-        $d['useri']     = $this->session->userdata(prefix_sess().'username');
+        $d['useri']     = $this->session->userdata('username');
         $d['username']  = $this->input->post('username');
         $d['password']  = $this->input->post('password');
         $d['nama']      = $this->input->post('nama');

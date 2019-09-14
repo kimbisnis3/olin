@@ -39,14 +39,14 @@ class Auth extends CI_Controller{
                     WHERE mcustomer.user = '$username'";
                 $result = $this->db->query($q)->row();
                 $d = array(
-                    prefix_sess().'status'    => "online",
-                    prefix_sess().'in_cl'     => TRUE,
-                    prefix_sess().'id'        => $result->id,
-                    prefix_sess().'nama'      => $result->nama,
-                    prefix_sess().'user'      => $result->user,
-                    prefix_sess().'kodecust'  => $result->kode,
-                    prefix_sess().'access'    => '7',
-                    prefix_sess().'mjencust_nama'=> $result->mjencust_nama,
+                    'status'    => "online",
+                    'in_cl'     => TRUE,
+                    'id'        => $result->id,
+                    'nama'      => $result->nama,
+                    'user'      => $result->user,
+                    'kodecust'  => $result->kode,
+                    'access'    => '7',
+                    'mjencust_nama'=> $result->mjencust_nama,
                 );
                 $this->session->set_userdata($d);
                 $this->db->trans_complete();
@@ -66,17 +66,17 @@ class Auth extends CI_Controller{
     }
     
     function logout(){
-        // $this->session->sess_destroy();
-        $arr = array(
-            prefix_sess().'status', 
-            prefix_sess().'in_cl',
-            prefix_sess().'id',
-            prefix_sess().'nama',
-            prefix_sess().'user',
-            prefix_sess().'kodecust',
-            prefix_sess().'access',
-            prefix_sess().'mjencust_nama',
-        );
+        $this->session->sess_destroy();
+        // $arr = array(
+        //     'status', 
+        //     'in_cl',
+        //     'id',
+        //     'nama',
+        //     'user',
+        //     'kodecust',
+        //     'access',
+        //     'mjencust_nama',
+        // );
         $this->session->unset_userdata($arr);
         redirect(base_url('auth'));
     }

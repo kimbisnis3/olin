@@ -48,12 +48,12 @@ class Modeldesign extends CI_Controller {
         $this->upload->initialize($config);
         
         if ( ! $this->upload->do_upload('image')){
-            $d['useri']     = $this->session->userdata(prefix_sess().'username');
+            $d['useri']     = $this->session->userdata('username');
             $d['nama']      = $this->input->post('nama');
             $d['ket']       = $this->input->post('ket');
             $result = $this->dbtwo->insert($this->table,$d);
         }else{
-            $d['useri']     = $this->session->userdata(prefix_sess().'username');
+            $d['useri']     = $this->session->userdata('username');
             $d['nama']      = $this->input->post('nama');
             $d['ket']       = $this->input->post('ket');
             $d['gambar']     = $path.'/'.$this->upload->data('file_name');
@@ -79,7 +79,7 @@ class Modeldesign extends CI_Controller {
         
                 @rename("$pathfile",'.'.$path.'/'.$this->upload->data('file_name').'.'.$ext);
                 
-                $d['useru']     = $this->session->userdata(prefix_sess().'username');
+                $d['useru']     = $this->session->userdata('username');
                 $d['dateu']     = 'now()';
                 $d['nama']      = $this->input->post('nama');
                 $d['ket']       = $this->input->post('ket');
@@ -89,7 +89,7 @@ class Modeldesign extends CI_Controller {
                 $result = $this->dbtwo->update($this->table,$d,$w);
         }else{
                 @unlink("$pathfile");
-                $d['useru']     = $this->session->userdata(prefix_sess().'username');
+                $d['useru']     = $this->session->userdata('username');
                 $d['dateu']     = 'now()';
                 $d['nama']      = $this->input->post('nama');
                 $d['ket']       = $this->input->post('ket');

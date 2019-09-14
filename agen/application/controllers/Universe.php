@@ -20,7 +20,7 @@ class Universe extends CI_Controller {
     }
 
     function getAkses() {
-        $w['akses']     = $this->session->userdata(prefix_sess()."access");
+        $w['akses']     = $this->session->userdata("access");
         $w['idmenu']    = $this->input->post("menu");
 
         $sql ="SELECT
@@ -41,7 +41,7 @@ class Universe extends CI_Controller {
         WHERE 
             nama_action = '{$this->input->post('menu')}'
         AND 
-            topsi.ref_access_opsi = '{$this->session->userdata(prefix_sess()."access")}'";
+            topsi.ref_access_opsi = '{$this->session->userdata("access")}'";
 
         $r['res']       = $this->db->query($sql)->row();
         $r['super']     = $w['akses'];
@@ -62,7 +62,7 @@ class Universe extends CI_Controller {
         LEFT OUTER JOIN taction_group ON taction.group_action = taction_group.kode
         WHERE
             taction.entity_action = 'web'
-        AND topsi.ref_access_opsi = {$this->session->userdata(prefix_sess()."access")}
+        AND topsi.ref_access_opsi = {$this->session->userdata("access")}
         ORDER BY taction_group.kode ASC";
 
         $anak = "SELECT
@@ -79,7 +79,7 @@ class Universe extends CI_Controller {
         LEFT OUTER JOIN taction_group ON taction.group_action = taction_group.kode
         WHERE
             taction.entity_action = 'web'
-        AND topsi.ref_access_opsi = {$this->session->userdata(prefix_sess()."access")}
+        AND topsi.ref_access_opsi = {$this->session->userdata("access")}
         ORDER BY
             kategori_menu";
 
@@ -138,7 +138,7 @@ class Universe extends CI_Controller {
                 FROM
                     topsi
                 WHERE
-                    ref_access_opsi = '{$this->session->userdata(prefix_sess().'access')}'
+                    ref_access_opsi = '{$this->session->userdata('access')}'
             )";
 
         $r = $this->db->query($sql)->result();

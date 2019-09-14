@@ -17,7 +17,7 @@ class Pembayaran extends CI_Controller {
     public function getall(){
         $filterawal = date('Y-m-d', strtotime($this->input->post('filterawal')));
         $filterakhir = date('Y-m-d', strtotime($this->input->post('filterakhir')));
-        $kodecust = $this->session->userdata(prefix_sess().'kodecust');
+        $kodecust = $this->session->userdata('kodecust');
         $q = "SELECT 
                 xpelunasan.id,
                 xpelunasan.kode,
@@ -115,7 +115,7 @@ class Pembayaran extends CI_Controller {
     }
 
     public function getorder(){
-        $kodecust = $this->session->userdata(prefix_sess().'kodecust');
+        $kodecust = $this->session->userdata('kodecust');
         $q = "select qr.*, (qr.total - qr.dibayar) kurang from (
             select 
             xorder.id,
@@ -163,8 +163,8 @@ class Pembayaran extends CI_Controller {
     public function savedata()
     {   
         $this->db->trans_begin();
-        $a['useri']     = $this->session->userdata(prefix_sess().'username');
-        $a['ref_cust']  = $this->session->userdata(prefix_sess().'kodecust');
+        $a['useri']     = $this->session->userdata('username');
+        $a['ref_cust']  = $this->session->userdata('kodecust');
         $a['tgl']       = date('Y-m-d', strtotime($this->input->post('tgl')));
         $a['total']     = $this->input->post('total');
         $a['bayar']     = $this->input->post('bayar');
@@ -181,7 +181,7 @@ class Pembayaran extends CI_Controller {
         $dataOrderd = $this->db->get_where('xorderd',array('ref_order' => $this->input->post('ref_order')))->result();
         foreach ($dataOrderd as $r) {
             $row    = array(
-                "useri"     => $this->session->userdata(prefix_sess().'username'),
+                "useri"     => $this->session->userdata('username'),
                 "ref_pelun" => $kodepelun,
                 "ref_brg"   => $r->ref_brg,
                 "jumlah"    => $r->jumlah,
@@ -239,7 +239,7 @@ class Pembayaran extends CI_Controller {
     function updatedata()
     {
         $this->db->trans_begin();
-        $a['useru']     = $this->session->userdata(prefix_sess().'username');
+        $a['useru']     = $this->session->userdata('username');
         $a['dateu']     = 'now()';
         $a['ref_cust']  = $this->input->post('ref_cust');
         $a['tgl']       = date('Y-m-d', strtotime($this->input->post('tgl')));
@@ -255,7 +255,7 @@ class Pembayaran extends CI_Controller {
         $dataOrderd = $this->db->get_where('xorderd',array('ref_order' => $this->input->post('ref_order')))->result();
         foreach ($dataOrderd as $r) {
             $row    = array(
-                "useru"     => $this->session->userdata(prefix_sess().'username'),
+                "useru"     => $this->session->userdata('username'),
                 "dateu"     => 'now()',
                 "ref_pelun" => $kodepelun,
                 "ref_brg"   => $r->ref_brg,
