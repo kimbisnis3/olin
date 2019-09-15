@@ -28,7 +28,7 @@
                           <div class="row">
                             <div class="col-md-6">
                               <div class="form-group">
-                                <label>Agen</label>
+                                <label>Customer</label>
                                 <input type="hidden" name="kode">
                                 <div class="input-group">
                                   <input type="hidden" class="form-control" name="ref_cust">
@@ -275,7 +275,7 @@
                 <div class="modal-content">
                   <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Daftar Agen</h4>
+                    <h4 class="modal-title">Daftar Customer</h4>
                   </div>
                   <div class="modal-body">
                     <div class="box">
@@ -468,8 +468,9 @@
                           </div>
                         </div>
                         <div class="col-md-3">
-                          <label>Agen</label>
+                          <label>Customer</label>
                           <select class="form-control select2" name="filteragen" id="filteragen">
+                          <option value=""></option>
                           <?php foreach ($agen as $i => $v): ?>
                             <option value="<?php echo $v->kode ?>"><?php echo $v->nama; ?></option>
                         <?php endforeach ?>
@@ -513,7 +514,7 @@
                               <th>ID</th>
                               <th>Kode</th>
                               <th>Tanggal</th>
-                              <th>Agen</th>
+                              <th>Customer</th>
                               <th>Layanan</th>
                               <th>Pengiriman</th>
                               <th>Keterangan</th>
@@ -538,7 +539,7 @@
   <script type="text/javascript">
   var path = 'order';
   var title = 'Data Pesanan';
-  var grupmenu = 'Customer';
+  var grupmenu = 'Store';
   var apiurl = "<?php echo base_url('') ?>" + path;
   var state;
   var idx     = -1;

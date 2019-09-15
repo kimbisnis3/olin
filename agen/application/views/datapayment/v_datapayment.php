@@ -54,7 +54,7 @@
                           </div>
                           <div class="col-md-6">
                             <div class="form-group">
-                              <label>Agen</label>
+                              <label>Customer</label>
                               <input type="hidden" class="form-control" name="ref_cust">
                               <input type="text" class="form-control" name="mcustomer_nama" readonly="true"/>
                             </div>
@@ -108,7 +108,7 @@
                               <th>ID</th>
                               <th>Kode</th>
                               <th>Ref Cust</th>
-                              <th>Agen</th>
+                              <th>Customer</th>
                               <th>Tanggal</th>
                               <th>Total</th>
                               <th>Dibayar</th>
@@ -172,8 +172,12 @@
                           </div>
                         </div>
                         <div class="col-md-3">
-                          <label>Agen</label>
+                          <label>Customer</label>
                           <select class="form-control select2" name="filteragen" id="filteragen">
+                          <option value=""></option>
+                          <?php foreach ($cust as $i => $v): ?>
+                            <option value="<?php echo $v->kode ?>"><?php echo $v->nama; ?></option>
+                        <?php endforeach ?>
                           </select>
                         </div>
                       </div>
@@ -206,7 +210,7 @@
                               <th>Kode</th>
                               <th>Posted</th>
                               <th>Tanggal</th>
-                              <th>Agen</th>
+                              <th>Customer</th>
                               <th>Kode PO</th>
                               <th>Jenis Bayar</th>
                               <th>Bayar</th>
@@ -241,11 +245,10 @@
   $(document).ready(function() {
       getAkses(title);
       select2();
-      activemenux('customer', 'datapayment');
+      activemenux('store', 'datapembayaran');
       dpicker();
       setMonth('filterawal',30);
       setMonth('filterakhir',0);
-      getSelectcustom('filteragen', 'universe/getcustomer', 'filteragenclass','kode', 'nama')
 
       table = $('#table').DataTable({
           "processing": true,

@@ -16,7 +16,8 @@ class Elimage extends CI_Controller {
     }
 
     public function getall(){
-        $this->dbtwo->where('tipe','elem');
+        $this->dbtwo->where('kode','elimage');
+        $this->db->order_by('id', 'ASC');
         $result = $this->dbtwo->get($this->table)->result();
         echo json_encode(array('data' => $result));
     }

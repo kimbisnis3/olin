@@ -1,10 +1,10 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-class Elteks extends CI_Controller {
+class Socmed extends CI_Controller {
     
     public $table       = 'tconfigtext';
-    public $foldername  = 'elteks';
-    public $indexpage   = 'elteks/v_elteks';
+    public $foldername  = 'socmed';
+    public $indexpage   = 'socmed/v_socmed';
 
     function __construct() {
         parent::__construct();
@@ -16,7 +16,7 @@ class Elteks extends CI_Controller {
     }
 
     public function getall(){
-        $this->dbtwo->where('kode','elteks');
+        $this->dbtwo->where('kode','socmed');
         $result = $this->dbtwo->get($this->table)->result();
         echo json_encode(array('data' => $result));
     }
@@ -30,7 +30,7 @@ class Elteks extends CI_Controller {
 
     function updatedata()
     {
-        $d['teks']  = $this->input->post('teks');
+        $d['link']  = $this->input->post('link');
         $d['ket']   = $this->input->post('ket');
         $w['id']    = $this->input->post('id');
         $result = $this->dbtwo->update($this->table,$d,$w);

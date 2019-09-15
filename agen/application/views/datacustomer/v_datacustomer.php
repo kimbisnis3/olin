@@ -45,7 +45,7 @@
                           <input type="text" class="form-control" name="nama">
                         </div>
                         <div class="form-group">
-                          <label>Jenis Agen</label>
+                          <label>Jenis Customer</label>
                           <select class="form-control select2" name="ref_jenc">
                             <option value="">-</option>
                             <?php foreach ($jenc as $i => $v): ?>
@@ -146,7 +146,7 @@
                             <th width="5%">No</th>
                             <th>ID</th>
                             <th>Nama</th>
-                            <th>Jenis Agen</th>
+                            <th>Jenis Customer</th>
                             <th>Alamat</th>
                             <th>Telp</th>
                             <th>Email</th>
@@ -183,7 +183,7 @@
   $(document).ready(function() {
       getAkses(title);
       select2();
-      activemenux('customer', 'datacustomer');
+      activemenux('store', 'datacustomer');
 
       table = $('#table').DataTable({
           "processing": true,

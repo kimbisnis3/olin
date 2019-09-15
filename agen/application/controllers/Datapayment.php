@@ -12,6 +12,7 @@ class Datapayment extends CI_Controller {
     }
     function index(){
         $data['jenisbayar'] = $this->dbtwo->get('mjenbayar')->result();
+        $data['cust'] = $this->dbtwo->get('mcustomer')->result();
         $this->load->view($this->indexpage,$data);  
     }
 
@@ -116,7 +117,7 @@ class Datapayment extends CI_Controller {
     }
 
     public function getorder(){
-        $q = "select qr.*, (qr.total - qr.dibayar) kurang from (
+        $q = "select qr.*, (COALESCE(qr.total,0))- (COALESCE(qr.dibayar,0)) kurang from (
                 select 
                 xorder.id,
                 xorder.kode,
@@ -138,7 +139,7 @@ class Datapayment extends CI_Controller {
                 from xorder
                 join mcustomer on mcustomer.kode = xorder.ref_cust
                 ) qr
-                where (qr.total - qr.dibayar) > 0";
+                where (qr.total - (COALESCE(qr.dibayar,0))) > 0";
         $result     = $this->dbtwo->query($q)->result();
         $list       = [];
         foreach ($result as $i => $r) {

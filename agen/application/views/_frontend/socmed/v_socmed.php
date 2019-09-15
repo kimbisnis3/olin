@@ -31,10 +31,8 @@
                           <input type="text" class="form-control" name="judul" readonly="true">
                         </div>
                         <div class="form-group">
-                          <label>Gambar</label>
-                          <div id="image-preview" onerror="imgError(this)"/></div><br>
-                          <input type="file" class="form-control" name="image" id="image" onchange="filePreview(this);">
-                          <input type="hidden" name="path" id="path">
+                          <label>Link</label>
+                          <input type="text" class="form-control" name="link">
                         </div>
                         <div class="form-group">
                           <label>Keterangan</label>
@@ -88,7 +86,7 @@
                             <th width="5%">No</th>
                             <th>ID</th>
                             <th>Judul</th>
-                            <th>Gambar</th>
+                            <th>Link</th>
                             <th>Keterangan</th>
                           </tr>
                         </thead>
@@ -108,8 +106,8 @@
     </html>
   <?php $this->load->view('_partials/js'); ?>
   <script type="text/javascript">
-  var path = 'elimage';
-  var title = 'Element Gambar';
+  var path = 'socmed';
+  var title = 'Link Social Media';
   var grupmenu = '';
   var apiurl = "<?php echo base_url('') ?>" + path;
   var state;
@@ -118,10 +116,7 @@
 
   $(document).ready(function() {
       select2();
-      activemenux('frontend', 'elementgambar');
-      // $("."+induk).addClass("active");
-  		// $("."+anak).addClass("active");
-  		// $(".title").html(title);
+      activemenux('frontend', 'socmed');
 
       table = $('#table').DataTable({
           "processing": true,
@@ -134,7 +129,7 @@
             { "render" : (data,type,row,meta) => {return meta.row + 1} },
             { "data": "id" , "visible" : false},
             { "data": "judul" },
-            { "render" : (data,type,row,meta) => {return showimage(row.image)} },
+            { "data": "link" },
             { "data": "ket" },
           ]
       });
@@ -153,27 +148,6 @@
     });
   });
 
-  function previewImage() {
-    document.getElementById("image-preview").style.display = "block";
-    var oFReader = new FileReader();
-     oFReader.readAsDataURL(document.getElementById("image").files[0]);
- 
-    oFReader.onload = function(oFREvent) {
-      document.getElementById("image-preview").src = oFREvent.target.result;
-    };
-  };
-
-  function filePreview(input) {
-    if (input.files && input.files[0]) {
-        var reader = new FileReader();
-        reader.onload = function (e) {
-            $('#img-preview').remove();
-            $('#image-preview').append('<img id="img-preview" src="'+e.target.result+'"/>');
-        }
-        reader.readAsDataURL(input.files[0]);
-    }
-}
-
   function refresh() {
       table.ajax.reload(null, false);
       idx = -1;
@@ -182,8 +156,6 @@
   function add_data() {
       state = 'add';
       $('#form-data')[0].reset();
-      $('#img-preview').remove();
-      $('.select2').trigger('change');
       $('#modal-data').modal('show');
       $('.modal-title').text('Tambah Data');
   }
@@ -206,9 +178,8 @@
           success: function(data) {
               $('[name="id"]').val(data.id);
               $('[name="judul"]').val(data.judul);
+              $('[name="link"]').val(data.link);
               $('[name="ket"]').val(data.ket);
-              $('[name="path"]').val(data.image);
-              $('#image-preview').append('<img id="img-preview" src="<?php echo base_url() ?>'+data.image+'"/>');
               $('#modal-data').modal('show');
               $('.modal-title').text('Edit Data');
           },
@@ -225,17 +196,12 @@
       } else {
           url = `${apiurl}/updatedata`;
       }
-      var formData = new FormData($('#form-data')[0]);
       $.ajax({
           url: url,
           type: "POST",
-          data: formData,
+          data: $('#form-data').serializeArray(),
           dataType: "JSON",
-          mimeType: "multipart/form-data",
-          contentType: false,
-          cache: false,
-          processData: false,
-          success: function(data) {
+          success: function (data) {
               if (data.sukses == 'success') {
                   $('#modal-data').modal('hide');
                   refresh();
@@ -247,7 +213,7 @@
               }
 
           },
-          error: function(jqXHR, textStatus, errorThrown) {
+          error: function (jqXHR, textStatus, errorThrown) {
               alert('Error on process');
           }
       });
