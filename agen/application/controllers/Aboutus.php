@@ -28,18 +28,6 @@ class Aboutus extends CI_Controller {
         echo json_encode($data);
     }
 
-    // public function savedata()
-    // {
-    //     $image = $this->libre->goUpload('image','img-'.time(),$this->foldername);
-    //     $d['image']     = $image;
-    //     $d['judul']     = $this->input->post('judul');
-    //     $d['ket']       = $this->input->post('ket');
-    //     $d['tipe']      = 'ss';
-    //     $result = $this->dbtwo->insert($this->table,$d);
-    //     $r['sukses'] = $result ? 'success' : 'fail' ;
-    //     echo json_encode($r);
-    // }
-
     function updatedata()
     {
         if (!empty($_FILES['image']['name'])) {
@@ -60,16 +48,4 @@ class Aboutus extends CI_Controller {
         echo json_encode($r);
     }
 
-
-
-    // public function deletedata()
-    // {
-    //     $sql = "SELECT image FROM {$this->table} WHERE id = {$this->input->post('id')}";
-    //     $image = $this->dbtwo->query($sql)->row()->image;
-    //     @unlink('.'.$image);
-    //     $w['id'] = $this->input->post('id');
-    //     $result = $this->dbtwo->delete($this->table,$w);
-    //     $r['sukses'] = $result ? 'success' : 'fail' ;
-    //     echo json_encode($r);
-    // }
 }
