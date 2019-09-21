@@ -47,7 +47,7 @@ $config['cache_query_string'] = FALSE;
 $config['encryption_key'] = '';
 
 $config['sess_driver'] = 'files';
-$config['sess_cookie_name'] = 'ci_session';
+$config['sess_cookie_name'] = 'olin_pusat';
 $config['sess_expiration'] = 36000;
 $config['sess_save_path'] = NULL;
 $config['sess_match_ip'] = FALSE;
