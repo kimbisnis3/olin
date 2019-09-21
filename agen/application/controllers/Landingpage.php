@@ -21,7 +21,8 @@ class Landingpage extends CI_Controller {
         $data['aktifgrup']  = $this->aktifgrup;
         $data['aktifmenu']  = $this->aktifmenu;
         $title      = $this->judul;
-        $this->load->view($this->indexpage, $data);  
+        $data['jenisbayar'] = $this->db->get('mjenbayar')->result();
+        $this->load->view($this->indexpage,$data);  
     }
 
     

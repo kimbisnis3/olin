@@ -23,6 +23,104 @@
                 <div class="modal-body">
                   <form id="form-data">
                     <div class="row">
+                    <div class="col-md-5">
+                        <div class="row">
+                          <div class="col-md-12">
+                            <table id="table-barang" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                              <thead>
+                                <tr>
+                                  <th width="5%">No</th>
+                                  <th>ID</th>
+                                  <th>Kode</th>
+                                  <th>Nama</th>
+                                  <th>Konv</th>
+                                  <th>Satuan</th>
+                                  <th>Harga</th>
+                                  <th>Berat</th>
+                                  <th>Keterangan</th>
+                                  <th>Opsi</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-md-6">
+                            <div class="form-group">
+                              <label>Produk</label>
+                              <input type="hidden" name="id">
+                              <input type="hidden" name="arr_produk">
+                              <input type="hidden" class="form-control" name="kodebrg">
+                              <input type="text" class="form-control" name="namabarang" readonly="true">
+                              <!-- <div class="input-group">
+                                <div class="input-group-btn">
+                                  <button type="button" class="btn btn-primary btn-flat" onclick="open_barang()"><i class="fa fa-table"></i></button>
+                                </div>
+                              </div> -->
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="form-group">
+                              <label>Harga</label>
+                              <input type="text" class="form-control" name="harga" readonly="true">
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-md-6">
+                            <div class="form-group">
+                              <label>Jumlah</label>
+                              <input type="number" class="form-control" name="jumlah" id="jumlah">
+                              <input type="hidden" class="form-control" name="beratkg" id="beratkg">
+                              <input type="hidden" class="form-control" name="total" id="input-total-harga">
+                            </div>
+                          </div>
+                          <div class="col-md-4">
+                            <label style="visibility: hidden;">xxxx</label>
+                            <button type="button" class="btn btn-flat btn-block btn-hijau bounceIn animated" id="btn-tambah-barang" onclick="add_barang()"><i class="fa fa-plus"></i> Tambah</button>
+                            <div class="row">
+                              <div class="col-md-6">
+                                <button type="button" class="btn btn-flat btn-block btn-oren bounceIn animated" id="btn-simpan-barang" onclick="update_barang()"><i class="fa fa-save"></i></button>
+                              </div>
+                              <div class="col-md-6">
+                                <button type="button" class="btn btn-flat btn-block btn-merah bounceIn animated" id="btn-batal-barang" onclick="batal_barang()"><i class="fa fa-times"></i></button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-md-12">
+                            <div class="table-responsive mailbox-messages">
+                              <table id="table-add-barang" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                                <thead>
+                                  <tr>
+                                    <th width="5%">No</th>
+                                    <th>ID</th>
+                                    <th>Produk</th>
+                                    <th>Jumlah</th>
+                                    <th>Berat p/item (kg)</th>
+                                    <th>Harga</th>
+                                    <th>Opsi</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                                <tfoot>
+                                  <tr>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th>Total</th>
+                                    <th colspan="2" id="total-harga"></th>
+                                  </tr>
+                                </tfoot>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                       <div class="col-md-7">
                         <div class="box-body pad">
                           <div class="row">
@@ -90,7 +188,9 @@
                               </div>
                             </div>
                           </div>
-                          <div class="row">
+                        </div>
+                        <div class="box-body pad invisible fadeIn animated" id="box-kurir">
+                        <div class="row">
                             <div class="col-md-8">
                               <div class="form-group">
                                 <label>Alamat Lengkap</label>
@@ -98,8 +198,6 @@
                               </div>
                             </div>
                           </div>
-                        </div>
-                        <div class="box-body pad invisible fadeIn animated" id="box-kurir">
                           <div class="row">
                             <div class="col-md-12">
                               <div class="row">
@@ -169,81 +267,6 @@
                                   <input type="text" class="form-control" name="kodekurir" readonly="true">
                                 </div>
                               </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="col-md-5">
-                        <div class="row">
-                          <div class="col-md-6">
-                            <div class="form-group">
-                              <label>Produk</label>
-                              <input type="hidden" name="id">
-                              <input type="hidden" name="arr_produk">
-                              <div class="input-group">
-                                <input type="hidden" class="form-control" name="kodebrg">
-                                <input type="text" class="form-control" name="namabarang" readonly="true">
-                                <div class="input-group-btn">
-                                  <button type="button" class="btn btn-primary btn-flat" onclick="open_barang()"><i class="fa fa-table"></i></button>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="col-md-6">
-                            <div class="form-group">
-                              <label>Harga</label>
-                              <input type="text" class="form-control" name="harga" readonly="true">
-                            </div>
-                          </div>
-                        </div>
-                        <div class="row">
-                          <div class="col-md-6">
-                            <div class="form-group">
-                              <label>Jumlah</label>
-                              <input type="number" class="form-control" name="jumlah" id="jumlah">
-                              <input type="hidden" class="form-control" name="beratkg" id="beratkg">
-                              <input type="hidden" class="form-control" name="total" id="input-total-harga">
-                            </div>
-                          </div>
-                          <div class="col-md-4">
-                            <label style="visibility: hidden;">xxxx</label>
-                            <button type="button" class="btn btn-flat btn-block btn-hijau bounceIn animated" id="btn-tambah-barang" onclick="add_barang()"><i class="fa fa-plus"></i> Tambah</button>
-                            <div class="row">
-                              <div class="col-md-6">
-                                <button type="button" class="btn btn-flat btn-block btn-oren bounceIn animated" id="btn-simpan-barang" onclick="update_barang()"><i class="fa fa-save"></i></button>
-                              </div>
-                              <div class="col-md-6">
-                                <button type="button" class="btn btn-flat btn-block btn-merah bounceIn animated" id="btn-batal-barang" onclick="batal_barang()"><i class="fa fa-times"></i></button>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="row">
-                          <div class="col-md-12">
-                            <div class="table-responsive mailbox-messages">
-                              <table id="table-add-barang" class="table table-striped table-bordered" cellspacing="0" width="100%">
-                                <thead>
-                                  <tr>
-                                    <th width="5%">No</th>
-                                    <th>ID</th>
-                                    <th>Produk</th>
-                                    <th>Jumlah</th>
-                                    <th>Harga</th>
-                                    <th>Opsi</th>
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                                <tfoot>
-                                  <tr>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th>Total</th>
-                                    <th colspan="2" id="total-harga"></th>
-                                  </tr>
-                                </tfoot>
-                              </table>
                             </div>
                           </div>
                         </div>
@@ -548,11 +571,11 @@
               "data": null,
               "defaultContent": ''
           },
-          { "data": "no" }, 
+          { "render" : (data,type,row,meta) => {return meta.row + 1} },
           { "data": "id" , "visible" : false},
           { "data": "kode" },
           { "data": "tgl" },
-          { "data": "namacust" },
+          { "data": "namacust" , "visible" : false },
           { "data": "mlayanan_nama" },
           { "data": "mkirim_nama" },
           { "data": "ket" },
@@ -686,10 +709,13 @@
   }
 
   function open_barang() {
-      $('#modal-barang').modal('show');
+      // $('#modal-barang').modal('show');
       tablebarang = $('#table-barang').DataTable({
           "processing": true,
           "destroy": true,
+          "lengthMenu": [[5, 10], [5, 10]],
+          scrollY:        '400px',
+          scrollCollapse: true,
           "ajax": {
               "url": `${apiurl}/loadbrg`,
               "type": "POST",
@@ -698,7 +724,7 @@
           "columnDefs": [{
               "targets": -1,
               "data": null,
-              "defaultContent": "<button class='btn btn-sm btn-success btn-flat'><i class='fa fa-check'></i></button>"
+              "defaultContent": "<button type='button' class='btn btn-sm btn-success btn-flat'><i class='fa fa-check'></i></button>"
           }],
           "columns": [
             { "data": "no", "visible" : false }, 
@@ -819,6 +845,7 @@
       arr_produk =[]
       reloadbarang();
       clearbarang();
+      open_barang()
   }
 
   function clearbarang() {
@@ -863,6 +890,7 @@
           { "data": "id" , "visible" : false},
           { "data": "nama" },
           { "data": "jumlah" },
+          { "data": "beratkg" },
           { "data": "harga" },
           { "render" : (data,type,row,meta) => { return `<button type="button" class="btn btn-sm btn-oren btn-flat" onclick="edit_barang(${meta.row})"><i class="fa fa-pencil"></i></button>
           <button type="button" class="btn btn-sm btn-merah btn-flat" onclick="del_barang(${meta.row},${row.id})"><i class="fa fa-trash"></i></button>` }},
@@ -936,7 +964,7 @@
   function add_barang() {
       if (state == 'add') {
           let label_old = $('#btn-tambah-barang').html();
-          cbs('#btn-tambah-barang', "start", "Memuat");
+          // cbs('#btn-tambah-barang', "start", "Memuat");
           if (ceknull('namabarang')) {
               return false
           }
@@ -957,7 +985,7 @@
           reloadbarang();
           clearbarang();
           total_harga()
-          cbs('#btn-tambah-barang', "stop", label_old);
+          // cbs('#btn-tambah-barang', "stop", label_old);
           console.log(arr_produk)
       } else if (state == 'update') {
           let label_old = $('#btn-tambah-barang').html();

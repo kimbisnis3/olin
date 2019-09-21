@@ -116,7 +116,7 @@ class Pembayaran extends CI_Controller {
 
     public function getorder(){
         $kodecust = $this->session->userdata('kodecust');
-        $q = "select qr.*, (qr.total - qr.dibayar) kurang from (
+        $q = "select qr.*, (COALESCE(qr.total,0))- (COALESCE(qr.dibayar,0)) kurang from (
             select 
             xorder.id,
             xorder.kode,
@@ -138,7 +138,7 @@ class Pembayaran extends CI_Controller {
             from xorder
             join mcustomer on mcustomer.kode = xorder.ref_cust
             ) qr
-            where (qr.total - qr.dibayar) > 0
+            where (COALESCE(qr.total,0))- (COALESCE(qr.dibayar,0)) > 0
             AND qr.ref_cust ='$kodecust'";
             
         $result     = $this->db->query($q)->result();

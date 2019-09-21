@@ -358,11 +358,11 @@
               "defaultContent": "<button id='pilih-order' class='btn btn-sm btn-success btn-flat'><i class='fa fa-check'></i></button>"
           }],
           "columns": [
-            { "data": "no" }, 
+            { "render" : (data,type,row,meta) => {return meta.row + 1} },
             { "data": "id" , "visible" : false},
             { "data": "kode" , "visible" : true},
             { "data": "ref_cust" , "visible" : false},
-            { "data": "mcustomer_nama" },
+            { "data": "mcustomer_nama" , "visible" : false },
             { "data": "tgl" },
             { "data": "total" },
             { "data": "dibayar" },

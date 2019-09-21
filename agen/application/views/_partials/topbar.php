@@ -1,5 +1,5 @@
 <header class="main-header">
-  <a class="logo">
+  <a href="<?php echo base_url() ?>" class="logo">
     <span class="logo-mini"><b>AO</b></span>
     <span class="logo-lg"><b>Agen Olin</b></span>
   </a>
