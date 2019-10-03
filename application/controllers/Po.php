@@ -229,6 +229,12 @@ class Po extends CI_Controller {
         echo json_encode(array('data' => $list));
     }
 
+    function gethargalayanan($ref_layanan)
+    {
+        $harga = $this->db->get_where('mlayanan',array('kode' => $ref_layanan))->row();
+        return $harga->harga;
+    }
+
     public function savedata()
     {   
         $upcorel    = $this->libre->goUpload('corel','corel-'.time(),$this->foldername);
@@ -307,7 +313,9 @@ class Po extends CI_Controller {
         if (count($design) > 0) {
             $this->db->insert_batch('xorderds',$c);
         }
-        $d['total'] = $this->input->post('total') + $this->input->post('biaya');
+        $hargalayanan = $this->gethargalayanan($this->input->post('ref_layanan'));
+        $d['total'] = $this->input->post('total') + $this->input->post('biaya') + $hargalayanan;
+        // $d['total'] = $this->input->post('total') + $this->input->post('biaya');
         $this->db->update('xorder',$d,array('kode' => $kodeOrder));
 
         if ($this->db->trans_status() === FALSE)
@@ -410,7 +418,9 @@ class Po extends CI_Controller {
         }
         $this->db->update('xorder',$a,array('kode' => $kodeorder));
         $kodebrg = $this->input->post('kodebrg');
-        $d['total'] = $this->input->post('total') + $this->input->post('biaya');
+        $hargalayanan = $this->gethargalayanan($this->input->post('ref_layanan'));
+        $d['total'] = $this->input->post('total') + $this->input->post('biaya') + $hargalayanan;
+        // $d['total'] = $this->input->post('total') + $this->input->post('biaya');
         $this->db->update('xorder',$d,array('kode' => $kodeorder));
         if ($this->db->trans_status() === FALSE)
         {

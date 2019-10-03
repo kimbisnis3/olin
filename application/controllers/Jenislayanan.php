@@ -22,6 +22,7 @@ class Jenislayanan extends CI_Controller {
             $row['no']      = $no;
             $row['nama']    = $r->nama;
             $row['ket']     = $r->ket;
+            $row['harga']   = $r->harga;
 
             $list[] = $row;
             $no++;
@@ -34,6 +35,7 @@ class Jenislayanan extends CI_Controller {
         $d['useri']     = $this->session->userdata('username');
         $d['nama']      = $this->input->post('nama');
         $d['ket']       = $this->input->post('ket');
+        $d['harga']     = $this->input->post('harga');
 
         $result = $this->db->insert($this->table,$d);
         $r['sukses'] = $result ? 'success' : 'fail' ;
@@ -58,6 +60,7 @@ class Jenislayanan extends CI_Controller {
         $d['dateu']     = 'now()';
         $d['nama']      = $this->input->post('nama');
         $d['ket']       = $this->input->post('ket');
+        $d['harga']     = $this->input->post('harga');
         $w['id'] = $this->input->post('id');
         $result = $this->db->update($this->table,$d,$w);
         $r['sukses'] = $result ? 'success' : 'fail' ;

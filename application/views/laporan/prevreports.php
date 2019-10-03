@@ -21,14 +21,14 @@
                   <form target="_blank" method="post" action="<?php echo current_url() ?>/cetak">
                     <div class="row">
                     <?php if (isset($filter_date) && $filter_date != '') { ?>
-                      <div class="col-md-3">
+                      <div class="col-md-2">
                         <div class="form-group">
                           <label>Awal</label>
                           <input type="text" class="form-control datepicker" name="awal" onchange="setmask()">
                           <input type="hidden" class="form-control" name="mask-awal">
                         </div>
                       </div>
-                      <div class="col-md-3">
+                      <div class="col-md-2">
                         <div class="form-group">
                           <label>Akhir</label>
                           <input type="text" class="form-control datepicker" name="akhir" onchange="setmask()">
@@ -37,7 +37,7 @@
                       </div>
                     <?php }  ?>
                     <?php if (isset($gb) && $gb != '') { ?> 
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                       <div class="form-group">
                         <label>Group By</label>
                         <select class="form-control select2" name="gb" onchange="setmask()">
@@ -53,7 +53,13 @@
                     <div class="col-md-2">
                       <div class="form-group">
                         <label style="color: #ffffff">zzzz</label>
-                        <button class="btn btn-success btn-flat btn-block"><i class="fa fa-print"></i> Cetak Laporan</button>
+                        <button class="btn btn-biru btn-flat btn-block" name="aksi_button" value="cetak"><i class="fa fa-print"></i> Cetak Laporan</button>
+                      </div>
+                    </div>
+                    <div class="col-md-2">
+                      <div class="form-group">
+                        <label style="color: #ffffff">zzzz</label>
+                        <button class="btn btn-hijau btn-flat btn-block" name="aksi_button" value="xls"><i class="fa fa-file-excel-o"></i> Export Excel</button>
                       </div>
                     </div>
                     </div>

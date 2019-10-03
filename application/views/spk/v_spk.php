@@ -25,7 +25,7 @@
                   <form id="form-data">
                     <div class="row">
                       <div class="col-md-12">
-                        <div class="row">
+                        <div class="row invisible">
                           <div class="col-md-6">
                             <div class="form-group">
                               <label>Pesanan</label>
@@ -170,35 +170,77 @@
               </div>
               <div class="row">
                 <div class="col-xs-12">
-                  <div class="box box-info">
-                    <div class="box-header">
-                      <div class="pull-left">
-                        <button class="btn btn-success btn-flat refresh-btn" onclick="refresh()"><i class="fa fa-refresh"></i> Refresh</button>
-                        <button class="btn btn-primary btn-flat add-btn invisible" onclick="add_data()" ><i class="fa fa-plus"></i> Tambah</button>
+                  <div class="nav-tabs-custom">
+                    <ul class="nav nav-tabs">
+                      <li class="active"><a href="#tab_1" data-toggle="tab">SPK</a></li>
+                      <li><a href="#tab_2" data-toggle="tab">History</a></li>
+                    </ul>
+                    <div class="tab-content">
+                      <div class="tab-pane active" id="tab_1">
+                        <div class="box box-info">
+                          <div class="box-header">
+                            <div class="pull-left">
+                              <button class="btn btn-success btn-flat refresh-btn" onclick="refresh2()"><i class="fa fa-refresh"></i> Refresh</button>
+                            </div>
+                          </div>
+                          <div class="box-body pad">
+                            <div class="table-responsive mailbox-messages">
+                              <table id="table2" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                                <thead>
+                                  <tr>
+                                    <th width="5%">No</th>
+                                    <th>ID</th>
+                                    <th>ref_brg</th>
+                                    <th>ref_satbrg</th>
+                                    <th>Kode PO</th>
+                                    <th>Tanggal</th>
+                                    <th>Agen</th>
+                                    <th>Bayar</th>
+                                    <th>Produk</th>
+                                    <th>Jumlah</th>
+                                    <th>Opsi</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                      <div class="pull-right">
-                        <button class="btn btn-warning btn-flat edit-btn invisible" onclick="edit_data()"><i class="fa fa-pencil"></i> Ubah</button>
-                        <button class="btn btn-danger btn-flat delete-btn invisible" onclick="void_data()" ><i class="fa fa-trash"></i> Void</button>
-                        <button class="btn btn-act bg-olive btn-flat" onclick="cetak_data()" ><i class="fa fa-print"></i> Cetak</button>
-                      </div>
-                    </div>
-                    <div class="box-body">
-                      <div class="table-responsive mailbox-messages">
-                        <table id="table" class="table table-striped table-bordered" cellspacing="0" width="100%">
-                          <thead>
-                            <tr>
-                              <th width="5%">No</th>
-                              <th>ID</th>
-                              <th>Kode</th>
-                              <th>Tanggal</th>
-                              <th>Produk</th>
-                              <th>Keterangan</th>
-                              <th>Kode PO</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                          </tbody>
-                        </table>
+                      <div class="tab-pane" id="tab_2">
+                        <div class="box box-info">
+                          <div class="box-header">
+                            <div class="pull-left">
+                              <button class="btn btn-success btn-flat refresh-btn" onclick="refresh()"><i class="fa fa-refresh"></i> Refresh</button>
+                              <button class="btn btn-primary btn-flat add-btn invisible" onclick="add_data()" ><i class="fa fa-plus"></i> Tambah</button>
+                            </div>
+                            <div class="pull-right">
+                              <button class="btn btn-warning btn-flat edit-btn invisible" onclick="edit_data()"><i class="fa fa-pencil"></i> Ubah</button>
+                              <button class="btn btn-danger btn-flat delete-btn invisible" onclick="void_data()" ><i class="fa fa-trash"></i> Void</button>
+                              <button class="btn btn-act bg-olive btn-flat" onclick="cetak_data()" ><i class="fa fa-print"></i> Cetak</button>
+                            </div>
+                          </div>
+                          <div class="box-body">
+                            <div class="table-responsive mailbox-messages">
+                              <table id="table" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                                <thead>
+                                  <tr>
+                                    <th width="5%">No</th>
+                                    <th>ID</th>
+                                    <th>Kode</th>
+                                    <th>Tanggal</th>
+                                    <th>Produk</th>
+                                    <th>Keterangan</th>
+                                    <th>Kode PO</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -228,6 +270,7 @@
       setMonth('filterawal',30);
       setMonth('filterakhir',0);
       getSelectcustom('filteragen', 'universe/getcustomer', 'filteragenclass','kode', 'nama')
+      data_2()
 
       table = $('#table').DataTable({
           "processing": true,
@@ -284,6 +327,47 @@
     });
   });
 
+  function data_2() {
+    table2 = $('#table2').DataTable({
+          "processing": true,
+          "destroy": true,
+          "ajax": {
+              "url": `${apiurl}/getorder`,
+              "type": "POST",
+              "data": {}
+          },
+          "columns": [
+            { "data": "id" , "note" : "num" }, 
+            { "data": "id" , "visible" : false},
+            { "data": "ref_brg" , "visible" : false},
+            { "data": "ref_satbrg" , "visible" : false},
+            { "data": "ref_order" },
+            { "data": "xorder_tgl" },
+            { "data": "mcustomer_nama" },
+            { "data": "xpelunasan_bayar" },
+            { "data": "mbarang_nama" },
+            { "data": "jumlah" },
+            { "render" : (data,type,row,meta) => { return "<button type='button' class='btn btn-biru btn-flat btn-block' id='buat-spk'>Buat Spk</button>" }}
+          ]
+
+      });
+
+    $('#table2 tbody').on('click', '#buat-spk', function() {
+          state = 'add';
+          $('#form-data')[0].reset();
+          var data = table2.row($(this).parents('tr')).data();
+          setMonth('tgl',0);
+          $('[name="ref_cust"]').val(data.ref_cust);
+          $('[name="ref_order"]').val(data.ref_order);
+          $('[name="jumlah"]').val(data.jumlah);
+          $('[name="mbarang_nama"]').val(data.mbarang_nama);
+          $('[name="ref_brg"]').val(data.ref_brg);
+          $('[name="ref_satbrg"]').val(data.ref_satbrg);
+          // $('[name="ket"]').val('-');
+          $('#modal-data').modal('show');
+      });
+  }
+
   function open_order() {
       $('#modal-order').modal('show');
       tableorder = $('#table-order').DataTable({
@@ -336,6 +420,11 @@
 
   function refresh() {
       table.ajax.reload(null, false);
+      idx = -1;
+  }
+
+  function refresh2() {
+      table2.ajax.reload(null, false);
       idx = -1;
   }
 
@@ -401,10 +490,12 @@
               if (data.sukses == 'success') {
                   $('#modal-data').modal('hide');
                   refresh();
+                  refresh2();
                   state == 'add' ? showNotif('Sukses', 'Data Berhasil Ditambahkan', 'success') : showNotif('Sukses', 'Data Berhasil Diubah', 'success')
               } else if (data.sukses == 'fail') {
                   $('#modal-data').modal('hide');
                   refresh();
+                  refresh2();
                   showNotif('Sukses', 'Tidak Ada Perubahan', 'success')
               }
           },

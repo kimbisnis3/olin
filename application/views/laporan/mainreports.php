@@ -1,3 +1,9 @@
+<?php
+if ($this->input->post('aksi_button') == 'xls') {
+  header("Content-type: application/vnd-ms-excel");
+  header("Content-Disposition: attachment; filename=".$title.".xls");
+}
+?>
 <!DOCTYPE html>
 <html>
   <head>
