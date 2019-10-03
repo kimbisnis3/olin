@@ -35,11 +35,13 @@ class Laporanbayaragen extends CI_Controller {
                             xorder.ref_cust,
                             COALESCE (xorder.total, 0) total,
                             COALESCE (SUM(xpelunasan.bayar), 0) dibayar,
-                            xorder.ket
+                            xorder.ket,
+                            STRING_AGG (mjenbayar.nama, ', ') jenisbayar
                         FROM
                             xpelunasan
                         JOIN xorder ON xorder.kode = xpelunasan.ref_jual
                         LEFT OUTER JOIN mcustomer ON mcustomer.kode = xpelunasan.ref_cust
+		                JOIN mjenbayar ON mjenbayar.kode = xpelunasan.ref_jenbayar
                         WHERE
                             xorder.void IS NOT TRUE
                         AND xpelunasan.void IS NOT TRUE
@@ -65,8 +67,8 @@ class Laporanbayaragen extends CI_Controller {
         $data['result'] = $this->db->query($q)->result_array();
         $data['periodestart'] = $this->input->post('awal');
         $data['periodeend']   = $this->input->post('akhir');
-        $data['header'] = ['Tanggal','Kode','Total','Dibayar','Keterangan','Kekurangan'];
-        $data['body']   = ['tgl_char','kode','total','dibayar','ket','kekurangan'];
+        $data['header'] = ['Tanggal','Kode','Total','Dibayar','Keterangan','Kekurangan','Jenis Bayar'];
+        $data['body']   = ['tgl_char','kode','total','dibayar','ket','kekurangan','jenisbayar'];
         $data['maskgb'] = $this->input->post('mask-gb');
         $data['title']  = $this->titlereport;
         $data['gb']     = $this->input->post('gb');

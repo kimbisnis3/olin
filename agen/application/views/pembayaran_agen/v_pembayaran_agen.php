@@ -178,7 +178,7 @@
               </div>
               <div class="row">
                 <div class="col-xs-12">
-                  <div class="box box-info">
+                  <div class="box box-info invisible">
                     <div class="box-header">
                       <div class="pull-left">
                         <button class="btn btn-act btn-success btn-flat refresh-btn" onclick="refresh()"><i class="fa fa-refresh"></i> Refresh</button>
@@ -202,6 +202,36 @@
                               <th>Bayar</th>
                               <th>Keterangan</th>
                               <th>Kode Unik</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="box box-info">
+                    <div class="box-header">
+                      <div class="pull-left">
+                        <button class="btn btn-act btn-success btn-flat refresh-btn" onclick="refresh2()"><i class="fa fa-refresh"></i> Refresh</button>
+                      </div>
+                    </div>
+                    <div class="box-body">
+                      <div class="table-responsive mailbox-messages">
+                        <table id="table2" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                          <thead>
+                            <tr>
+                              <th width="5%">No</th>
+                              <th>ID</th>
+                              <th>Kode</th>
+                              <th>Ref Cust</th>
+                              <th>Agen</th>
+                              <th>Tanggal</th>
+                              <th>Total</th>
+                              <th>Dibayar</th>
+                              <th>Kurang</th>
+                              <th>Keterangan</th>
+                              <th>Opsi</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -235,6 +265,7 @@
       dpicker();
       setMonth('filterawal',30);
       setMonth('filterakhir',0);
+      data_2()
 
       table = $('#table').DataTable({
           "processing": true,
@@ -316,6 +347,60 @@
     });
   });
 
+  function data_2() {
+    table2 = $('#table2').DataTable({
+          "processing": true,
+          "destroy": true,
+          "ajax": {
+              "url": `${apiurl}/getorder`,
+              "type": "POST",
+              "data": {}
+          },
+          "columns": [
+            { "render" : (data,type,row,meta) => {return meta.row + 1} },
+            { "data": "id" , "visible" : false},
+            { "data": "kode" , "visible" : true},
+            { "data": "ref_cust" , "visible" : false},
+            { "data": "mcustomer_nama" , "visible" : false },
+            { "data": "tgl" },
+            { "data": "total" },
+            { "data": "dibayar" },
+            { "data": "kurang" },
+            { "data": "kurang" },
+            { "render" : (data,type,row,meta) => 
+            { 
+              if (row['dibayar'] <= 0 || row['dibayar'] == null || row['dibayar'] == '') {
+                return "<button type='button' class='btn btn-hijau btn-flat btn-block' id='pilih-order'>Bayar</button>"
+              } else {
+                return "<button type='button' class='btn btn-biru btn-flat btn-block' id='pilih-order'>Lunasi</button>"
+              } 
+            }
+            }
+          ]
+    })
+
+    $('#table2 tbody').on('click', '#pilih-order', function() {
+          state = 'add';
+          $('#form-data')[0].reset();
+          var data = table2.row($(this).parents('tr')).data();
+          $('[name="ref_cust"]').val(data.ref_cust);
+          $('[name="mcustomer_nama"]').val(data.mcustomer_nama);
+          $('[name="ref_order"]').val(data.kode);
+          $('[name="kurang"]').val(data.kurang);
+          $('[name="total"]').val(data.total);
+          $('[name="bayar"]').val(parseInt(data.kurang));
+          if (data.dibayar <= 0 || data.dibayar == null || data.dibayar == '') {
+            $('[name="ref_jenbayar"]').val('GX0003')
+            $('.select2').trigger('change');
+          } else {
+            $('[name="ref_jenbayar"]').val('GX0001')
+            $('.select2').trigger('change');
+          }
+          setMonth('tgl', 0);
+          $('#modal-data').modal('show');
+      });
+  }
+
   function jenisbayar() {
     let ref_jenbayar = $('[name="ref_jenbayar"]').val()
     let total = $('[name="kurang"]').val()
@@ -370,7 +455,6 @@
             { "data": "ket" },
             { "data": "opsi" },
           ]
-
       });
 
       $('#table-order tbody').on('click', '#pilih-order', function() {
@@ -389,6 +473,11 @@
 
   function refresh() {
       table.ajax.reload(null, false);
+      idx = -1;
+  }
+
+  function refresh2() {
+      table2.ajax.reload(null, false);
       idx = -1;
   }
 
@@ -467,11 +556,13 @@
               if (data.sukses == 'success') {
                   $('#modal-data').modal('hide');
                   refresh();
+                  refresh2();
                   state == 'add' ? showNotif('Sukses', 'Data Berhasil Ditambahkan', 'success') : showNotif('Sukses', 'Data Berhasil Diubah', 'success')
                   state == 'add' ? showNotif('', 'Kode Unik Anda '+data.kodeunik, 'success') : ''
               } else if (data.sukses == 'fail') {
                   $('#modal-data').modal('hide');
                   refresh();
+                  refresh2();
                   showNotif('Sukses', 'Tidak Ada Perubahan', 'success')
               }
           },
