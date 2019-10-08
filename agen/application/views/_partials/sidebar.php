@@ -1,4 +1,10 @@
 <?php $menu = $this->Unimodel->getaksesmenu_new() ?>
+<?php 
+  include(APPPATH.'libraries/dbinclude.php');  
+  $w = array('active' => '1', );
+  $this->dbtwo->order_by('urutan','ASC');
+  $menulist = $this->dbtwo->get_where('tmenu',$w)->result_array()
+?>
 <aside class="main-sidebar">
   <section class="sidebar">
     <div class="user-panel">
@@ -82,13 +88,23 @@
       echo '</li>';
 
       ?> 
-    <!-- <li class="header">FRONT END WEBSITE</li>
-    <li class="slideshow">
-      <a href="<?php echo base_url() ?>slide">
-        <i class="fa fa-sliders"></i> <span>Slideshow</span>
+    
+    <li class="frontend treeview">
+      <a href="#">
+        <i class="fa fa-dashboard"></i> <span>Front End</span>
+        <span class="pull-right-container">
+          <i class="fa fa-angle-left pull-right"></i>
+        </span>
       </a>
-    </li> -->
-
-    </ul>
+      <ul class="treeview-menu">
+        <?php foreach ($menulist as $i => $v): ?>
+        <li class="<?php echo $v['class'] ?>">
+          <a href="<?php echo base_url() ?><?php echo $v['url'] ?>">
+            <i class="<?php echo $v['icon'] ?>"></i> <span><?php echo $v['menu'] ?></span>
+          </a>
+        </li>
+        <?php endforeach; ?>
+      </ul>
+    </li>
   </section>
 </aside>
