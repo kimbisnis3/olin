@@ -1,10 +1,10 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-class Slide extends CI_Controller {
+class Slideabout extends CI_Controller {
     
     public $table       = 'tconfigimage';
-    public $foldername  = 'slide';
-    public $indexpage   = 'slide/v_slide';
+    public $foldername  = 'slideabout';
+    public $indexpage   = 'slideabout/v_slideabout';
 
     function __construct() {
         parent::__construct();
@@ -16,8 +16,7 @@ class Slide extends CI_Controller {
     }
 
     public function getall(){
-        $this->dbtwo->where('tipe','ss');
-        $this->dbtwo->where('ref_web','2');
+        $this->dbtwo->where('tipe','ss_about');
         $result = $this->dbtwo->get($this->table)->result();
         echo json_encode(array('data' => $result));
     }
@@ -35,7 +34,7 @@ class Slide extends CI_Controller {
         $d['image']     = $image;
         $d['judul']     = $this->input->post('judul');
         $d['ket']       = $this->input->post('ket');
-        $d['tipe']      = 'ss';
+        $d['tipe']      = 'ss_about';
         $result = $this->dbtwo->insert($this->table,$d);
         $r['sukses'] = $result ? 'success' : 'fail' ;
         echo json_encode($r);

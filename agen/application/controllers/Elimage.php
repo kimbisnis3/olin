@@ -16,8 +16,10 @@ class Elimage extends CI_Controller {
     }
 
     public function getall(){
-        $this->dbtwo->where('kode','elimage');
-        $this->db->order_by('id', 'ASC');
+        $this->dbtwo->where('ref_web','2');
+        $this->dbtwo->where('kode !=','ss');
+        $this->dbtwo->where('kode !=','icon');
+        $this->dbtwo->order_by('id','asc');
         $result = $this->dbtwo->get($this->table)->result();
         echo json_encode(array('data' => $result));
     }
@@ -60,8 +62,6 @@ class Elimage extends CI_Controller {
         $r['sukses']    = $result ? 'success' : 'fail' ;
         echo json_encode($r);
     }
-
-
 
     public function deletedata()
     {

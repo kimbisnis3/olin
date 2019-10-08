@@ -118,7 +118,7 @@
 
   $(document).ready(function() {
       select2();
-      activemenux('frontend', 'elementgambar');
+      activemenux('frontend', 'elimage');
       // $("."+induk).addClass("active");
   		// $("."+anak).addClass("active");
   		// $(".title").html(title);

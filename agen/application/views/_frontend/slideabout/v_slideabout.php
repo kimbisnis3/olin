@@ -28,11 +28,13 @@
                         <div class="form-group">
                           <label>Judul</label>
                           <input type="hidden" name="id">
-                          <input type="text" class="form-control" name="judul" readonly="true">
+                          <input type="text" class="form-control" name="judul" >
                         </div>
                         <div class="form-group">
-                          <label>Teks</label>
-                          <input type="text" class="form-control" name="teks">
+                          <label>Gambar</label>
+                          <div id="image-preview" onerror="imgError(this)"/></div><br>
+                          <input type="file" class="form-control" name="image" id="image" onchange="filePreview(this);">
+                          <input type="hidden" name="path" id="path">
                         </div>
                         <div class="form-group">
                           <label>Keterangan</label>
@@ -71,11 +73,11 @@
                   <div class="box-header">
                     <div class="pull-left">
                       <button class="btn btn-success btn-flat refresh-btn" onclick="refresh()"><i class="fa fa-refresh"></i> Refresh</button>
-                      <!-- <button class="btn btn-primary btn-flat add-btn" onclick="add_data()" ><i class="fa fa-plus"></i> Tambah</button> -->
+                      <button class="btn btn-primary btn-flat add-btn" onclick="add_data()" ><i class="fa fa-plus"></i> Tambah</button>
                     </div>
                     <div class="pull-right">
                       <button class="btn btn-warning btn-flat edit-btn" onclick="edit_data()"><i class="fa fa-pencil"></i> Ubah</button>
-                      <!-- <button class="btn btn-danger btn-flat delete-btn" onclick="hapus_data()" ><i class="fa fa-trash"></i> Hapus</button> -->
+                      <button class="btn btn-danger btn-flat delete-btn" onclick="hapus_data()" ><i class="fa fa-trash"></i> Hapus</button>
                     </div>
                   </div>
                   <div class="box-body">
@@ -86,7 +88,7 @@
                             <th width="5%">No</th>
                             <th>ID</th>
                             <th>Judul</th>
-                            <th>Teks</th>
+                            <th>Gambar</th>
                             <th>Keterangan</th>
                           </tr>
                         </thead>
@@ -106,8 +108,8 @@
     </html>
   <?php $this->load->view('_partials/js'); ?>
   <script type="text/javascript">
-  var path = 'elteks';
-  var title = 'Element Teks';
+  var path = 'slideabout';
+  var title = 'Slideshow About';
   var grupmenu = '';
   var apiurl = "<?php echo base_url('') ?>" + path;
   var state;
@@ -116,7 +118,7 @@
 
   $(document).ready(function() {
       select2();
-      activemenux('frontend', 'elteks');
+      activemenux('frontend', 'slideshowabout');
 
       table = $('#table').DataTable({
           "processing": true,
@@ -129,7 +131,7 @@
             { "render" : (data,type,row,meta) => {return meta.row + 1} },
             { "data": "id" , "visible" : false},
             { "data": "judul" },
-            { "data": "teks" },
+            { "render" : (data,type,row,meta) => {return showimage(row.image)} },
             { "data": "ket" },
           ]
       });
@@ -148,6 +150,27 @@
     });
   });
 
+  function previewImage() {
+    document.getElementById("image-preview").style.display = "block";
+    var oFReader = new FileReader();
+     oFReader.readAsDataURL(document.getElementById("image").files[0]);
+ 
+    oFReader.onload = function(oFREvent) {
+      document.getElementById("image-preview").src = oFREvent.target.result;
+    };
+  };
+
+  function filePreview(input) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            $('#img-preview').remove();
+            $('#image-preview').append('<img id="img-preview" src="'+e.target.result+'"/>');
+        }
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
   function refresh() {
       table.ajax.reload(null, false);
       idx = -1;
@@ -156,6 +179,8 @@
   function add_data() {
       state = 'add';
       $('#form-data')[0].reset();
+      $('#img-preview').remove();
+      $('.select2').trigger('change');
       $('#modal-data').modal('show');
       $('.modal-title').text('Tambah Data');
   }
@@ -178,8 +203,9 @@
           success: function(data) {
               $('[name="id"]').val(data.id);
               $('[name="judul"]').val(data.judul);
-              $('[name="teks"]').val(data.teks);
               $('[name="ket"]').val(data.ket);
+              $('[name="path"]').val(data.image);
+              $('#image-preview').append('<img id="img-preview" src="<?php echo base_url() ?>'+data.image+'"/>');
               $('#modal-data').modal('show');
               $('.modal-title').text('Edit Data');
           },
@@ -196,12 +222,17 @@
       } else {
           url = `${apiurl}/updatedata`;
       }
+      var formData = new FormData($('#form-data')[0]);
       $.ajax({
           url: url,
           type: "POST",
-          data: $('#form-data').serializeArray(),
+          data: formData,
           dataType: "JSON",
-          success: function (data) {
+          mimeType: "multipart/form-data",
+          contentType: false,
+          cache: false,
+          processData: false,
+          success: function(data) {
               if (data.sukses == 'success') {
                   $('#modal-data').modal('hide');
                   refresh();
@@ -213,7 +244,7 @@
               }
 
           },
-          error: function (jqXHR, textStatus, errorThrown) {
+          error: function(jqXHR, textStatus, errorThrown) {
               alert('Error on process');
           }
       });

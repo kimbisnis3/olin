@@ -118,7 +118,7 @@
 
   $(document).ready(function() {
       select2();
-      activemenux('frontend', 'slideshow');
+      activemenux('frontend', 'slide');
 
       table = $('#table').DataTable({
           "processing": true,
