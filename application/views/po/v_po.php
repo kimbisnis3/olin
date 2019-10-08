@@ -1313,10 +1313,11 @@
 
   function setPrice() {
     let s = $('#select-service').val()
+    let berat = $('[name="berat"]').val()
     if (s.length > 0) {
       let b = getbiayakirim(s);
       let k = kodekurir(s);
-      $('[name="biaya"]').val(b * $('[name="berat"]').val());
+      $('[name="biaya"]').val(b * Math.ceil(berat));
       $('[name="kodekurir"]').val(k);
       console.log(s);
     }
