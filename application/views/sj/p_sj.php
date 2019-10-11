@@ -164,24 +164,32 @@
       </div>
     </section>
     <hr>
-    <section style="margin-bottom: 40px" class="box-bawah">
-      <div class="row">
-        <div class="col-xs-7">
-          <div class="row">
-            <div class="col-xs-3">
-              <p>Produk</p>
-              <p>Jumlah</p>
-            </div>
-            <div class="col-xs-1">
-              <p>:</p>
-              <p>:</p>
-            </div>
-            <div class="col-xs-4">
-              <p><?php echo $sj->mbarang_nama ?></p>
-              <p><?php echo $sj->jumlah ?></p>
-            </div>
-          </div>
-        </div>
+    <section style="margin-bottom: 40px">
+      <div>
+        <table style="width: 100% !important">
+          <thead>
+            <tr>
+              <th>Kode</th>
+              <th>Nama Produk</th>
+              <th>Jumlah</th>
+              <th>Harga</th>
+              <th>Total</th>
+              <th>Design</th>
+              <th>Warna</th>
+            </tr>
+            <?php foreach ($barang as $i => $v): ?>
+            <tr>
+              <td><?php echo $v->kode ?></td>
+              <td><?php echo $v->nama ?></td>
+              <td><?php echo $v->jumlah ?> <?php echo $v->satuan ?></td>
+              <td><?php echo number_format($v->harga) ?></td>
+              <td><?php echo number_format($v->subtotal) ?></td>
+              <td><?php echo $v->mmodesign_nama ?></td>
+              <td><?php echo $v->mwarna_nama ?></td>
+            </tr>
+            <?php endforeach ?>
+          </thead>
+        </table>
       </div>
     </section>
   </div>

@@ -201,6 +201,20 @@
                         <p><?php echo number_format($order->bykirim) ?></p>
                       </div>
                     </div>
+
+                    <div class="row">
+                      <div class="col-xs-<?php echo $colkiri ?>">
+                        <p>Biaya Kirim</p>
+                      </div>
+                      <div class="col-xs-<?php echo $coltengah ?>">
+                        <p>:</p>
+                      </div>
+                      <div class="col-xs-<?php echo $colkanan ?>">
+                        <p><?php echo number_format($order->mlayanan_harga) ?></p>
+                      </div>
+                    </div>
+
+
                   </div>
                   <div class="col-xs-3">
                     <div class="row">

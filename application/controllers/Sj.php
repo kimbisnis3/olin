@@ -106,7 +106,7 @@ class Sj extends CI_Controller {
                 to_char(xprocorder.tgl, 'DD Mon YYYY') tgl,
                 xprocorder.ref_brg,
                 xprocorder.ref_order,
-                xprocorder.status,
+                xorder.status,
                 xorder.kode xorder_kode,
                 xorder.bykirim,
                 xorder.ket,
@@ -118,15 +118,44 @@ class Sj extends CI_Controller {
                 mbarang.nama mbarang_nama,
                 mcustomer.nama mcustomer_nama
             FROM
-                xprocorder
+                xorder
+            JOIN xprocorder ON xorder.kode = xprocorder.ref_order
             LEFT JOIN mbarang ON mbarang.kode = xprocorder.ref_brg
-            JOIN xorder ON xorder.kode = xprocorder.ref_order
             LEFT JOIN mcustomer ON mcustomer.kode = xorder.ref_cust
-            WHERE xprocorder.status >= '4'
+            WHERE xorder.status >= '4'
             AND xprocorder.void IS NOT TRUE";
         $result     = $this->db->query($q)->result();   
         echo json_encode(array('data' => $result));
     }
+
+    // public function getproc(){
+    //     $q = "SELECT
+    //             xprocorder.id,
+    //             xprocorder.kode,
+    //             to_char(xprocorder.tgl, 'DD Mon YYYY') tgl,
+    //             xprocorder.ref_brg,
+    //             xprocorder.ref_order,
+    //             xprocorder.status,
+    //             xorder.kode xorder_kode,
+    //             xorder.bykirim,
+    //             xorder.ket,
+    //             xorder.ref_cust,
+    //             xorder.kirimke,
+    //             xorder.alamat,
+    //             xorder.kurir,
+    //             xorder.kodekurir,
+    //             mbarang.nama mbarang_nama,
+    //             mcustomer.nama mcustomer_nama
+    //         FROM
+    //             xprocorder
+    //         LEFT JOIN mbarang ON mbarang.kode = xprocorder.ref_brg
+    //         JOIN xorder ON xorder.kode = xprocorder.ref_order
+    //         LEFT JOIN mcustomer ON mcustomer.kode = xorder.ref_cust
+    //         WHERE xprocorder.status >= '4'
+    //         AND xprocorder.void IS NOT TRUE";
+    //     $result     = $this->db->query($q)->result();   
+    //     echo json_encode(array('data' => $result));
+    // }
 
     public function savedata()
     {   
@@ -351,11 +380,51 @@ class Sj extends CI_Controller {
             LEFT JOIN mbarang ON mbarang.kode = xorderd.ref_brg
             WHERE xsuratjalan.kode = '$kode'";
 
-        $ressj  = $this->db->query($sj)->row();
+        $barang = "SELECT
+                mbarang. ID,
+                mbarang.kode,
+                mbarang.nama,
+                mbarang.ket,
+                msatbrg. ID idsatbarang,
+                msatbrg.konv,
+                msatbrg.ket ketsat,
+                msatbrg.harga,
+                msatbrg.ref_brg,
+                msatbrg.ref_sat,
+                msatuan.nama satuan,
+                mgudang.nama gudang,
+                xorderd.jumlah,
+                xorderd.jumlah * xorderd.harga subtotal,
+                mbarangs.sn,
+                xorderds. ID,
+                xorderds.ket,
+                mbarang.nama,
+                mmodesign.kode mmodesign_kode,
+                mmodesign.nama mmodesign_nama,
+                mmodesign.gambar mmodesign_gambar,
+                mwarna.nama mwarna_nama,
+                mwarna.colorc mwarna_colorc
+            FROM
+                xsuratjalan
+            LEFT JOIN xorder ON xorder.kode = xsuratjalan.ref_order
+            LEFT JOIN xorderd ON xorderd.ref_order = xorder.kode
+            LEFT JOIN mbarang ON mbarang.kode = xorderd.ref_brg
+            LEFT JOIN mbarangs ON mbarang.kode = mbarangs.ref_brg
+            LEFT JOIN msatbrg ON msatbrg.kode = xorderd.ref_satbrg
+            LEFT JOIN msatuan ON msatuan.kode = msatbrg.ref_sat
+            LEFT JOIN mgudang ON mgudang.kode = msatbrg.ref_gud
+            LEFT JOIN xorderds ON xorderds.ref_orderd = xorderd. ID
+            LEFT JOIN mmodesign ON mmodesign.kode = xorderds.ref_modesign
+            LEFT JOIN mwarna ON mwarna.kode = xorderds.ref_warna
+            WHERE xsuratjalan.kode = '$kode'";
+
+        $res_sj   = $this->db->query($sj)->row();
+        $res_brg  = $this->db->query($barang)->result();
 
 
         $data['title']  = "Surat Jalan";
-        $data['sj']     = $ressj;
+        $data['sj']     = $res_sj;
+        $data['barang'] = $res_brg;
         $this->load->view($this->printpage,$data);
     }
     

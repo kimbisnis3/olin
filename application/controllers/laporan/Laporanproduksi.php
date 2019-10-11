@@ -24,8 +24,10 @@ class Laporanproduksi extends CI_Controller {
 
     function cetak()
     {
-        $st   = date('Y-m-d', strtotime($this->input->post('awal')));
-        $en   = date('Y-m-d', strtotime($this->input->post('akhir')));
+        $st         = date('Y-m-d', strtotime($this->input->post('awal')));
+        $en         = date('Y-m-d', strtotime($this->input->post('akhir')));
+        $ref_cust   = $this->input->post('ref_cust');
+
         $q     = "SELECT
                     mbarangs.sn kodepdx,
                     xorderd.ref_brg,
@@ -55,6 +57,9 @@ class Laporanproduksi extends CI_Controller {
             $q  .=" AND
                     xprocorder.tgl 
                 BETWEEN '$st' AND '$en'";
+        }
+        if ($ref_cust) {
+            $q  .=" AND xorder.ref_cust = '$ref_cust'";
         }
         $q .= " GROUP BY
                     mbarangs.sn,

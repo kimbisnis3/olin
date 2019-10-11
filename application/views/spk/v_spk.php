@@ -25,7 +25,7 @@
                   <form id="form-data">
                     <div class="row">
                       <div class="col-md-12">
-                        <div class="row invisible">
+                        <div class="row">
                           <div class="col-md-6">
                             <div class="form-group">
                               <label>Pesanan</label>
@@ -37,13 +37,13 @@
                                 </div>
                               </div>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group invisible">
                               <label>Jumlah</label>
                               <input type="text" class="form-control" name="jumlah" readonly="true">
                             </div>
                           </div>
                           <div class="col-md-6">
-                            <div class="form-group">
+                            <div class="form-group invisible">
                               <label>Produk</label>
                               <input type="hidden" class="form-control" name="ref_brg">
                               <input type="hidden" class="form-control" name="ref_satbrg">
@@ -51,7 +51,7 @@
                             </div>
                             <div class="form-group">
                               <label>Tanggal</label>
-                              <input type="text" class="form-control datepicker" name="tgl">
+                              <input type="text" class="form-control datepicker" name="tgl" readonly="true">
                             </div>
                           </div>
                         </div>

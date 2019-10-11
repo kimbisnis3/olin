@@ -103,6 +103,14 @@
                             </div>
                           </div>
                           <div class="row">
+                            <div class="col-md-4">
+                              <div class="form-group">
+                              <label>No Hp</label>
+                              <input type="text" class="form-control" name="telp">
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row">
                             <div class="col-md-8">
                               <div class="form-group">
                                 <label>Alamat Lengkap</label>
@@ -1112,6 +1120,7 @@
               $('[name="total"]').val(data.po.total - data.po.bykirim);
               $('#total-harga').html(data.po.total - data.po.bykirim);
               $('[name="alamat"]').val(data.po.alamat);
+              $('[name="telp"]').val(data.po.telp);
               $('[name="berat"]').val(data.po.kgkirim);
               $('[name="provinsi"]').val(data.po.kodeprovfrom);
               $('[name="provinsito"]').val(data.po.kodeprovto);

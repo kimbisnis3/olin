@@ -5,6 +5,7 @@
     <div class="wrapper" id="app">
       <?php $this->load->view('_partials/topbar'); ?>
       <?php $this->load->view('_partials/sidebar'); ?>
+      <?php $agen = $this->db->get('mcustomer')->result_array() ?>
       <div class="content-wrapper">
         <section class="content-header">
           <h1 class="title"></h1>
@@ -37,7 +38,7 @@
                       </div>
                     <?php }  ?>
                     <?php if (isset($gb) && $gb != '') { ?> 
-                    <div class="col-md-4">
+                    <div class="col-md-2">
                       <div class="form-group">
                         <label>Group By</label>
                         <select class="form-control select2" name="gb" onchange="setmask()">
@@ -50,6 +51,18 @@
                       </div>
                     </div>
                     <?php } ?>
+                    <div class="col-md-2">
+                      <div class="form-group">
+                        <label>Agen</label>
+                        <select class="form-control select2" name="ref_cust" >
+                          <option value=""></option>
+                          <?php foreach ($agen as $i => $v): ?>
+                            <option value="<?php echo $v['kode'] ?>"><?php echo $v['nama']; ?></option>
+                          <?php endforeach ?>
+                        </select>
+                        <input type="hidden" class="form-control" name="mask-gb">
+                      </div>
+                    </div>
                     <div class="col-md-2">
                       <div class="form-group">
                         <label style="color: #ffffff">zzzz</label>

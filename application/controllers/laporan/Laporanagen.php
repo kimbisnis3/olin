@@ -17,6 +17,21 @@ class Laporanagen extends CI_Controller {
             {"val":"nama","label":"Nama"},
             {"val":"alamat","label":"Alamat"}
         ]';
+        // $setGb = 
+        // array( 
+        //     array( 
+        //         "val" => "mjencust_nama", 
+        //         "label" => "Jenis Agen" 
+        //     ), 
+        //     array( 
+        //         "val" => "nama", 
+        //         "label" => "Nama" 
+        //     ), 
+        //     array( 
+        //         "val" => "alamat", 
+        //         "label" => "Alamat" 
+        //     ), 
+        // )
         $data['gb']     = json_decode($setGb); 
         $data['title']  = $this->titlepage;
         $this->load->view($this->indexpage,$data);
@@ -25,8 +40,9 @@ class Laporanagen extends CI_Controller {
 
     function cetak()
     {
-        $st   = date('Y-m-d', strtotime($this->input->post('awal')));
-        $en   = date('Y-m-d', strtotime($this->input->post('akhir')));
+        $st         = date('Y-m-d', strtotime($this->input->post('awal')));
+        $en         = date('Y-m-d', strtotime($this->input->post('akhir')));
+        $ref_cust   = $this->input->post('ref_cust');
         $q     = "SELECT
                 mcustomer.nama,
                 mcustomer.alamat,
@@ -38,6 +54,11 @@ class Laporanagen extends CI_Controller {
             FROM
                 mcustomer
             LEFT JOIN mjencust ON mjencust.kode = mcustomer.ref_jenc";
+        
+        if ($ref_cust) {
+            $q .= " WHERE mcustomer.kode = '$ref_cust'";
+        }
+
         $data['result']  = $this->db->query($q)->result_array();
         // $data['periodestart'] = '@tanggal';
         // $data['periodeend']   = '@tanggal';

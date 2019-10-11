@@ -100,5 +100,43 @@ class Qc extends CI_Controller {
         $r['sukses'] = $result > 0 ? 'success' : 'fail' ;
         echo json_encode($r);
     }
+
+    function cekstok($id){
+        $tbstok     = "";
+        $stok       = $this->db->get($tbstok)->num_rows();
+        $stokaman   = $this->db->get($tbstok)->num_rows();
+        if ($stok < $stokaman) {
+           return 1; 
+        } else {
+            return 2
+        }
+    }
+
+    public function emailqc()
+    {
+        $config = Array( 
+                'protocol'  => 'smtp', 
+                'smtp_host' => 'ssl://smtp.gmail.com', 
+                'smtp_port' => 465, 
+                'smtp_user' => 'eps.sangkrah@gmail.com', 
+                'smtp_pass' => 'eps2019wkwk',
+                'mailtype'  => 'html', 
+                'charset'   => 'iso-8859-1', 
+                'wordwrap'  => TRUE 
+                ); 
+        $html = 'wkwkwkwkw';
+        $this->load->library('email',$config);
+        $this->email->set_newline("\r\n");
+        // $emailto = "";
+        $this->email->from('eps.sangkrah@gmail.com', 'Dari Mr. Robot');
+        $this->email->to('kimbisnis3@gmail.com');
+        $this->email->subject('Jangan Buang Sampah Sembarangan');
+        $this->email->message($html);
+        if ($this->email->send()) {
+                echo json_encode(array("sukses" => TRUE));  
+        }else{
+                print_r($this->email->print_debugger());
+        }
+    }
     
 }

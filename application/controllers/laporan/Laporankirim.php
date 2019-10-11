@@ -24,8 +24,9 @@ class Laporankirim extends CI_Controller {
 
     function cetak()
     {
-        $st   = date('Y-m-d', strtotime($this->input->post('awal')));
-        $en   = date('Y-m-d', strtotime($this->input->post('akhir')));
+        $st         = date('Y-m-d', strtotime($this->input->post('awal')));
+        $en         = date('Y-m-d', strtotime($this->input->post('akhir')));
+        $ref_cust   = $this->input->post('ref_cust');
         $q     = "SELECT
                     mcustomer.nama agen,
                     to_char(xsuratjalan.tglkirim, 'DD Mon YYYY') tglkirim,
@@ -52,6 +53,9 @@ class Laporankirim extends CI_Controller {
             $q  .=" AND
                     xsuratjalan.tgl 
                 BETWEEN '$st' AND '$en'";
+        }
+        if ($ref_cust) {
+            $q  .=" AND xorder.ref_cust = '$ref_cust'";
         }
         if ($this->input->post('gb')) {
             $q .=" ORDER BY {$this->input->post('gb')}";

@@ -24,8 +24,9 @@ class Laporanbayar extends CI_Controller {
 
     function cetak()
     {
-        $st   = date('Y-m-d', strtotime($this->input->post('awal')));
-        $en   = date('Y-m-d', strtotime($this->input->post('akhir')));
+        $st         = date('Y-m-d', strtotime($this->input->post('awal')));
+        $en         = date('Y-m-d', strtotime($this->input->post('akhir')));
+        $ref_cust   = $this->input->post('ref_cust');
         $q     = "SELECT
                     qr.*, (qr.total - qr.dibayar) kekurangan
                 FROM
@@ -35,6 +36,7 @@ class Laporanbayar extends CI_Controller {
                             xorder.tgl,
                             to_char(xorder.tgl, 'DD Mon YYYY') tgl_char,
                             xorder.kode,
+                            xorder.ref_cust,
                             COALESCE (xorder.total, 0) total,
                             COALESCE (SUM(xpelunasan.bayar), 0) dibayar,
                             xorder.ket,
@@ -59,6 +61,9 @@ class Laporanbayar extends CI_Controller {
             $q  .=" WHERE
                     qr.tgl 
                 BETWEEN '$st' AND '$en'";
+        }
+        if ($ref_cust) {
+            $q  .=" AND qr.ref_cust = '$ref_cust'";
         }
         $q .=" ORDER BY ";
         if ($this->input->post('gb')) {
