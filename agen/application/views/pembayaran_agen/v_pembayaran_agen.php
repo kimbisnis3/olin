@@ -178,66 +178,78 @@
               </div>
               <div class="row">
                 <div class="col-xs-12">
-                  <div class="box box-info invisible">
-                    <div class="box-header">
-                      <div class="pull-left">
-                        <button class="btn btn-act btn-success btn-flat refresh-btn" onclick="refresh()"><i class="fa fa-refresh"></i> Refresh</button>
-                        <button class="btn btn-act btn-primary btn-flat add-btn invisible" onclick="add_data()" ><i class="fa fa-plus"></i> Tambah</button>
-                      </div>
-                    </div>
-                    <div class="box-body">
-                      <div class="table-responsive mailbox-messages">
-                        <table id="table" class="table table-striped table-bordered" cellspacing="0" width="100%">
-                          <thead>
-                            <tr>
-                              <th></th>
-                              <th width="5%">No</th>
-                              <th>ID</th>
-                              <th>Kode</th>
-                              <th>Posted</th>
-                              <th>Tanggal</th>
-                              <th>Agen</th>
-                              <th>Kode PO</th>
-                              <th>Jenis Bayar</th>
-                              <th>Bayar</th>
-                              <th>Keterangan</th>
-                              <th>Kode Unik</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="box box-info">
-                    <div class="box-header">
-                      <div class="pull-left">
-                        <button class="btn btn-act btn-success btn-flat refresh-btn" onclick="refresh2()"><i class="fa fa-refresh"></i> Refresh</button>
-                      </div>
-                    </div>
-                    <div class="box-body">
-                      <div class="table-responsive mailbox-messages">
-                        <table id="table2" class="table table-striped table-bordered" cellspacing="0" width="100%">
-                          <thead>
-                            <tr>
-                              <th width="5%">No</th>
-                              <th>ID</th>
-                              <th>Kode</th>
-                              <th>Ref Cust</th>
-                              <th>Agen</th>
-                              <th>Tanggal</th>
-                              <th>Total</th>
-                              <th>Dibayar</th>
-                              <th>Kurang</th>
-                              <th>Keterangan</th>
-                              <th>Opsi</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                          </tbody>
-                        </table>
-                      </div>
+                  <div class="nav-tabs-custom">
+                    <ul class="nav nav-tabs">
+                      <li class="active"><a href="#tab_1" data-toggle="tab">Pembayaran</a></li>
+                      <li><a href="#tab_2" data-toggle="tab">Riwayat</a></li>
+                    </ul>
+                    <div class="tab-content">
+                      <div class="tab-pane active" id="tab_1">
+                        <div class="box box-info">
+                          <div class="box-header">
+                            <div class="pull-left">
+                              <button class="btn btn-act btn-success btn-flat refresh-btn" onclick="refresh2()"><i class="fa fa-refresh"></i> Refresh</button>
+                            </div>
+                          </div>
+                          <div class="box-body">
+                            <div class="table-responsive mailbox-messages">
+                              <table id="table2" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                                <thead>
+                                  <tr>
+                                    <th width="5%">No</th>
+                                    <th>ID</th>
+                                    <th>Kode</th>
+                                    <th>Ref Cust</th>
+                                    <th>Agen</th>
+                                    <th>Tanggal</th>
+                                    <th>Total</th>
+                                    <th>Dibayar</th>
+                                    <th>Kurang</th>
+                                    <th>Keterangan</th>
+                                    <th>Opsi</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
+                      </div><!-- TAB 1-->
+                      <div class="tab-pane" id="tab_2">
+                        <div class="box box-info">
+                          <div class="box-header">
+                            <div class="pull-left">
+                              <button class="btn btn-act btn-success btn-flat refresh-btn" onclick="refresh()"><i class="fa fa-refresh"></i> Refresh</button>
+                              <!-- <button class="btn btn-act btn-primary btn-flat add-btn invisible" onclick="add_data()" ><i class="fa fa-plus"></i> Tambah</button> -->
+                            </div>
+                          </div>
+                          <div class="box-body">
+                            <div class="table-responsive mailbox-messages">
+                              <table id="table" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                                <thead>
+                                  <tr>
+                                    <th></th>
+                                    <th width="5%">No</th>
+                                    <th>ID</th>
+                                    <th>Kode</th>
+                                    <th>Posted</th>
+                                    <th>Tanggal</th>
+                                    <th>Agen</th>
+                                    <th>Kode PO</th>
+                                    <th>Jenis Bayar</th>
+                                    <th>Bayar</th>
+                                    <th>Keterangan</th>
+                                    <th>Kode Unik</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
+                      </div><!-- TAB 2-->
                     </div>
                   </div>
                 </div>

@@ -16,7 +16,8 @@ class Elteks extends CI_Controller {
     }
 
     public function getall(){
-        $this->dbtwo->where('kode','elteks');
+        // $this->dbtwo->where('kode','elteks');
+        $this->dbtwo->order_by('id','asc');
         $result = $this->dbtwo->get($this->table)->result();
         echo json_encode(array('data' => $result));
     }

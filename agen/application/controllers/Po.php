@@ -244,6 +244,7 @@ class Po extends CI_Controller {
         $a['ref_layanan'] = $this->input->post('ref_layanan');
         $a['kirimke']   = $this->input->post('kirimke');
         $a['alamat']    = $this->input->post('alamat');
+        $a['telp']      = $this->input->post('telp');
         if ($this->input->post('ref_kirim') == 'GX0002') {    
             $a['kodeprovfrom']  = $this->input->post('provinsi');
             $a['kodeprovto']    = $this->input->post('provinsito');
@@ -397,6 +398,7 @@ class Po extends CI_Controller {
         $a['ref_layanan'] = $this->input->post('ref_layanan');
         $a['kirimke']   = $this->input->post('kirimke');
         $a['alamat']    = $this->input->post('alamat');
+        $a['telp']      = $this->input->post('telp');
         if ($this->input->post('ref_kirim') == 'GX0002') {
             $a['kodeprovfrom']  = $this->input->post('provinsi');
             $a['kodeprovto'] = $this->input->post('provinsito');
@@ -784,7 +786,8 @@ class Po extends CI_Controller {
                 mcustomer.telp,
                 mcustomer.nama namacust,
                 mkirim.nama mkirim_nama,
-                mlayanan.nama mlayanan_nama
+                mlayanan.nama mlayanan_nama,
+                mlayanan.harga mlayanan_harga
             FROM
                 xorder
             LEFT JOIN mcustomer ON mcustomer.kode = xorder.ref_cust

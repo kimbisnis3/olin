@@ -124,7 +124,7 @@ class Pembayaran extends CI_Controller {
             xorder.ket,
             xorder.pic,
             xorder.kgkirim,
-            xorder.bykirim,
+            xorder.bykirim, 
             xorder.ref_cust,
             xorder.ref_kirim,
             mcustomer.nama mcustomer_nama,
