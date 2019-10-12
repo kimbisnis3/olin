@@ -46,7 +46,7 @@ class Spk extends CI_Controller {
     }
 
     public function getorder(){
-        $q = "SELECT
+        $q = "SELECT DISTINCT
                 xorder. ID,
                 to_char(xorder.tgl, 'DD Mon YYYY') xorder_tgl,
                 xorderd.ref_order,
@@ -54,7 +54,7 @@ class Spk extends CI_Controller {
                 xorderd.ref_satbrg,
                 xorderd.jumlah,
                 mcustomer.nama mcustomer_nama,
-                xpelunasan.kode xpelunasan_kode,
+                --xpelunasan.kode xpelunasan_kode,
                 xpelunasan.bayar xpelunasan_bayar,
                 mbarang.nama mbarang_nama
             FROM
@@ -74,6 +74,7 @@ class Spk extends CI_Controller {
                 FROM
                     xprocorder
                 WHERE xprocorder.void IS NOT TRUE
+                AND xprocorder.ref_order = xorder.kode
             )";
         $result     = $this->db->query($q)->result();
         echo json_encode(array('data' => $result));

@@ -44,14 +44,14 @@ class Qc extends CI_Controller {
             LEFT JOIN msatbrg ON mbarang.kode = msatbrg.ref_brg
             LEFT JOIN msatuan ON msatuan.kode = msatbrg.ref_sat
             LEFT JOIN xorder ON xorder.kode = xprocorder.ref_order
-            LEFT JOIN xorderd ON xorder.kode = xorderd.ref_order
+            LEFT JOIN xorderd ON (xorder.kode = xorderd.ref_order AND xorderd.ref_brg = xprocorder.ref_brg)
             WHERE
                 xprocorder.tgl
             BETWEEN '$filterawal' AND '$filterakhir'
             AND msatbrg.def = 't'
             AND xprocorder.void IS NOT TRUE";
         if ($filterstatus) {
-            $q .=" AND xprocorder.status <= '$filterstatus'";
+            $q .=" AND xprocorder.status >= '$filterstatus'";
         }
         if ($filteragen) {
             $q .= " AND xorder.ref_cust = '$filteragen'";
@@ -81,62 +81,89 @@ class Qc extends CI_Controller {
         echo json_encode(array('data' => $list));
     }
 
-    function do_qc() {
-        $sql = "SELECT status FROM xprocorder WHERE id = {$this->input->post('id')}";
-        $s = $this->db->query($sql)->row()->status;
+    function do_qc() 
+    {
+        $id = $this->input->post('id');
+        $fetch = $this->db->query("SELECT * FROM xprocorder WHERE id = '$id'")->row();
+        $s = $fetch->status;
         $d['status'] = $s + 1;
         $w['id']    = $this->input->post('id');   
         $result     = $this->db->update('xprocorder',$d,$w);
-        $r['sukses'] = $result > 0 ? 'success' : 'fail' ;
+        $fetch_after = $this->db->query("SELECT * FROM xprocorder WHERE id = '$id'")->row();
+        if ($fetch_after->status == '2') {
+            $stok           = $this->cekstok($fetch->ref_brg);
+            $r['ref_brg']   = $fetch->ref_brg;
+            $r['stok']      = $stok;
+            $r['sendemail'] = TRUE;
+        }
+        $r['current_status']    = $fetch_after->status;
+        $r['sukses']            = $result > 0 ? 'success' : 'fail' ;
         echo json_encode($r);
     }
 
-    function do_anti_qc() {
-        $sql = "SELECT status FROM xprocorder WHERE id = {$this->input->post('id')}";
-        $s = $this->db->query($sql)->row()->status;
+    function do_anti_qc() 
+    {
+        $id = $this->input->post('id');
+        $fetch = $this->db->query("SELECT * FROM xprocorder WHERE id = '$id'")->row();
+        $s = $fetch->status;
         $d['status'] = $s - 1;
         $w['id']    = $this->input->post('id');   
         $result     = $this->db->update('xprocorder',$d,$w);
-        $r['sukses'] = $result > 0 ? 'success' : 'fail' ;
+        $fetch_after = $this->db->query("SELECT * FROM xprocorder WHERE id = '$id'")->row();
+        if ($fetch_after->status == '2') {
+            $stok           = $this->cekstok($fetch->ref_brg);
+            $r['ref_brg']   = $fetch->ref_brg;
+            $r['stok']      = $stok;
+            $r['sendemail'] = TRUE;
+        }
+        $r['current_status']    = $fetch_after->status;
+        $r['sukses']            = $result > 0 ? 'success' : 'fail' ;
         echo json_encode($r);
     }
 
-    function cekstok($id){
-        $tbstok     = "";
-        $stok       = $this->db->get($tbstok)->num_rows();
-        $stokaman   = $this->db->get($tbstok)->num_rows();
-        if ($stok < $stokaman) {
+    public function cekstok($ref_brg){
+        $inventory  = $this->db->get_where('dinventot',array('ref_brg' => $ref_brg))->row();
+        if ($inventory->jumlah < $inventory->minstok) {
+           $this->emailqc($inventory->jumlah, $inventory->minstok, $ref_brg);
            return 1; 
         } else {
-            return 2
+            return 2;
         }
     }
 
-    public function emailqc()
+    public function emailqc($stok, $minstok, $ref_brg)
     {
+        $emailto = $this->db->get('tcompany')->row();
+        $subject = 'No Reply';
+        $message = 'Jumlah stok produk '.$ref_brg.' Saat Ini adalah '.$stok.' Kurang dari stok aman yaitu '.$minstok;
+        $config_name    = 'Mr Robot';
+        $config_email   = 'eps.sangkrah@gmail.com';
+        $config_pass    = 'eps2019wkwk';
+
         $config = Array( 
                 'protocol'  => 'smtp', 
                 'smtp_host' => 'ssl://smtp.gmail.com', 
                 'smtp_port' => 465, 
-                'smtp_user' => 'eps.sangkrah@gmail.com', 
-                'smtp_pass' => 'eps2019wkwk',
+                'smtp_user' => $config_email, 
+                'smtp_pass' => $config_pass,
                 'mailtype'  => 'html', 
                 'charset'   => 'iso-8859-1', 
                 'wordwrap'  => TRUE 
                 ); 
-        $html = 'wkwkwkwkw';
+        
         $this->load->library('email',$config);
         $this->email->set_newline("\r\n");
-        // $emailto = "";
-        $this->email->from('eps.sangkrah@gmail.com', 'Dari Mr. Robot');
-        $this->email->to('kimbisnis3@gmail.com');
-        $this->email->subject('Jangan Buang Sampah Sembarangan');
-        $this->email->message($html);
-        if ($this->email->send()) {
-                echo json_encode(array("sukses" => TRUE));  
-        }else{
-                print_r($this->email->print_debugger());
-        }
+        $emailto = $emailto->email;
+        $this->email->from($config_email, $config_name);
+        $this->email->to($emailto);
+        $this->email->subject($subject);
+        $this->email->message($message);
+        $this->email->send();
+        // if ($this->email->send()) {
+        //         echo json_encode(array("sukses" => TRUE));  
+        // }else{
+        //         print_r($this->email->print_debugger());
+        // }
     }
     
 }
