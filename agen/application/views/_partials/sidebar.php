@@ -1,9 +1,16 @@
 <?php $menu = $this->Unimodel->getaksesmenu_new() ?>
 <?php 
   include(APPPATH.'libraries/dbinclude.php');  
-  $w = array('active' => '1', );
-  $this->dbtwo->order_by('urutan','ASC');
-  $menulist = $this->dbtwo->get_where('tmenu',$w)->result_array()
+  // $w = array('active' => '1', );
+  // $this->dbtwo->order_by('urutan','ASC');
+  $q = "SELECT 
+            * 
+        FROM 
+          takses 
+        LEFT JOIN tmenu ON tmenu.kode = takses.ref_menu
+        WHERE 
+          takses.ref_cust = '{$this->session->userdata('kodecust')}'";
+  $menulist = $this->dbtwo->query($q)->result_array()
 ?>
 <aside class="main-sidebar">
   <section class="sidebar">
