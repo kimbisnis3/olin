@@ -228,6 +228,7 @@
                               <th>Kurir</th>
                               <th>Tujuan</th>
                               <th>Biaya</th>
+                              <th>Telp</th>
                               <th>Keterangan</th>
                             </tr>
                           </thead>
@@ -301,6 +302,7 @@
           { "data": "kurir" },
           { "data": "lokasike" },
           { "data": "biayakirim" },
+          { "data": "telp" },
           { "data": "ket" },
           ]
       });

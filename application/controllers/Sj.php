@@ -38,7 +38,8 @@ class Sj extends CI_Controller {
                 xorder.kurir,
                 xorder.kodekurir,
                 xorder.lokasidari,
-                xorder.lokasike
+                xorder.lokasike,
+                xorder.telp
             FROM
                 xsuratjalan
             LEFT JOIN mcustomer ON mcustomer.kode = xsuratjalan.ref_cust
@@ -369,6 +370,7 @@ class Sj extends CI_Controller {
                 xorder.lokasidari,
                 xorder.lokasike,
                 xorder.alamat,
+                xorder.telp,
                 xorderd.jumlah,
                 mbarang.kode mbarang_kode,
                 mbarang.nama mbarang_nama

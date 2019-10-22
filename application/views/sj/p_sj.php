@@ -160,6 +160,17 @@
               <p><?php echo strtok($sj->lokasike, '-') ?></p>
             </div>
           </div>
+          <div class="row">
+            <div class="col-xs-3">
+              <p>Telp.</p>
+            </div>
+            <div class="col-xs-1">
+              <p>:</p>
+            </div>
+            <div class="col-xs-4  ">
+              <p><?php echo strtok($sj->telp, '-') ?></p>
+            </div>
+          </div>
         </div>
       </div>
     </section>
