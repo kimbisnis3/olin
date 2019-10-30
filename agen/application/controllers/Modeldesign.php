@@ -36,73 +36,105 @@ class Modeldesign extends CI_Controller {
         echo json_encode($data);
     }
 
+    // public function savedata()
+    // {   
+    //     $config['upload_path'] = $this->libre->pathupload().$this->foldername;
+    //     if (!is_dir($config['upload_path'])) {
+    //         mkdir($config['upload_path'], 0777, TRUE);
+    //     }
+    //     $config['allowed_types'] = '*';
+    //     $config['file_name'] = slug($this->input->post('nama'));
+    //     $path = substr($config['upload_path'],1);
+    //     $this->upload->initialize($config);
+        
+    //     if ( ! $this->upload->do_upload('image')){
+    //         $d['useri']     = $this->session->userdata('username');
+    //         $d['nama']      = $this->input->post('nama');
+    //         $d['ket']       = $this->input->post('ket');
+    //         $result = $this->dbtwo->insert($this->table,$d);
+    //     }else{
+    //         $d['useri']     = $this->session->userdata('username');
+    //         $d['nama']      = $this->input->post('nama');
+    //         $d['ket']       = $this->input->post('ket');
+    //         $d['gambar']     = $path.'/'.$this->upload->data('file_name');
+
+    //         $result = $this->dbtwo->insert($this->table,$d);
+    //     }
+    //     $r['sukses'] = $result ? 'success' : 'fail' ;
+    //     echo json_encode($r);
+    // }
+
     public function savedata()
-    {   
-        $config['upload_path'] = $this->libre->pathupload().$this->foldername;
-        if (!is_dir($config['upload_path'])) {
-            mkdir($config['upload_path'], 0777, TRUE);
-        }
-        $config['allowed_types'] = '*';
-        $config['file_name'] = slug($this->input->post('nama'));
-        $path = substr($config['upload_path'],1);
-        $this->upload->initialize($config);
-        
-        if ( ! $this->upload->do_upload('image')){
-            $d['useri']     = $this->session->userdata('username');
-            $d['nama']      = $this->input->post('nama');
-            $d['ket']       = $this->input->post('ket');
-            $result = $this->dbtwo->insert($this->table,$d);
-        }else{
-            $d['useri']     = $this->session->userdata('username');
-            $d['nama']      = $this->input->post('nama');
-            $d['ket']       = $this->input->post('ket');
-            $d['gambar']     = $path.'/'.$this->upload->data('file_name');
-
-            $result = $this->dbtwo->insert($this->table,$d);
-        }
+    {
+        $image = $this->libre->goUpload('image','img-'.time(),$this->foldername);
+        $d['gambar']    = $image;
+        $d['useri']     = $this->session->userdata('username');
+        $d['nama']      = $this->input->post('nama');
+        $d['ket']       = $this->input->post('ket');
+        $result = $this->dbtwo->insert($this->table,$d);
         $r['sukses'] = $result ? 'success' : 'fail' ;
         echo json_encode($r);
     }
 
-    function updatedata(){
-        $config['upload_path'] = $this->libre->pathupload().$this->foldername;
-        if (!is_dir($config['upload_path'])) {
-            mkdir($config['upload_path'], 0777, TRUE);
+    function updatedata()
+    {
+        if (!empty($_FILES['image']['name'])) {
+            $path = $this->libre->goUpload('image','img-'.time(),$this->foldername);
+            $d['gambar'] = $path;
+            $oldpath = $this->input->post('path');
+            @unlink(".".$oldpath);
+        } else {
+            $d['gambar'] = $this->input->post('path');
         }
-        $config['allowed_types'] = '*';
-        $config['file_name'] = slug($this->input->post('nama'));
-        $path =  substr($config['upload_path'],1);
-        $this->upload->initialize($config);
-        $pathfile   = $this->input->post('path');
-        $ext        = substr($pathfile, -3);
-        if ( ! $this->upload->do_upload('image')){
+
+        $d['useru']     = $this->session->userdata('username');
+        $d['dateu']     = 'now()';
+        $d['nama']      = $this->input->post('nama');
+        $d['ket']       = $this->input->post('ket');
+        $w['id'] = $this->input->post('id');
+
+        $result = $this->dbtwo->update($this->table,$d,$w);
+        $r['sukses']    = $result ? 'success' : 'fail' ;
+        echo json_encode($r);
+    }
+
+    // function updatedata(){
+    //     $config['upload_path'] = $this->libre->pathupload().$this->foldername;
+    //     if (!is_dir($config['upload_path'])) {
+    //         mkdir($config['upload_path'], 0777, TRUE);
+    //     }
+    //     $config['allowed_types'] = '*';
+    //     $config['file_name'] = slug($this->input->post('nama'));
+    //     $path =  substr($config['upload_path'],1);
+    //     $this->upload->initialize($config);
+    //     $pathfile   = $this->input->post('path');
+    //     $ext        = substr($pathfile, -3);
+    //     if ( ! $this->upload->do_upload('image')){
         
-                @rename("$pathfile",'.'.$path.'/'.$this->upload->data('file_name').'.'.$ext);
+    //             @rename("$pathfile",'.'.$path.'/'.$this->upload->data('file_name').'.'.$ext);
                 
-                $d['useru']     = $this->session->userdata('username');
-                $d['dateu']     = 'now()';
-                $d['nama']      = $this->input->post('nama');
-                $d['ket']       = $this->input->post('ket');
-                $d['gambar']    = $path.'/'.$this->upload->data('file_name').'.'.$ext ;
+    //             $d['useru']     = $this->session->userdata('username');
+    //             $d['dateu']     = 'now()';
+    //             $d['nama']      = $this->input->post('nama');
+    //             $d['ket']       = $this->input->post('ket');
+    //             $d['gambar']    = $path.'/'.$this->upload->data('file_name').'.'.$ext ;
 
-                $w['id'] = $this->input->post('id');
-                $result = $this->dbtwo->update($this->table,$d,$w);
-        }else{
-                @unlink("$pathfile");
-                $d['useru']     = $this->session->userdata('username');
-                $d['dateu']     = 'now()';
-                $d['nama']      = $this->input->post('nama');
-                $d['ket']       = $this->input->post('ket');
-                $d['gambar']    = $path.'/'.$this->upload->data('file_name');
+    //             $w['id'] = $this->input->post('id');
+    //             $result = $this->dbtwo->update($this->table,$d,$w);
+    //     }else{
+    //             @unlink("$pathfile");
+    //             $d['useru']     = $this->session->userdata('username');
+    //             $d['dateu']     = 'now()';
+    //             $d['nama']      = $this->input->post('nama');
+    //             $d['ket']       = $this->input->post('ket');
+    //             $d['gambar']    = $path.'/'.$this->upload->data('file_name');
 
-                $w['id'] = $this->input->post('id');
-                $result = $this->dbtwo->update($this->table,$d,$w);
-        }
-        $r['sukses'] = $result ? 'success' : 'fail' ;
-        echo json_encode($r);
-    }
-
-
+    //             $w['id'] = $this->input->post('id');
+    //             $result = $this->dbtwo->update($this->table,$d,$w);
+    //     }
+    //     $r['sukses'] = $result ? 'success' : 'fail' ;
+    //     echo json_encode($r);
+    // }
 
     public function deletedata()
     {
