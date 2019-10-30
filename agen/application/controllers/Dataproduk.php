@@ -19,12 +19,15 @@ class Dataproduk extends CI_Controller {
                 mbarang.id,
                 mbarang.kode,
                 mbarang.ket,
-                mbarang.nama
+                mbarang.nama,
+                mkategori.nama kategori_nama
             FROM
                 msatbrg
-            LEFT JOIN mbarang ON mbarang.kode = msatbrg.ref_brg";
-        $komp  .= " WHERE mbarang.ref_ktg = 'GX0002'";
-        $komp  .= " AND msatbrg.def = 't'";
+            LEFT JOIN mbarang ON mbarang.kode = msatbrg.ref_brg
+            LEFT JOIN mkategori ON mkategori.kode = mbarang.ref_ktg
+        ";
+        $komp  .= " WHERE msatbrg.def = 't'";
+        // $komp  .= " AND mbarang.ref_ktg = 'GX0002'";
         $komp  .= " ORDER BY msatbrg.id DESC";
         $data['komp']   = $this->dbtwo->query($komp)->result();
         $this->load->view($this->indexpage,$data);  
@@ -206,6 +209,38 @@ class Dataproduk extends CI_Controller {
         $result = $this->dbtwo->query($q)->result();
         echo json_encode(array('data' => $result));
     } 
+
+    function getimage() 
+    {
+        $kode = $this->input->post('kode');
+        $q= "SELECT * FROM mbarangpic WHERE ref_barang = '$kode'";
+        $data = $this->dbtwo->query($q)->result();
+        echo json_encode(array('data' => $data));
+    }
+
+    function saveimage()
+    {
+        $image          = $this->libre->goUpload('image','img-'.time(),$this->foldername);
+        $a['image']     = $image;
+        $a['ref_barang']= $this->input->post('kodebarang');
+        $result = $this->dbtwo->insert('mbarangpic',$a);
+        $r['sukses'] = $result ? 'success' : 'fail' ;
+        echo json_encode($r);
+    }
+
+    function delimage()
+    {
+        $w['id'] = $this->input->post('id');
+        $sql = "SELECT image FROM mbarangpic WHERE id = {$this->input->post('id')}";
+        $path = $this->dbtwo->query($sql)->row()->image;
+        
+        @unlink('.'.$path);
+        
+        $w['id'] = $this->input->post('id');
+        $result = $this->dbtwo->delete('mbarangpic',$w);
+        $r['sukses'] = $result ? 'success' : 'fail' ;
+        echo json_encode($r);
+    }
 
     function addkomponen() {
         $q = "SELECT

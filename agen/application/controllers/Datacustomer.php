@@ -16,12 +16,14 @@ class Datacustomer extends CI_Controller {
     }
 
     public function getall(){
-        $q = "SELECT 
-                mcustomer.*,
-                mjencust.nama AS jencust
-            FROM 
+        $q = "SELECT
+                mcustomer.*, mjencust.nama AS jencust
+            FROM
                 mcustomer
-            LEFT JOIN mjencust ON mjencust.kode = mcustomer.ref_jenc";
+            LEFT JOIN mjencust ON mjencust.kode = mcustomer.ref_jenc
+            WHERE
+                mcustomer.ref_jenc != '2019000001'
+            AND mcustomer.ref_jenc != '2019000002'";
         $result     = $this->dbtwo->query($q)->result();
         $list       = [];
         foreach ($result as $i => $r) {

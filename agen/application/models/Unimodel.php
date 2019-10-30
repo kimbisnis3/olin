@@ -9,7 +9,7 @@ class Unimodel extends CI_Model{
         $access     = $this->session->userdata("access");
         $issuper    = $this->session->userdata("issuper");
         $sql    = 
-            "SELECT 
+            "SELECT
             taction_group.group_action,
             taction_group.icon_group,
             taction.nama_action nama,
