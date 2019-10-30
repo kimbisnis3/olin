@@ -30,11 +30,18 @@ class Elicon extends CI_Controller {
 
     function updatedata()
     {
-        $d['image']  = $this->input->post('image');
+        if (!empty($_FILES['image']['name'])) {
+            $path = $this->libre->goUpload('image','img-'.time(),$this->foldername);
+            $d['image'] = $path;
+            $oldpath = $this->input->post('path');
+            @unlink(".".$oldpath);
+        } else {
+            $d['image'] = $this->input->post('path');
+        }
         $d['ket']   = $this->input->post('ket');
         $w['id']    = $this->input->post('id');
-        $result = $this->dbtwo->update($this->table,$d,$w);
-        $r['sukses']    = $result ? 'success' : 'fail' ;
+        $result     = $this->dbtwo->update($this->table,$d,$w);
+        $r['sukses']= $result ? 'success' : 'fail' ;
         echo json_encode($r);
     }
 }

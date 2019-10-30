@@ -32,7 +32,9 @@
                         </div>
                         <div class="form-group">
                           <label>Icon</label>
-                          <input type="text" class="form-control" name="image">
+                          <!-- <input type="text" class="form-control" name="image"> -->
+                          <input type="file" class="form-control" name="image" id="image">
+                          <input type="hidden" class="form-control" name="path" id="path">
                         </div>
                         <div class="form-group">
                           <label>Keterangan</label>
@@ -127,7 +129,7 @@
             { "render" : (data,type,row,meta) => {return meta.row + 1} },
             { "data": "id" , "visible" : false},
             { "data": "judul" },
-            { "render" : (data,type,row,meta) => {return `<i class="${row.image}"></i> ${row.image}`} },
+            { "render" : (data,type,row,meta) => {return `${showimage(row.image)}`} },
             { "data": "ket" },
           ]
       });
@@ -176,7 +178,7 @@
           success: function(data) {
               $('[name="id"]').val(data.id);
               $('[name="judul"]').val(data.judul);
-              $('[name="image"]').val(data.image);
+              $('[name="path"]').val(data.image);
               $('[name="ket"]').val(data.ket);
               $('#modal-data').modal('show');
               $('.modal-title').text('Edit Data');
@@ -194,12 +196,17 @@
       } else {
           url = `${apiurl}/updatedata`;
       }
+      var formData = new FormData($('#form-data')[0]);
       $.ajax({
           url: url,
           type: "POST",
-          data: $('#form-data').serializeArray(),
+          data: formData,
           dataType: "JSON",
-          success: function (data) {
+          mimeType: "multipart/form-data",
+          contentType: false,
+          cache: false,
+          processData: false,
+          success: function(data) {
               if (data.sukses == 'success') {
                   $('#modal-data').modal('hide');
                   refresh();
@@ -211,7 +218,7 @@
               }
 
           },
-          error: function (jqXHR, textStatus, errorThrown) {
+          error: function(jqXHR, textStatus, errorThrown) {
               alert('Error on process');
           }
       });
