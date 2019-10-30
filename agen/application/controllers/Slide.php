@@ -17,7 +17,7 @@ class Slide extends CI_Controller {
 
     public function getall(){
         $this->dbtwo->where('tipe','ss');
-        $this->dbtwo->where('ref_web','2');
+        // $this->dbtwo->where('ref_web','2');
         $result = $this->dbtwo->get($this->table)->result();
         echo json_encode(array('data' => $result));
     }
@@ -36,6 +36,7 @@ class Slide extends CI_Controller {
         $d['judul']     = $this->input->post('judul');
         $d['ket']       = $this->input->post('ket');
         $d['tipe']      = 'ss';
+        // $d['ref_web']   = '2';
         $result = $this->dbtwo->insert($this->table,$d);
         $r['sukses'] = $result ? 'success' : 'fail' ;
         echo json_encode($r);
