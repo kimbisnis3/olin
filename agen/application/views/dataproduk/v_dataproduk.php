@@ -27,6 +27,7 @@
                     </div>
                     <div class="pull-right">
                       <button class="btn btn-biru btn-flat" onclick="image_data()"><i class="fa fa-image"></i> Gambar</button>
+                      <button class="btn btn-hijau btn-flat" onclick="custom_data()"><i class="fa fa-check"></i> Status Produk</button>
                       <button class="btn btn-warning btn-flat edit-btn invisible" onclick="edit_data()"><i class="fa fa-pencil"></i> Ubah</button>
                       <button class="btn btn-danger btn-flat delete-btn invisible" onclick="hapus_data()" ><i class="fa fa-trash"></i> Hapus</button>
                     </div>
@@ -50,6 +51,7 @@
                             <th>Kategori</th>
                             <th>Gambar Design</th>
                             <th>Warna</th>
+                            <th>Custom</th>
                         </thead>
                         <tbody>
                         </tbody>

@@ -49,6 +49,7 @@
           { "data": "kategori_nama" },
           { "render" : (data,type,row,meta) => { return showimage(row['gambardesign'])} },
           { "render" : (data,type,row,meta) => { return showcolor(row['kodewarna'])} },
+          { "render" : (data,type,row,meta) => { return row['is_design'] == 't' ? '<span class="label label-success">Custom</span>' : '' }},
           ]
       });
 
@@ -395,6 +396,9 @@
               $('[name="idbarang"]').val(data.barang.id);
               $('[name="nama"]').val(data.barang.nama);
               $('[name="ket"]').val(data.barang.ket);
+              $('[name="bahan"]').val(data.barang.bahan);
+              $('[name="dimensi"]').val(data.barang.dimensi);
+              $('[name="kapasitas"]').val(data.barang.kapasitas);
               $('[name="ref_ktg"]').val(data.barang.ref_ktg);
               $('[name="kode"]').val(data.barang.kode);
 
@@ -467,6 +471,9 @@
             idsatbarang : $('[name="idsatbarang"]').val(),
             nama        : $('[name="nama"]').val(),
             ket         : $('[name="ket"]').val(),
+            bahan       : $('[name="bahan"]').val(),
+            dimensi     : $('[name="dimensi"]').val(),
+            kapasitas   : $('[name="kapasitas"]').val(),
             ref_ktg     : $('[name="ref_ktg"]').val(),
             ref_gud     : $('[name="ref_gud"]').val(),
 
@@ -581,6 +588,41 @@
               } else if (data.sukses == 'fail') {
                   tbkomponen.ajax.reload(null, false);
                   showNotif('Gagal', 'Data Gagal Dihapus', 'danger')
+              }
+          },
+          error: function(jqXHR, textStatus, errorThrown) {
+              showNotif('Fail', 'Internal Error', 'danger');
+          }
+      });
+  }
+
+  function custom_data() {
+      //id barang
+      id = table.cell( idx, 4).data();
+      if (idx == -1) {
+          return false;
+      }
+      $('.modal-title').text('Ubah Tipe Produk ?');
+      $('#modal-konfirmasi').modal('show');
+      $('#btnHapus').attr('onclick', 'do_custom_data(' + id + ')');
+  }
+
+  function do_custom_data(id) {
+      $.ajax({
+          url: `${apiurl}/custom_data`,
+          type: "POST",
+          dataType: "JSON",
+          data: {
+              id: id,
+          },
+          success: function(data) {
+              $('#modal-konfirmasi').modal('hide');
+              if (data.sukses == 'success') {
+                  table.ajax.reload(null, false);
+                  showNotif('Sukses', 'Data Berhasil Diubah', 'success')
+              } else if (data.sukses == 'fail') {
+                  $('#modal-konfirmasi').modal('hide');
+                  showNotif('Gagal', 'Data Gagal Diubah', 'danger')
               }
           },
           error: function(jqXHR, textStatus, errorThrown) {

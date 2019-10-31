@@ -45,6 +45,7 @@ class Dataproduk extends CI_Controller {
                 mbarang.kode kodebarang,
                 mbarang.ket ketbarang,
                 mbarang.nama namabarang,
+                mbarang.is_design,
                 msatuan.nama namasatuan,
                 mgudang.nama namagudang,
                 mmodesign.gambar gambardesign,
@@ -278,6 +279,9 @@ class Dataproduk extends CI_Controller {
         $a['nama']      = $this->input->post('nama');
         $a['kode']      = $this->input->post('kode');
         $a['ket']       = $this->input->post('ket');
+        $a['bahan']     = $this->input->post('bahan');
+        $a['dimensi']   = $this->input->post('dimensi');
+        $a['kapasitas'] = $this->input->post('kapasitas');
         $a['ref_ktg']   = $this->input->post('ref_ktg');
         $this->dbtwo->insert('mbarang',$a);
         $idBrg = $this->dbtwo->insert_id();
@@ -329,6 +333,9 @@ class Dataproduk extends CI_Controller {
                 mbarang.kode,
                 mbarang.nama,
                 mbarang.ket,
+                mbarang.bahan,
+                mbarang.dimensi,
+                mbarang.kapasitas,
                 mbarang.ref_ktg
             FROM
                 mbarang
@@ -373,6 +380,9 @@ class Dataproduk extends CI_Controller {
         $a['nama']      = $this->input->post('nama');
         $a['kode']      = $this->input->post('kode');
         $a['ket']       = $this->input->post('ket');
+        $a['bahan']     = $this->input->post('bahan');
+        $a['dimensi']   = $this->input->post('dimensi');
+        $a['kapasitas'] = $this->input->post('kapasitas');
         $a['ref_ktg']   = $this->input->post('ref_ktg');
         $kodeBrg        = $this->input->post('kode');
         $idBrg          = $this->input->post('idbarang');
@@ -421,6 +431,19 @@ class Dataproduk extends CI_Controller {
         $w['id']    = $this->input->post('id');
         $result     = $this->dbtwo->update('msatbrg',array('def' => 't' ),$w);
         $r['sukses'] = $result ? 'success' : 'fail' ;
+        echo json_encode($r);
+    }
+
+    function custom_data()
+    {
+        $id             = $this->input->post('id');
+        $sql            = "SELECT is_design FROM mbarang WHERE id = $id";
+        $s              = $this->dbtwo->query($sql)->row()->is_design;
+        $s == 't' ? $status = 'f' : $status = 't';
+        $d['is_design'] = $status;
+        $w['id']        = $id;
+        $result         = $this->dbtwo->update('mbarang',$d,$w);
+        $r['sukses']    = $result > 0 ? 'success' : 'fail' ;
         echo json_encode($r);
     }
 }
