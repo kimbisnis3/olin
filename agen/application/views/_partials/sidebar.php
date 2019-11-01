@@ -1,4 +1,3 @@
-<?php $menu = $this->Unimodel->getaksesmenu_new() ?>
 <?php 
   include(APPPATH.'libraries/dbinclude.php');  
   // $w = array('active' => '1', );
@@ -24,78 +23,69 @@
       </div>
     </div>
     <ul class="sidebar-menu" data-widget="tree">
-      <li class="header">MENU</li>
-      <?php 
-      $id = -1;
-      $no=1;
+    <li class="header">MENU</li>
+    <?php 
+    $access     = $this->session->userdata("access");
+    $issuper    = $this->session->userdata("issuper");
+    $sql    = 
+        "SELECT DISTINCT
+        taction_group.group_action,
+        taction_group.kode,
+        taction_group.icon_group,
+        taction_group.sort_group
+      FROM
+        taction_group
+      LEFT OUTER JOIN taction ON taction.group_action = taction_group.kode
+      LEFT OUTER JOIN topsi ON taction.id_action = topsi.ref_action_opsi
+    ";
+    if ($issuper !='1' or $issuper != '1') {
+        $sql .= " WHERE topsi.ref_access_opsi = '$access'";
+    }
+    $sql .= " ORDER BY taction_group.sort_group ASC";
+    $menuinduk = $this->db->query($sql)->result();
+    ?>
+    <?php foreach ($menuinduk as $i => $v): ?>
+    <li class="<?php echo strtolower(str_replace(' ', '', $v->group_action)); ?> treeview">
+      <a href="#">
+        <i class="fa <?php echo $v->icon_group; ?>"></i> <span><?php echo $v->group_action ?></span>
+        <span class="pull-right-container">
+          <i class="fa fa-angle-left pull-right"></i>
+        </span>
+      </a>
+      <ul class="treeview-menu">
+        <?php
+        $access     = $this->session->userdata("access");
+        $issuper    = $this->session->userdata("issuper");
+        $sql    = 
+            "SELECT
+            taction_group.group_action,
+            taction_group.icon_group,
+            taction.nama_action nama,
+            taction.icon_action icon,
+            taction.kategori_menu kategori,
+            taction.url
+        FROM
+            taction
+        LEFT OUTER JOIN topsi ON taction.id_action = topsi.ref_action_opsi
+        LEFT OUTER JOIN taction_group ON taction.group_action = taction_group.kode";
 
-      foreach ($menu as $t) {
-
-          if ($id != -1 && $id != $t->group_action) {
-              echo '</ul>';
-          }
-
-          if ($id != $t->group_action) { ?>
-
-              <li class="treeview <?php echo strtolower(str_replace(' ', '', $t->group_action)); ?>" >
-                <a href="#">
-                <?php 
-                $geticongroup= $t->icon_group;
-                $icongroup = 'fa fa-database';
-                if ($geticongroup) {
-                  $icongroup = $geticongroup;
-                }else {
-                  $icongroup = $icongroup;
-                }?>
-                
-                <?php 
-                $group = "";
-                if ($t->group_action == NULL) {
-                  $group = "Lainnya";
-                }else {
-                  $group = $t->group_action;
-                }
-
-                 ?>
-                <i class="fa <?php echo $icongroup; ?>"></i> <span>
-                    <?php echo $group; ?>
-                </span>
-                <span class="pull-right-container">
-                  <i class="fa fa-angle-left pull-right"></i>
-                </span>
-              </a>
-              <ul class="treeview-menu data">
-              
-
-          <?php $id = $t->group_action; } ?>
-
-          <?php $str = substr("$t->nama",0,6);
-            $hidden = 'inline';
-            if ($str != 'Master') {
-              $hidden = 'none';
-            };
-            $geticon= $t->icon;
-            $icon = 'fa fa-circle-o';
-            if ($geticon) {
-              $icon = $geticon;
-            }else {
-              $icon = $icon;
-            }?>
-             
-          <li class="<?php echo strtolower(str_replace(' ', '', $t->nama)); ?>">
-            <a href="<?php echo site_url( strtolower(str_replace(' ', '', $t->url))); ?>">
-          <i class="fa <?php echo $icon ?>"></i> <span><?php echo $t->nama ?></span>
+        if ($issuper !='1' or $issuper != '1') {
+            $sql .= " WHERE topsi.ref_access_opsi = '$access'";
+        }
+        $sql .= " AND taction.group_action = '$v->kode'";
+        $sql .= " ORDER BY taction_group.sort_group, taction.sort_menu ASC";
+        $menuanak = $this->db->query($sql)->result();
+        ?>
+        <?php foreach ($menuanak as $i => $t): ?>
+        <li class="<?php echo strtolower(str_replace(' ', '', $t->nama)); ?>">
+          <a href="<?php echo site_url( strtolower(str_replace(' ', '', $t->url))); ?>">
+            <i class="fa <?php echo $t->icon ?>"></i> <span><?php echo $t->nama ?></span>
           </a>
-          </li>
-             
-
-        <?php $no++;}
-
-      echo '</ul>';
-      echo '</li>';
-
-      ?> 
-    
+        </li>
+        <?php endforeach; ?>
+      </ul>
+    </li>
+    <?php endforeach; ?>
     <li class="frontend treeview">
       <a href="#">
         <i class="fa fa-dashboard"></i> <span>Front End</span>
