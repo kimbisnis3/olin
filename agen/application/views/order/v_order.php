@@ -541,6 +541,7 @@
   var title = 'Data Pesanan';
   var grupmenu = 'Store';
   var apiurl = "<?php echo base_url('') ?>" + path;
+  var designUrl = "<?php echo lumise_url() ?>" + 'editor.php';
   var state;
   var idx     = -1;
   var table ;
@@ -1345,8 +1346,12 @@
       window.open(`${apiurl}/cetak?kode=${kode}`);
   }
 
-
-  
+  function grab_design(product_id, design_id, order_id) {
+    window.open(
+      `${designUrl}?product=${product_id}&design_print=${design_id}&order_print=${order_id}`,
+      `_blank`
+    );
+  }
   </script>
 </body>
 </html>

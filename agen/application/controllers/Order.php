@@ -109,7 +109,10 @@ class Order extends CI_Controller {
                 mgudang.nama gudang,
                 xorderd.jumlah,
                 xorderd.statusd,
-                xorderd.jumlah * xorderd.harga subtotal
+                xorderd.jumlah * xorderd.harga subtotal,
+                xorderd._product_id,
+                xorderd._design_id,
+                xorderd._order_id
             FROM
                 xorderd
             LEFT JOIN mbarang ON mbarang.kode = xorderd.ref_brg
@@ -155,6 +158,7 @@ class Order extends CI_Controller {
                             <th>Subtotal</th>
                             <th>Keterangan</th>
                             <th>Status</th>
+                            <th>Design</th>
                         </tr>
                         <thead>';
         foreach ($brg as $i => $r) {
@@ -169,6 +173,7 @@ class Order extends CI_Controller {
                             <td>'.number_format($r->subtotal).'</td>
                             <td>'.$r->ket.'</td>
                             <td>'.statuspo($r->statusd).'</td>
+                            <td><button class="btn btn-success btn-flat btn-sm" onclick="grab_design(\''.$r->_product_id.'\',\''.$r->_design_id.'\',\''.$r->_order_id.'\')">Design</button></td>
                         </tr>
                         </tbody>';
         }       

@@ -7,6 +7,11 @@ if (!function_exists('status')) {
         return '_olinagen_';
     }
 
+    function lumise_url() {
+        // return 'https://';
+        return 'http://localhost/lumise_new/';
+    }
+
     function view_front() {
         return '_frontend/';
     }
