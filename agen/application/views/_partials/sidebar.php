@@ -42,7 +42,7 @@
         $sql .= " WHERE topsi.ref_access_opsi = '$access'";
     }
     $sql .= " ORDER BY taction_group.sort_group ASC";
-    $menuinduk = $this->db->query($sql)->result();
+    $menuinduk = $this->dbtwo->query($sql)->result();
     ?>
     <?php foreach ($menuinduk as $i => $v): ?>
     <li class="<?php echo strtolower(str_replace(' ', '', $v->group_action)); ?> treeview">
@@ -74,11 +74,11 @@
         }
         $sql .= " AND taction.group_action = '$v->kode'";
         $sql .= " ORDER BY taction_group.sort_group, taction.sort_menu ASC";
-        $menuanak = $this->db->query($sql)->result();
+        $menuanak = $this->dbtwo->query($sql)->result();
         ?>
         <?php foreach ($menuanak as $i => $t): ?>
         <li class="<?php echo strtolower(str_replace(' ', '', $t->nama)); ?>">
-          <a href="<?php echo site_url( strtolower(str_replace(' ', '', $t->url))); ?>">
+          <a href="<?php echo site_url(strtolower(str_replace(' ', '', $t->url))); ?>">
             <i class="fa <?php echo $t->icon ?>"></i> <span><?php echo $t->nama ?></span>
           </a>
         </li>
@@ -86,22 +86,5 @@
       </ul>
     </li>
     <?php endforeach; ?>
-    <li class="frontend treeview">
-      <a href="#">
-        <i class="fa fa-dashboard"></i> <span>Front End</span>
-        <span class="pull-right-container">
-          <i class="fa fa-angle-left pull-right"></i>
-        </span>
-      </a>
-      <ul class="treeview-menu">
-        <?php foreach ($menulist as $i => $v): ?>
-        <li class="<?php echo $v['class'] ?>">
-          <a href="<?php echo base_url() ?><?php echo $v['url'] ?>">
-            <i class="<?php echo $v['icon'] ?>"></i> <span><?php echo $v['menu'] ?></span>
-          </a>
-        </li>
-        <?php endforeach; ?>
-      </ul>
-    </li>
   </section>
 </aside>
