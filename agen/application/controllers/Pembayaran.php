@@ -11,6 +11,7 @@ class Pembayaran extends CI_Controller {
     }
     function index(){
         $data['jenisbayar'] = $this->db->get('mjenbayar')->result();
+        $data['mbank']      = $this->db->get('mbank')->result();
         $this->load->view($this->indexpage,$data);  
     }
 
@@ -30,6 +31,9 @@ class Pembayaran extends CI_Controller {
                 xpelunasan.ket,
                 xpelunasan.ref_jual,
                 xpelunasan.kodeunik,
+                xpelunasan.ref_bank,
+	            mbank.nama bank_nama,
+	            mbank.norek bank_norek,
                 mcustomer.nama mcustomer_nama,
                 mgudang.nama mgudang_nama,
                 mjenbayar.nama mjenbayar_nama
@@ -38,6 +42,7 @@ class Pembayaran extends CI_Controller {
             LEFT JOIN mcustomer ON mcustomer.kode = xpelunasan.ref_cust
             LEFT JOIN mgudang ON mgudang.kode = xpelunasan.ref_gud
             LEFT JOIN mjenbayar ON mjenbayar.kode = xpelunasan.ref_jenbayar
+            LEFT JOIN mbank ON mbank.kode = xpelunasan.ref_bank
             WHERE xpelunasan.void IS NOT TRUE
             AND
                 xpelunasan.tgl 
@@ -171,6 +176,7 @@ class Pembayaran extends CI_Controller {
         $a['ket']       = $this->input->post('ket');
         $a['ref_jual']  = $this->input->post('ref_order');
         $a['ref_jenbayar']  = $this->input->post('ref_jenbayar');
+        $a['ref_bank']  = $this->input->post('ref_bank');
         $a['ref_gud']   = $this->libre->gud_def();
         $a['posted']    = 'f';
 
@@ -223,6 +229,7 @@ class Pembayaran extends CI_Controller {
                 xpelunasan.ref_jual,
                 xpelunasan.ref_jenbayar,
                 xpelunasan.ref_cust,
+                xpelunasan.ref_bank,
                 mcustomer.nama mcustomer_nama,
                 mgudang.nama mgudang_nama,
                 mjenbayar.nama mjenbayar_nama
@@ -248,6 +255,7 @@ class Pembayaran extends CI_Controller {
         $a['ket']       = $this->input->post('ket');
         $a['ref_jual']  = $this->input->post('ref_order');
         $a['ref_jenbayar']  = $this->input->post('ref_jenbayar');
+        $a['ref_bank']  = $this->input->post('ref_bank');
         $kodepelun           = $this->input->post('kode');
 
         $result = $this->db->update('xpelunasan',$a,array('kode' => $kodepelun, ));

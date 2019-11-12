@@ -28,15 +28,15 @@
                         <div class="form-group">
                           <label>Nama</label>
                           <input type="hidden" name="id">
-                          <input type="text" class="form-control" name="nama" >
+                          <input type="text" class="form-control" name="nama">
                         </div>
                         <div class="form-group">
-                          <label>No Rekening</label>
-                          <input type="text" class="form-control" name="norek" >
+                          <label>No. Rekeninng</label>
+                          <input type="text" class="form-control" name="norek">
                         </div>
                         <div class="form-group">
                           <label>Keterangan</label>
-                          <input type="text" class="form-control" name="ket" >
+                          <input type="text" class="form-control" name="ket">
                         </div>
                       </div>
                     </div>
@@ -71,11 +71,11 @@
                   <div class="box-header">
                     <div class="pull-left">
                       <button class="btn btn-success btn-flat refresh-btn" onclick="refresh()"><i class="fa fa-refresh"></i> Refresh</button>
-                      <button class="btn btn-primary btn-flat add-btn invisible" onclick="add_data()" ><i class="fa fa-plus"></i> Tambah</button>
+                      <button class="btn btn-primary btn-flat add-btn" onclick="add_data()" ><i class="fa fa-plus"></i> Tambah</button>
                     </div>
                     <div class="pull-right">
-                      <button class="btn btn-warning btn-flat edit-btn invisible" onclick="edit_data()"><i class="fa fa-pencil"></i> Ubah</button>
-                      <button class="btn btn-danger btn-flat delete-btn invisible" onclick="hapus_data()" ><i class="fa fa-trash"></i> Hapus</button>
+                      <button class="btn btn-warning btn-flat edit-btn" onclick="edit_data()"><i class="fa fa-pencil"></i> Ubah</button>
+                      <button class="btn btn-danger btn-flat delete-btn" onclick="hapus_data()" ><i class="fa fa-trash"></i> Hapus</button>
                     </div>
                   </div>
                   <div class="box-body">
@@ -86,7 +86,7 @@
                             <th width="5%">No</th>
                             <th>ID</th>
                             <th>Nama</th>
-                            <th>Norek</th>
+                            <th>No. Rekening</th>
                             <th>Keterangan</th>
                           </tr>
                         </thead>
@@ -108,17 +108,15 @@
   <script type="text/javascript">
   var path = 'masterbank';
   var title = 'Master Bank';
-  var grupmenu = 'Master Data';
+  var grupmenu = '';
   var apiurl = "<?php echo base_url('') ?>" + path;
   var state;
   var idx     = -1;
   var table ;
 
   $(document).ready(function() {
-      getAkses(title);
       select2();
       activemenux('masterdata', 'masterbank');
-      $('.colorpicker').colorpicker()
 
       table = $('#table').DataTable({
           "processing": true,
@@ -128,11 +126,11 @@
               "data": {},
           },
           "columns": [
-          { "data": "no" }, 
-          { "data": "id" , "visible" : false},
-          { "data": "nama" }, 
-          { "data": "norek" }, 
-          { "data": "ket" }
+            { "render" : (data,type,row,meta) => {return meta.row + 1} },
+            { "data": "id" , "visible" : false},
+            { "data": "nama" },
+            { "data": "norek" },
+            { "data": "ket" }
           ]
       });
 
@@ -150,29 +148,6 @@
     });
   });
 
-  function tabel_detail() {
-      if (idx == -1) { return false }
-      $('#modal-detail').modal('show');
-      id = table.cell( idx, 1).data();
-      tablehr = $('#tabledetail').DataTable({
-          "destroy": true,
-          "processing": true,
-          "ajax": {
-              "url": `${apiurl}/getdetail`,
-              "data": {
-                  id: id
-              },
-              "type": "POST",
-          },
-          "columns": [
-            { "data": "no" },
-            { "data": "zzz" },
-            { "data": "zzz" },
-            { "data": "action" }
-          ]
-      });
-  }
-
   function refresh() {
       table.ajax.reload(null, false);
       idx = -1;
@@ -181,7 +156,6 @@
   function add_data() {
       state = 'add';
       $('#form-data')[0].reset();
-      $('.select2').trigger('change');
       $('#modal-data').modal('show');
       $('.modal-title').text('Tambah Data');
   }
@@ -193,6 +167,7 @@
       }
       state = 'update';
       $('#form-data')[0].reset();
+      $('#img-preview').remove();
       $.ajax({
           url: `${apiurl}/edit`,
           type: "POST",
@@ -203,8 +178,8 @@
           success: function(data) {
               $('[name="id"]').val(data.id);
               $('[name="nama"]').val(data.nama);
-              $('[name="ket"]').val(data.ket);
               $('[name="norek"]').val(data.norek);
+              $('[name="ket"]').val(data.ket);
               $('#modal-data').modal('show');
               $('.modal-title').text('Edit Data');
           },
@@ -226,7 +201,7 @@
           type: "POST",
           data: $('#form-data').serializeArray(),
           dataType: "JSON",
-          success: function(data) {
+          success: function (data) {
               if (data.sukses == 'success') {
                   $('#modal-data').modal('hide');
                   refresh();
@@ -236,9 +211,10 @@
                   refresh();
                   showNotif('Sukses', 'Tidak Ada Perubahan', 'success')
               }
+
           },
-          error: function(jqXHR, textStatus, errorThrown) {
-              showNotif('Fail', 'Internal Error', 'danger')
+          error: function (jqXHR, textStatus, errorThrown) {
+              alert('Error on process');
           }
       });
   }

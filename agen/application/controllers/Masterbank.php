@@ -4,7 +4,7 @@ class Masterbank extends CI_Controller {
     
     public $table       = 'mbank';
     public $foldername  = 'mbank';
-    public $indexpage   = 'mbank/v_mbank';
+    public $indexpage   = 'masterbank/v_masterbank';
 
     function __construct() {
         parent::__construct();
@@ -13,7 +13,7 @@ class Masterbank extends CI_Controller {
     }
     function index()
     {
-        $this->load->view($this->indexpage,$data);  
+        $this->load->view($this->indexpage);  
     }
 
     public function getall()

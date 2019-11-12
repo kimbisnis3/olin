@@ -14,6 +14,7 @@ class Po extends CI_Controller {
         include(APPPATH.'libraries/sessionakses.php');
         $data['mlayanan'] = $this->db->get('mlayanan')->result();
         $data['mkirim'] = $this->db->get('mkirim')->result();
+        $data['mbank'] = $this->db->get('mbank')->result();
         $this->load->view($this->indexpage,$data);  
     }
 
@@ -245,6 +246,7 @@ class Po extends CI_Controller {
         $a['kirimke']   = $this->input->post('kirimke');
         $a['alamat']    = $this->input->post('alamat');
         $a['telp']      = $this->input->post('telp');
+        $a['ref_bank']  = $this->input->post('ref_bank');
         if ($this->input->post('ref_kirim') == 'GX0002') {    
             $a['kodeprovfrom']  = $this->input->post('provinsi');
             $a['kodeprovto']    = $this->input->post('provinsito');
@@ -356,6 +358,7 @@ class Po extends CI_Controller {
                 xorder.kodecityto,
                 xorder.alamat,
                 xorder.kirimke,
+                xorder.ref_bank,
                 mcustomer.nama mcustomer_nama
             FROM 
                 xorder
@@ -399,6 +402,7 @@ class Po extends CI_Controller {
         $a['kirimke']   = $this->input->post('kirimke');
         $a['alamat']    = $this->input->post('alamat');
         $a['telp']      = $this->input->post('telp');
+        $a['ref_bank']  = $this->input->post('ref_bank');
         if ($this->input->post('ref_kirim') == 'GX0002') {
             $a['kodeprovfrom']  = $this->input->post('provinsi');
             $a['kodeprovto'] = $this->input->post('provinsito');

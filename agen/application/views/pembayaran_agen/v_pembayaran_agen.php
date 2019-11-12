@@ -66,6 +66,15 @@
                               <label>Bayar</label>
                               <input type="number" class="form-control" name="bayar" id="bayar">
                             </div>
+                            <div class="form-group">
+                              <label>Bank</label>
+                              <select class="form-control select2" name="ref_bank" id="ref_bank">
+                                  <option value="">-</option>
+                                  <?php foreach ($mbank as $i => $v): ?>
+                                  <option value="<?php echo $v->kode ?>"><?php echo $v->nama; ?> - (<?php echo $v->norek; ?>)</option>
+                                  <?php endforeach ?>
+                              </select>
+                            </div>
                           </div>
                         </div>
                         <div class="row">
@@ -238,6 +247,7 @@
                                     <th>Agen</th>
                                     <th>Kode PO</th>
                                     <th>Jenis Bayar</th>
+                                    <th>No Rekening</th>
                                     <th>Bayar</th>
                                     <th>Keterangan</th>
                                     <th>Kode Unik</th>
@@ -307,6 +317,7 @@
           { "data": "mcustomer_nama", "visible" : false },
           { "data": "ref_jual" },
           { "data": "mjenbayar_nama" },
+          { "data": "bank_norek" },
           { "data": "bayar" },
           { "data": "ket" },
           { "data": "kodeunik" },
@@ -533,6 +544,7 @@
               $('[name="ket"]').val(data.ket);
               $('[name="ref_order"]').val(data.ref_jual);
               $('[name="ref_jenbayar"]').val(data.ref_jenbayar);
+              $('[name="ref_bank"]').val(data.ref_bank);
               $('.select2').trigger('change');
               $('#modal-data').modal('show');
               $('.modal-title').text('Edit Data');

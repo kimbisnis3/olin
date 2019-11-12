@@ -195,6 +195,17 @@
                               <input type="text" class="form-control" name="telp">
                               </div>
                             </div>
+                            <div class="col-md-6 invisible">
+                              <div class="form-group">
+                                <label>Bank</label>
+                                <select class="form-control select2" name="ref_bank" id="ref_bank">
+                                  <option value="">-</option>
+                                  <?php foreach ($mbank as $i => $v): ?>
+                                  <option value="<?php echo $v->kode ?>"><?php echo $v->nama; ?> - (<?php echo $v->norek; ?>)</option>
+                                  <?php endforeach ?>
+                                </select>
+                              </div>
+                            </div>
                           </div>
                         </div>
                         <div class="box-body pad invisible fadeIn animated" id="box-kurir">
@@ -1124,6 +1135,7 @@
               $('[name="provinsi"]').val(data.po.kodeprovfrom);
               $('[name="provinsito"]').val(data.po.kodeprovto);
               $('[name="city"]').val(data.po.kodecityfrom);
+              $('[name="ref_bank"]').val(data.po.ref_bank);
               setTimeout(function(){ 
                 $('[name="cityto"]').val(data.po.kodecityto);
                 $('[name="kurir"]').val(data.po.kurir);
