@@ -170,6 +170,7 @@ class Sj extends CI_Controller {
         $a['biayakirim']= $this->input->post('biayakirim');
         $a['pic']       = $this->input->post('pic');
         $a['ref_order'] = $this->input->post('ref_order');
+        $a['noresi']    = $this->input->post('noresi');
         $a['ref_gud']   = $this->libre->gud_def();
 
         $this->db->insert('xsuratjalan',$a);
@@ -221,6 +222,7 @@ class Sj extends CI_Controller {
                 xsuratjalan.posted,
                 xsuratjalan.pic,
                 xsuratjalan.ref_order,
+                xsuratjalan.noresi,
                 mcustomer.nama mcustomer_nama
             FROM
                 xsuratjalan
@@ -243,6 +245,7 @@ class Sj extends CI_Controller {
         $a['biayakirim']= $this->input->post('biayakirim');
         $a['pic']       = $this->input->post('pic');
         $a['ref_order'] = $this->input->post('ref_order');
+        $a['noresi']    = $this->input->post('noresi');
         $a['ref_gud']   = $this->libre->gud_def();
         $kodesj         = $this->input->post('kode');
         $w['kode']      = $kodesj;

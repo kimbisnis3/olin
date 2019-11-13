@@ -71,20 +71,28 @@
                           </div>
                         </div>
                         <div class="row">
-                          <div class="col-md-8">
+                          <div class="col-md-12">
                             <div class="form-group">
                               <label>Alamat</label>
                               <input type="text" class="form-control" name="alamat">
                             </div>
                           </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-md-8">
+                            <div class="form-group">
+                              <label>No. Resi</label>
+                              <input type="text" class="form-control" name="noresi">
+                            </div>
+                          </div>
                           <div class="col-md-2">
                               <label>Kurir</label>
                               <input type="text" class="form-control" name="kurir" readonly="true">
-                            </div>
-                            <div class="col-md-2">
+                          </div>
+                          <div class="col-md-2">
                               <label>Kode</label>
                               <input type="text" class="form-control" name="kodekurir" readonly="true">
-                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -230,6 +238,7 @@
                               <th>Biaya</th>
                               <th>Telp</th>
                               <th>Keterangan</th>
+                              <th></th>
                             </tr>
                           </thead>
                           <tbody>
@@ -304,6 +313,7 @@
           { "data": "biayakirim" },
           { "data": "telp" },
           { "data": "ket" },
+          { "render" : (data,type,row,meta) => { return row['posted'] == 't' ? '<span class="label label-success"><i class="fa fa-check"></i></span>' : '' }},
           ]
       });
 
@@ -470,6 +480,7 @@
               $('[name="pic"]').val(data.pic);
               $('[name="kirim"]').val(data.kirim);
               $('[name="ket"]').val(data.ket);
+              $('[name="noresi"]').val(data.noresi);
               $('.select2').trigger('change');
               $('#modal-data').modal('show');
               $('.modal-title').text('Edit Data');
