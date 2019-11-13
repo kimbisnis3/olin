@@ -39,6 +39,7 @@ class Po extends CI_Controller {
                 xorder.pathcorel,
                 xorder.pathimage,
                 xorder.status,
+                xsuratjalan.noresi,
                 mcustomer.nama namacust,
                 mkirim.nama mkirim_nama,
                 mlayanan.nama mlayanan_nama,
@@ -49,12 +50,13 @@ class Po extends CI_Controller {
             LEFT JOIN mcustomer ON mcustomer.kode = xorder.ref_cust
             LEFT JOIN mkirim ON mkirim.kode = xorder.ref_kirim
             LEFT JOIN mlayanan ON mlayanan.kode = xorder.ref_layanan
+            LEFT JOIN xsuratjalan ON xsuratjalan.ref_order = xorder.kode
             WHERE xorder.void IS NOT TRUE
             AND
                 xorder.tgl 
             BETWEEN '$filterawal' AND '$filterakhir'";
         if ($kodecust) {
-            $q .= " AND ref_cust = '$kodecust'";
+            $q .= " AND xorder.ref_cust = '$kodecust'";
         }
         $q .=" ORDER BY xorder.id DESC" ;
         $result     = $this->db->query($q)->result();
@@ -75,6 +77,7 @@ class Po extends CI_Controller {
             $row['pathimage']   = $r->pathimage;
             $row['kirimke']     = $r->kirimke;
             $row['mlayanan_nama']= $r->mlayanan_nama;
+            $row['noresi']      = $r->noresi;
             $row['status']      = statuspo($r->status);
             $row['jmlorder']    = $r->jmlorder;
             $row['orderdone']   = $r->orderdone;
