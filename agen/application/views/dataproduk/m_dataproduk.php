@@ -134,6 +134,20 @@
                             </div>
                         </div>
                         <div class="row">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label>Harga 1</label>
+                                    <input type="number" class="form-control" name="harga1">
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label>Minimum Order</label>
+                                    <input type="number" class="form-control" name="minorder">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
                             <div class="pull-right">
                                 <button style="margin-right: 19px!important" type="button" class="btn btn-primary btn-flat add-btn bounceIn animated" onclick="add_harga()" id="btn-tambah-harga"><i class="fa fa-plus"></i> Tambah</button>
                                 <button style="margin-right: 19px!important" type="button" class="btn btn-warning btn-flat add-btn bounceIn animated" onclick="simpan_harga()" id="btn-simpan-harga"><i class="fa fa-save"></i> Simpan</button>
@@ -149,6 +163,8 @@
                                         <th>Konv</th>
                                         <th>Satuan</th>
                                         <th>Harga</th>
+                                        <th>Harga 1</th>
+                                        <th>Min Order</th>
                                         <th>Berat</th>
                                         <th>Keterangan</th>
                                         <th>Default</th>
@@ -167,6 +183,8 @@
                                         <th>Konv</th>
                                         <th>Satuan</th>
                                         <th>Harga</th>
+                                        <th>Harga 1</th>
+                                        <th>Min Order</th>
                                         <th>Berat</th>
                                         <th>Keterangan</th>
                                         <th>Default</th>

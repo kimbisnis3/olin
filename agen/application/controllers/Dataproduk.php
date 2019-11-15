@@ -79,6 +79,8 @@ class Dataproduk extends CI_Controller {
                 msatbrg.konv,
                 msatbrg.ket,
                 msatbrg.harga,
+                msatbrg.harga1,
+                msatbrg.minorder,
                 msatbrg.ref_brg,
                 msatbrg.ref_sat,
                 msatbrg.beratkg,
@@ -97,6 +99,8 @@ class Dataproduk extends CI_Controller {
             $row['konv']        = $r->konv;
             $row['namasatuan']  = $r->namasatuan;
             $row['harga']       = $r->harga;
+            $row['harga1']      = $r->harga1;
+            $row['minorder']    = $r->minorder;
             $row['beratkg']     = $r->beratkg;
             $row['ket']         = $r->ket;
             $row['def']         = truefalse($r->def,'Default','');
@@ -124,6 +128,8 @@ class Dataproduk extends CI_Controller {
                 "ref_sat"   => $this->input->post('ref_sat'),
                 "konv"      => $this->input->post('konv'),
                 "harga"     => $this->input->post('harga'),
+                "harga1"    => $this->input->post('harga1'),
+                "minorder"  => $this->input->post('minorder'),
                 "ket"       => $this->input->post('ketsatuan'),
                 "ref_gud"   => $this->libre->gud_def()
             );
@@ -139,6 +145,8 @@ class Dataproduk extends CI_Controller {
                 "ref_sat"   => $this->input->post('ref_sat'),
                 "konv"      => $this->input->post('konv'),
                 "harga"     => $this->input->post('harga'),
+                "harga1"    => $this->input->post('harga1'),
+                "minorder"  => $this->input->post('minorder'),
                 "beratkg"   => $this->input->post('beratkg'),
                 "ket"       => $this->input->post('ketsatuan'),
                 "ref_gud"   => $this->libre->gud_def()
@@ -296,6 +304,8 @@ class Dataproduk extends CI_Controller {
                 "harga"     => $r->harga,
                 "beratkg"   => $r->beratkg,
                 "ket"       => $r->ketsatuan,
+                "harga1"    => $r->harga1,
+                "minorder"  => $r->minorder,
                 "def"       => ien($r->def),
                 "ref_gud"   => $this->libre->gud_def(),
             );
@@ -356,6 +366,8 @@ class Dataproduk extends CI_Controller {
                 msatbrg.konv,
                 msatbrg.ket ketsatuan,
                 msatbrg.harga,
+                msatbrg.harga1,
+                msatbrg.minorder,
                 msatbrg.ref_brg,
                 msatbrg.ref_sat,
                 msatbrg.ref_gud,

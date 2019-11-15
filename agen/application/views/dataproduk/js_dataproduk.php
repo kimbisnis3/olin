@@ -110,6 +110,8 @@
           { "data": "konv" },
           { "data": "satuan" },
           { "data": "harga" },
+          { "data": "harga1" },
+          { "data": "minorder" },
           { "data": "beratkg" },
           { "data": "ketsatuan" },
           { "data": "deflabel" },
@@ -263,6 +265,8 @@
                 'ref_sat': $('[name="ref_sat"]').val(),
                 'satuan': $('[name="ref_sat"] option:selected').html(),
                 'ketsatuan': $('[name="ketsatuan"]').val(),
+                'harga1': $('[name="harga1"]').val(),
+                'minorder': $('[name="minorder"]').val(),
                 'def': defvalue,
                 'deflabel': deflabel,
             });
@@ -283,7 +287,10 @@
           'beratkg': $('[name="beratkg"]').val(),
           'ref_sat': $('[name="ref_sat"]').val(),
           'def': '',
+          'harga1': $('[name="harga1"]').val(),
+          'minorder': $('[name="minorder"]').val(),
           'ketsatuan': $('[name="ketsatuan"]').val()
+          
         }
         unipost(`${apiurl}/addharga`, param, function(res) {
             if (res.sukses == "success") {
@@ -306,6 +313,8 @@
           $('[name="beratkg"]').val(data.beratkg);
           $('[name="ref_sat"]').val(data.ref_sat);
           $('[name="ketsatuan"]').val(data.ket);
+          $('[name="harga1"]').val(data.harga1);
+          $('[name="minorder"]').val(data.minorder);
           $('.select2').trigger('change');
       })
       state_edsatuan();
@@ -323,6 +332,8 @@
           'harga': $('[name="harga"]').val(),
           'beratkg': $('[name="beratkg"]').val(),
           'ref_sat': $('[name="ref_sat"]').val(),
+          'harga1': $('[name="harga1"]').val(),
+          'minorder': $('[name="minorder"]').val(),
           'ketsatuan': $('[name="ketsatuan"]').val()
       }
       unipost(`${apiurl}/updateharga`, param, function(res) {
@@ -346,6 +357,8 @@
       $('[name="beratkg"]').val('');
       $('[name="ref_sat"]').val('');
       $('[name="ketsatuan"]').val('');
+      $('[name="harga1"]').val('');
+      $('[name="minorder"]').val('');
       $('.select2').trigger('change');
   }
 
@@ -366,6 +379,7 @@
       sat   = [];
       reloadharga()
       $('#form-data')[0].reset();
+      clearformsat()
       $('.box-table-harga-edit').addClass('invisible');
       $('.box-table-harga').removeClass('invisible');
       $('.select2').trigger('change');
