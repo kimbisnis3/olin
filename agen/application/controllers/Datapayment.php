@@ -174,7 +174,8 @@ class Datapayment extends CI_Controller {
         $a['posted']    = 'f';
 
         $result = $this->dbtwo->insert('xpelunasan',$a);
-        $idpelun = $this->dbtwo->insert_id();
+        // $idpelun = $this->dbtwo->insert_id();
+        $idpelun = $this->dbtwo->insert_id('public."xpelunasan_id_seq"');
         $kodepelun = $this->dbtwo->get_where('xpelunasan',array('id' => $idpelun))->row()->kode;
         $kodeunik = $this->dbtwo->get_where('xpelunasan',array('id' => $idpelun))->row()->kodeunik;
         $dataOrderd = $this->dbtwo->get_where('xorderd',array('ref_order' => $this->input->post('ref_order')))->result();

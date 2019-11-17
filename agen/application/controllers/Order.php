@@ -588,7 +588,8 @@ class Order extends CI_Controller {
         $a['ref_gud']   = $Brg->msatbrg_ref_gud;
         $a['ket']       = $Brg->msatbrg_ket;
         $this->dbtwo->insert('xorderd',$a);
-        $idorderd= $this->dbtwo->insert_id();
+        // $idorderd= $this->dbtwo->insert_id();
+        $idorderd = $this->dbtwo->insert_id('public."xorderd_id_seq"');
         $design  = $this->dbtwo->get_where('mbarangs',array('ref_brg' => $kodebarang))->result();
             foreach ($design as $r) {
                 $row    = array(

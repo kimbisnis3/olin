@@ -292,9 +292,10 @@ class Dataproduk extends CI_Controller {
         $a['kapasitas'] = $this->input->post('kapasitas');
         $a['ref_ktg']   = $this->input->post('ref_ktg');
         $this->dbtwo->insert('mbarang',$a);
-        $idBrg = $this->dbtwo->insert_id();
-        $kodeBrg = $this->dbtwo->get_where('mbarang',array('id' => $idBrg))->row()->kode;
-        $arrHarga = json_decode($this->input->post('arrHarga'));
+        // $idBrg = $this->dbtwo->insert_id();
+        $idBrg      = $this->dbtwo->insert_id('public."mbarang_id_seq"');
+        $kodeBrg    = $this->dbtwo->get_where('mbarang',array('id' => $idBrg))->row()->kode;
+        $arrHarga   = json_decode($this->input->post('arrHarga'));
         foreach ($arrHarga as $r) {
             $row    = array(
                 "useri"     => $this->session->userdata('username'),

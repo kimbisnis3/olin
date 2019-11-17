@@ -3,6 +3,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 /** If empty null helper **/
 if (!function_exists('status')) {
 
+    function insert_id($table){
+        $ci =& get_instance();
+        return $ci->db->insert_id('public."'.$table.'_id_seq"');
+    }
+
     function prefix_sess() {
         return '_olinagen_';
     }

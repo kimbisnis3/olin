@@ -264,7 +264,8 @@ class Po extends CI_Controller {
         }
         $this->db->insert('xorder',$a);
 
-        $idOrder = $this->db->insert_id();
+        // $idOrder = $this->db->insert_id();
+        $idOrder    = insert_id('xorder');
         $kodeOrder = $this->db->get_where('xorder',array('id' => $idOrder))->row()->kode;
         $kodebrg    = $this->input->post('kodebrg');
         $arr_produk = $this->input->post('arr_produk');
@@ -593,7 +594,8 @@ class Po extends CI_Controller {
         $a['ref_gud']   = $Brg->msatbrg_ref_gud;
         $a['ket']       = $Brg->msatbrg_ket;
         $this->db->insert('xorderd',$a);
-        $idorderd= $this->db->insert_id();
+        // $idorderd= $this->db->insert_id();
+        $idOrder    = insert_id('xorder');
         $design  = $this->db->get_where('mbarangs',array('ref_brg' => $kodebarang))->result();
             foreach ($design as $r) {
                 $row    = array(
