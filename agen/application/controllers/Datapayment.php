@@ -285,9 +285,48 @@ class Datapayment extends CI_Controller {
         $d['posted']    = 't';
         $w['id']        = $this->input->post('id');   
         $result         = $this->dbtwo->update('xpelunasan',$d,$w);
+        $kodeorder      = $this->dbtwo->get_where('xpelunasan',$w)->row();
+        if ($kodeorder != NULL || $kodeorder != '')
+        {
+            $this->sendemail($kodeorder->ref_jual);
+        }
         $r['sukses']    = $result ? 'success' : 'fail' ;
         echo json_encode($r);
+    }
 
+    public function sendemail($kodeorder = '')
+    {
+        $emailto        = 'kimbisnis3@gmail.com';
+        // adm_taspromo@yahoo.co.id
+        $subject        = 'No Reply';
+        $message        = 'Pembayaran Untuk Pesanan '.$kodeorder.' Sudah divalidasi';
+        $config_name    = 'Pabrik Tas Custom';
+        $config_email   = 'gongsoft.olinbags@gmail.com';
+        $config_pass    = 'gongsoft2019mkj';
+
+        $config = Array( 
+                'protocol'  => 'smtp', 
+                'smtp_host' => 'ssl://smtp.gmail.com', 
+                'smtp_port' => 465, 
+                'smtp_user' => $config_email, 
+                'smtp_pass' => $config_pass,
+                'mailtype'  => 'html', 
+                'charset'   => 'iso-8859-1', 
+                'wordwrap'  => TRUE 
+                ); 
+        
+        $this->load->library('email',$config);
+        $this->email->set_newline("\r\n");
+        $this->email->from($config_email, $config_name);
+        $this->email->to($emailto);
+        $this->email->subject($subject);
+        $this->email->message($message);
+        $this->email->send();
+        if ($this->email->send()) {
+                return 1;  
+        }else{
+                return 0;
+        }
     }
 
     function voiddata() 
