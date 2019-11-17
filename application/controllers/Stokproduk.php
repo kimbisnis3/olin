@@ -94,7 +94,8 @@ class Stokproduk extends CI_Controller {
         $a['tgl']       = date('Y-m-d', strtotime($this->input->post('tgl')));
         $a['ket']       = $this->input->post('ket');
         $this->db->insert('xgudangin',$a);
-        $id     = $this->db->insert_id();
+        // $id     = $this->db->insert_id();
+        $id     = insert_id('xgudangin');
         $kode   = $this->db->get_where('xgudangin',array('id' => $id))->row()->kode;
         $b['ref_gudin'] = $kode;
         $b['ref_brg']   = $this->input->post('ref_brg');
@@ -127,7 +128,8 @@ class Stokproduk extends CI_Controller {
         $a['tgl']       = date('Y-m-d', strtotime($this->input->post('tgl')));
         $a['ket']       = $this->input->post('ket');
         $this->db->insert('xgudangout',$a);
-        $id     = $this->db->insert_id();
+        // $id     = $this->db->insert_id();
+        $id     = insert_id('xgudangout');
         $kode   = $this->db->get_where('xgudangout',array('id' => $id))->row()->kode;
         $b['ref_gudout'] = $kode;
         $b['ref_brg']   = $this->input->post('ref_brg');

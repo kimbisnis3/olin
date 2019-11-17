@@ -244,7 +244,8 @@ class Dataproduk extends CI_Controller {
         $a['ket']       = $this->input->post('ket');
         $a['ref_ktg']   = $this->input->post('ref_ktg');
         $this->db->insert('mbarang',$a);
-        $idBrg = $this->db->insert_id();
+        // $idBrg = $this->db->insert_id();
+        $idOrder    = insert_id('mbarang');
         $kodeBrg = $this->db->get_where('mbarang',array('id' => $idBrg))->row()->kode;
         $arrHarga = json_decode($this->input->post('arrHarga'));
         foreach ($arrHarga as $r) {

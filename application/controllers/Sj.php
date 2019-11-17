@@ -175,7 +175,8 @@ class Sj extends CI_Controller {
 
         $this->db->insert('xsuratjalan',$a);
         $kodeorder = $this->input->post('ref_order');
-        $idsj = $this->db->insert_id();
+        // $idsj   = $this->db->insert_id();
+        $idsj   = insert_id('xsuratjalan');
         $kodesj = $this->db->get_where('xsuratjalan',array('id' => $idsj))->row()->kode;
         $dataOrderd = $this->db->get_where('xorderd',array('ref_order' => $kodeorder))->result();
         foreach ($dataOrderd as $r) {

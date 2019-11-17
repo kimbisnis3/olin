@@ -172,7 +172,8 @@ class Pembayaran extends CI_Controller {
         $a['posted']    = 'f';
 
         $result = $this->db->insert('xpelunasan',$a);
-        $idpelun = $this->db->insert_id();
+        // $idpelun = $this->db->insert_id();
+        $idpelun   = insert_id('xpelunasan');
         $kodepelun = $this->db->get_where('xpelunasan',array('id' => $idpelun))->row()->kode;
         $kodeunik = $this->db->get_where('xpelunasan',array('id' => $idpelun))->row()->kodeunik;
         $dataOrderd = $this->db->get_where('xorderd',array('ref_order' => $this->input->post('ref_order')))->result();
