@@ -875,7 +875,15 @@
             dataType: "JSON",
             data: $('#form-status').serializeArray(),
             success: function(data) {
-              $('#modal-status').modal('hide');
+              if (data.sukses == 'success') {
+                $('#modal-status').modal('hide');
+                  refresh();
+                  showNotif('Sukses', 'Data Berhasil Diubah', 'success')
+              } else if (data.sukses == 'fail') {
+                  $('#modal-input-file').modal('hide');
+                  refresh();
+                  showNotif('Sukses', 'Tidak Ada Perubahan', 'success')
+              }
             },
             error: function(jqXHR, textStatus, errorThrown) {
                 showNotif('Fail', 'Internal Error', 'danger');

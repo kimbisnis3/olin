@@ -231,6 +231,15 @@ class Order extends CI_Controller {
         echo json_encode($result);
     }
 
+    function updatestatus()
+    {
+        $w['kode']      = $this->input->post('kode_po');
+        $d['status']    = $this->input->post('status_po');
+        $result = $this->dbtwo->update('xorder',$d,$w);
+        $r['sukses'] = $result ? 'success' : 'fail' ;
+        echo json_encode($r);
+    }
+
     public function loadfilelist(){
         $q = "SELECT
                 xorder.id,
