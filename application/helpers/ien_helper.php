@@ -3,6 +3,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 /** If empty null helper **/
 if (!function_exists('status')) {
 
+    function image_url() {
+        $url    = 'http://localhost/olin/';
+        // $url    = 'https://mkj.olinbags.com/';
+        return $url
+    }
 
     function insert_id($table){
       $ci =& get_instance();
@@ -185,5 +190,63 @@ if (!function_exists('status')) {
 
         
     }
+
+    // function pref_file()
+    // {
+    //     return '/_pusat';
+    // }
+
+    // function image_url($i) {
+    //     // $url_pusat  = 'https://mkj.olinbags.com/';
+    //     // $url_agen   = 'https://agen.olinbags.com/';
+    //     $url_pusat  = 'http://localhost/olin/';
+    //     $url_agen   = 'http://localhost/olin/agen/';
+        
+    //     if (strpos($i, '_pusat') !== false || strpos($i, '/pusat/') !== false) {
+    //         return $url_pusat.str_replace("_pusat/","",$i);
+    //     } else if (strpos($i, '_agen') !== false || strpos($i, '/agen/') !== false) {
+    //         return $url_agen.str_replace("_agen/","",$i);
+    //     } else {
+    //         return '';
+    //     }
+    // }
+
+    // //IMAGE MANIPULATION
+
+    // function showimage($i){
+         
+    //     if ($i == NULL){
+    //         $i = "(Noimage)";
+    //     } else {
+    //         $img = image_url($i);
+    //         $i = "<img style='max-width : 60px;' src='".$img."'>";
+    //     }
+
+    //     return $i;
+    // }
+
+    // function dlimage($img){
+
+    //     $path = ".".$img;
+
+    //     if ($img == null || $img == "") {
+    //         $img = "(Noimage)";
+    //     } else {
+    //         $img = '<a href="'.$img.'" title="ImageName"  download="img_'.time().'" ><img style="max-width : 60px;" src="'.image_url($img).'" alt="ImageName"></a>';
+    //     }
+    //     return $img;
+    // }
+
+    // function imghandler($img,$maxw)
+    // {
+    //     $path = ".".$img;
+
+    //     if ($img == null || $img == "") {
+    //         $img = "(Noimage)";
+    //     } else {
+    //         $img = "<img onerror='imgError(this)' style='max-width : ".$maxw."px;' src='".image_url($img)."'>";
+    //     }
+    //     return $img;
+    // }
 
 }

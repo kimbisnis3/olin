@@ -867,5 +867,14 @@ class Po extends CI_Controller {
         $data['spek']   = $resspek;
         $this->load->view($this->printpage,$data);
     }
+
+    function move_ftp()
+    {
+        $uploadpath         = '/uploads/po/2.png';
+        $ftp_source         = '.'.$uploadpath; 
+        $ftp_destination    = str_replace("uploads","uploads_ftp",$uploadpath);
+        $upload = $this->libre->upload_ftp($ftp_source, $ftp_destination);
+        print_r($upload);
+    }
     
 }
