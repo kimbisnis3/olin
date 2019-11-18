@@ -30,13 +30,13 @@ class Mastergambar extends CI_Controller {
         $result     = $this->db->query($q)->result();
         $list       = [];
         foreach ($result as $i => $r) {
-            $row['id']      = $r->id;
-            $row['no']      = $i + 1;
-            $row['nama']    = $r->nama;
-            $row['image']   = showimage($r->path);
-            $row['ket']     = $r->ket;
-            $row['namadesign']      = $r->namadesign;
-            $row['gambardesign']    = showimage($r->gambardesign);
+            $row['id']          = $r->id;
+            $row['no']          = $i + 1;
+            $row['nama']        = $r->nama;
+            $row['image']       = showimage($r->path);
+            $row['ket']         = $r->ket;
+            $row['namadesign']  = $r->namadesign;
+            $row['gambardesign']= showimage($r->gambardesign);
 
             $list[] = $row;
         }   
@@ -52,30 +52,14 @@ class Mastergambar extends CI_Controller {
 
     public function savedata()
     {   
-        $config['upload_path'] = $this->libre->pathupload().$this->foldername;
-        if (!is_dir($config['upload_path'])) {
-            mkdir($config['upload_path'], 0777, TRUE);
-        }
-        $config['allowed_types'] = '*';
-        $config['file_name'] = slug($this->input->post('nama'));
-        $path = substr($config['upload_path'],1);
-        $this->upload->initialize($config);
-        
-        if ( ! $this->upload->do_upload('image')){
-            $d['useri']     = $this->session->userdata('username');
-            $d['nama']      = $this->input->post('nama');
-            $d['ket']       = $this->input->post('ket');
-            $d['ref_model'] = $this->input->post('ref_model');
-            $result = $this->db->insert($this->table,$d);
-        }else{
-            $d['useri']     = $this->session->userdata('username');
-            $d['nama']      = $this->input->post('nama');
-            $d['ket']       = $this->input->post('ket');
-            $d['ref_model'] = $this->input->post('ref_model');
-            $d['path']      = $path.'/'.$this->upload->data('file_name');
+        $upimage        = $this->libre->goUpload('image','img-'.time(),$this->foldername);
+        $d['path']      = $upimage;
+        $d['useri']     = $this->session->userdata('username');
+        $d['nama']      = $this->input->post('nama');
+        $d['ket']       = $this->input->post('ket');
+        $d['ref_model'] = $this->input->post('ref_model');
 
-            $result = $this->db->insert($this->table,$d);
-        }
+        $result = $this->db->insert($this->table,$d);
         $r['sukses'] = $result ? 'success' : 'fail' ;
         echo json_encode($r);
     }

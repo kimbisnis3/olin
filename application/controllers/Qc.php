@@ -68,7 +68,7 @@ class Qc extends CI_Controller {
             $row['jumlah']      = $r->jumlah;
             $row['status']      = $r->status;
             $row['xorder_kode'] = $r->xorder_kode;
-            $row['pathimage']   = imgerr($r->pathimage);
+            $row['pathimage']   = $r->pathimage;
             $row['mbarang_nama']= $r->mbarang_nama;
             $row['msatuan_nama']= $r->msatuan_nama;
             $row['a']           = $r->a;
