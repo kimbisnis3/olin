@@ -131,7 +131,7 @@ class Pembayaran extends CI_Controller {
                 when 'GX0002' then xorder.total
                 when 'GX0001' then xorder.total - xorder.bykirim
                 end as total,
-                (select sum(xpelunasan.bayar) from xpelunasan
+                (select coalesce(sum(xpelunasan.bayar),0) from xpelunasan
                 where xpelunasan.void is not true 
                 and xpelunasan.ref_jual = xorder.kode) dibayar
                 from xorder
