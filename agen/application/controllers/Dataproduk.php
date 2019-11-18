@@ -369,6 +369,7 @@ class Dataproduk extends CI_Controller {
                 msatbrg.harga,
                 msatbrg.harga1,
                 msatbrg.minorder,
+                msatbrg.beratkg,
                 msatbrg.ref_brg,
                 msatbrg.ref_sat,
                 msatbrg.ref_gud,

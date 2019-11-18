@@ -426,6 +426,43 @@
               </div>
             </div>
             </div>  <!-- END MODAL INPUT-->
+            <div class="modal fade" id="modal-status" role="dialog" data-backdrop="static">
+              <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title"></h4>
+                  </div>
+                  <div class="modal-body">
+                    <div class="box">
+                      <div class="box-header">
+                      </div>
+                      <div class="box-body pad">
+                        <form id="form-status">
+                          <div class="row">
+                            <div class="col-md-6">
+                              <div class="form-group">
+                                <label>Status </label>
+                                <input type="hidden" name="kode_po">
+                                <select name="status_po" class="form-control select2">
+                                    <option value=""></option>
+                                    <option value="0">Pending</option>
+                                    <option value="1">Proses</option>
+                                    <option value="2">Sedang Dikirim</option>
+                                </select>
+                              </div>
+                            </div>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-warning btn-flat" data-dismiss="modal">Tutup</button>
+                  </div>
+                </div>
+              </div>
+            </div>  <!-- END MODAL status-->
             <div id="modal-konfirmasi" class="modal fade" role="dialog">
               <div class="modal-dialog modal-sm">
                 <div class="modal-content">
@@ -500,6 +537,7 @@
                       <div class="pull-right">
                         <button class="btn btn-act btn-warning btn-flat edit-btn invisible" onclick="edit_data()"><i class="fa fa-pencil"></i> Ubah</button>
                         <!-- <button class="btn btn-act bg-navy btn-flat file-btn" onclick="open_file()"><i class="fa fa-file"></i> File</button> -->
+                        <button class="btn btn-act bg-orange btn-flat" onclick="open_status()"><i class="fa fa-pencil"></i> Status</button>
                         <button class="btn btn-act btn-danger btn-flat delete-btn invisible" onclick="hapus_data()" ><i class="fa fa-trash"></i> Void</button>
                         <button class="btn btn-act bg-olive btn-flat" onclick="cetak_data()" ><i class="fa fa-print"></i> Cetak</button>
                       </div>
@@ -587,7 +625,7 @@
           { "data": "mlayanan_nama" },
           { "data": "mkirim_nama" },
           { "data": "ket" },
-          { "data": "statusorder" }
+          { "data": "status" }
           ]
       });
 
@@ -801,6 +839,48 @@
           $('#modal-input-file').modal('show');
       });
 
+  }
+
+  function open_status() {
+      kode = table.cell( idx, 3).data();
+      if (idx == -1) {
+          return false;
+      }
+      $('#modal-status').modal('show');
+      $('#modal-title').modal('Status');
+      $.ajax({
+            url: `${apiurl}/getstatus`,
+            type: "POST",
+            dataType: "JSON",
+            data: {
+                kode: kode,
+            },
+            success: function(data) {
+                $('[name="kode_po"]').val(data.kode)
+                $('[name="status_po"]').val(data.status)
+                $('.select2').trigger('change');
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                showNotif('Fail', 'Internal Error', 'danger');
+            }
+        });
+
+  }
+
+  function send_status()
+  {
+      $.ajax({
+            url: `${apiurl}/updatestatus`,
+            type: "POST",
+            dataType: "JSON",
+            data: $('#form-status').serializeArray(),
+            success: function(data) {
+              $('#modal-status').modal('hide');
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                showNotif('Fail', 'Internal Error', 'danger');
+            }
+        });
   }
 
   function updatefile() {

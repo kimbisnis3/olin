@@ -444,6 +444,8 @@
                   { "data": "konv" },
                   { "data": "namasatuan" },
                   { "data": "harga" },
+                  { "data": "harga1" },
+                  { "data": "minorder" },
                   { "data": "beratkg" },
                   { "data": "ket" },
                   { "data": "def" },

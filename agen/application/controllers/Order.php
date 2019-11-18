@@ -82,7 +82,7 @@ class Order extends CI_Controller {
             $row['pathimage']   = $r->pathimage;
             $row['kirimke']     = $r->kirimke;
             $row['mlayanan_nama']= $r->mlayanan_nama;
-            $row['status']      = statuspo($r->status);
+            $row['status']      = $this->status_po($r->status);
             $row['jmlorder']    = $r->jmlorder;
             $row['orderdone']   = $r->orderdone;
             $row['statusorder'] = ($r->orderdone == $r->jmlorder) ? '<span class="label label-success">Selesai Semua</span>' : '<span class="label label-warning">Belum Selesai</span>' ;
@@ -172,7 +172,7 @@ class Order extends CI_Controller {
                             <td>'.number_format($r->harga).'</td>
                             <td>'.number_format($r->subtotal).'</td>
                             <td>'.$r->ket.'</td>
-                            <td>'.statuspo($r->statusd).'</td>
+                            <td>'.$this->status_po($r->statusd).'</td>
                             <td><button class="btn btn-success btn-flat btn-sm" onclick="grab_design(\''.$r->_product_id.'\',\''.$r->_design_id.'\',\''.$r->_order_id.'\')">Design</button></td>
                         </tr>
                         </tbody>';
@@ -210,6 +210,25 @@ class Order extends CI_Controller {
                   </div>
                 </div>';
         echo $tabs;
+    }
+
+    public function status_po($s)
+    {
+        if ($s == 0) {
+            $s = '<span class="label label-warning">Pending</span>';
+        } else if($s == 1) {
+            $s = '<span class="label label-success">Proses</span>';
+        } else if($s >= 2) {
+            $s = '<span class="label label-info">Sudah Dikirim</span>';
+        }
+        return $s;
+    }
+
+    function getstatus()
+    {
+        $kode = $this->input->post('kode');
+        $result = $this->dbtwo->get_where('xorder',array('kode' => $kode))->row();
+        echo json_encode($result);
     }
 
     public function loadfilelist(){
