@@ -142,7 +142,7 @@ class Order extends CI_Controller {
         $tabs   = '<div class="nav-tabs-custom fadeIn animated">
                   <ul class="nav nav-tabs">
                     <li class="active"><a href="#tab_1" data-toggle="tab">Data Produk</a></li>
-                    <li><a href="#tab_2" data-toggle="tab">Data Spesifikasi</a></li>
+                    <li style="display : none"><a href="#tab_2" data-toggle="tab">Data Spesifikasi</a></li>
                   </ul>
                   <div class="tab-content">
                     <div class="tab-pane active" id="tab_1">';
@@ -788,7 +788,8 @@ class Order extends CI_Controller {
                 mcustomer.telp,
                 mcustomer.nama namacust,
                 mkirim.nama mkirim_nama,
-                mlayanan.nama mlayanan_nama
+                mlayanan.nama mlayanan_nama,
+                mlayanan.harga mlayanan_harga
             FROM
                 xorder
             LEFT JOIN mcustomer ON mcustomer.kode = xorder.ref_cust

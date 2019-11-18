@@ -195,7 +195,7 @@
                               <input type="text" class="form-control" name="telp">
                               </div>
                             </div>
-                            <div class="col-md-6 invisible">
+                            <div class="col-md-6">
                               <div class="form-group">
                                 <label>Bank</label>
                                 <select class="form-control select2" name="ref_bank" id="ref_bank">

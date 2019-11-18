@@ -67,6 +67,7 @@ class Pembayaran extends CI_Controller {
             $row['posted']          = $r->posted;
             $row['ref_jual']        = $r->ref_jual;
             $row['kodeunik']        = $r->kodeunik;
+            $row['bank_norek']      = $r->bank_norek;
 
             $list[] = $row;
         }
@@ -176,7 +177,7 @@ class Pembayaran extends CI_Controller {
         $a['ket']       = $this->input->post('ket');
         $a['ref_jual']  = $this->input->post('ref_order');
         $a['ref_jenbayar']  = $this->input->post('ref_jenbayar');
-        $a['ref_bank']  = $this->input->post('ref_bank');
+        $a['ref_bank']  = ien($this->input->post('ref_bank'));
         $a['ref_gud']   = $this->libre->gud_def();
         $a['posted']    = 'f';
 
@@ -192,7 +193,7 @@ class Pembayaran extends CI_Controller {
                 "ref_pelun" => $kodepelun,
                 "ref_brg"   => $r->ref_brg,
                 "jumlah"    => $r->jumlah,
-                "ref_satbrg"=> $r->ref_satbrg,
+                "ref_satbrg"=> ien($r->ref_satbrg),
                 "ket"       => $r->ket,
                 "harga"     => $r->harga,
             );
@@ -256,7 +257,7 @@ class Pembayaran extends CI_Controller {
         $a['ket']       = $this->input->post('ket');
         $a['ref_jual']  = $this->input->post('ref_order');
         $a['ref_jenbayar']  = $this->input->post('ref_jenbayar');
-        $a['ref_bank']  = $this->input->post('ref_bank');
+        $a['ref_bank']  = ien($this->input->post('ref_bank'));
         $kodepelun           = $this->input->post('kode');
 
         $result = $this->db->update('xpelunasan',$a,array('kode' => $kodepelun, ));

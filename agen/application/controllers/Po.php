@@ -249,7 +249,7 @@ class Po extends CI_Controller {
         $a['kirimke']   = $this->input->post('kirimke');
         $a['alamat']    = $this->input->post('alamat');
         $a['telp']      = $this->input->post('telp');
-        $a['ref_bank']  = $this->input->post('ref_bank');
+        $a['ref_bank']  = ien($this->input->post('ref_bank'));
         if ($this->input->post('ref_kirim') == 'GX0002') {    
             $a['kodeprovfrom']  = $this->input->post('provinsi');
             $a['kodeprovto']    = $this->input->post('provinsito');

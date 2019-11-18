@@ -195,7 +195,7 @@
                       </div>
                       <div class="pull-right">
                         <button class="btn btn-act btn-warning btn-flat edit-btn invisible" onclick="edit_data()"><i class="fa fa-pencil"></i> Ubah</button>
-                        <button class="btn btn-act btn-success btn-flat option-btn invisible" onclick="valid_data()"><i class="fa fa-check"></i> Validasi</button>
+                        <button class="btn btn-act btn-success btn-flat option-btn" onclick="valid_data()"><i class="fa fa-check"></i> Validasi</button>
                         <button class="btn btn-danger btn-flat delete-btn invisible" onclick="void_data()" ><i class="fa fa-trash"></i> Void</button>
                       </div>
                     </div>
