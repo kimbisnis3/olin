@@ -454,8 +454,8 @@ class Po extends CI_Controller {
         }
 
         if (!empty($_FILES['editimage']['name'])) {
-            $upcorel    = $this->libre->goUpload('editimage','image-'.time(),$this->foldername);
-            $a['pathimage'] = $upcorel;
+            $upimage    = $this->libre->goUpload('editimage','image-'.time(),$this->foldername);
+            $a['pathimage'] = $upimage;
             $oldpath = $this->input->post('editpathimage');
             @unlink(".".$oldpath);
         } else {
