@@ -316,8 +316,8 @@ class Datapayment extends CI_Controller {
 
     public function sendemail($kodeorder = '', $message)
     {
-        $emailto        = 'ihsanwst@yahoo.com';
-        // $emailto        = 'kimbisnis3@gmail.com';
+        // $emailto        = 'ihsanwst@yahoo.com';
+        $emailto        = 'kimbisnis3@gmail.com';
         // adm_taspromo@yahoo.co.id
         $subject        = 'No Reply';
         // $message        = 'Pembayaran Untuk Pesanan '.$kodeorder.' Sudah divalidasi';
