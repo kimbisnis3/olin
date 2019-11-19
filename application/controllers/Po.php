@@ -365,7 +365,9 @@ class Po extends CI_Controller {
             $this->db->insert_batch('xorderds',$c);
         }
         $hargalayanan = $this->gethargalayanan($this->input->post('ref_layanan'));
-        $d['total'] = $this->input->post('total') + $this->input->post('biaya') + $hargalayanan;
+        $bykirim    = $this->input->post('bykirim') == null || $this->input->post('biaya') == '' ? 0 : $this->input->post('biaya') ;
+        $d['total'] = $this->input->post('total') + $bykirim + $hargalayanan;
+        // $d['total'] = $this->input->post('total_cart') + $bykirim  + $hargalayanan;
         // $d['total'] = $this->input->post('total') + $this->input->post('biaya');
         $this->db->update('xorder',$d,array('kode' => $kodeOrder));
 
@@ -471,7 +473,9 @@ class Po extends CI_Controller {
         $this->db->update('xorder',$a,array('kode' => $kodeorder));
         $kodebrg = $this->input->post('kodebrg');
         $hargalayanan = $this->gethargalayanan($this->input->post('ref_layanan'));
-        $d['total'] = $this->input->post('total') + $this->input->post('biaya') + $hargalayanan;
+        $bykirim    = $this->input->post('bykirim') == null || $this->input->post('biaya') == '' ? 0 : $this->input->post('biaya') ;
+        $d['total'] = $this->input->post('total') + $bykirim + $hargalayanan;
+        // $d['total'] = $this->input->post('total_cart') + $bykirim  + $hargalayanan;
         // $d['total'] = $this->input->post('total') + $this->input->post('biaya');
         $this->db->update('xorder',$d,array('kode' => $kodeorder));
         if ($this->db->trans_status() === FALSE)
