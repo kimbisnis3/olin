@@ -896,6 +896,77 @@ class Po extends CI_Controller {
         $this->load->view($this->printpage,$data);
     }
 
+    function cetakspk()
+    {
+        $kode = $this->input->get('kode');
+        $order  = "
+            SELECT
+                xorder.kode,
+                xorder.tgl + INTEGER '15' tgl
+            FROM
+                xorder
+            WHERE xorder.kode = '$kode'";
+
+        $qty  = "
+            SELECT
+                sum(xorderd.jumlah) qty
+            FROM
+                xorder
+            LEFT JOIN xorderd ON xorder.kode = xorderd.ref_order
+            WHERE xorder.kode = '$kode'";
+
+        $spek ="SELECT
+                xorderds.id,
+                xorderds.ket,
+                mbarang.nama,
+                mmodesign.nama mmodesign_nama,
+                mmodesign.gambar mmodesign_gambar,
+                mwarna.nama mwarna_nama,
+                mwarna.colorc mwarna_colorc
+            FROM
+                xorderds
+            LEFT JOIN mmodesign ON mmodesign.kode = xorderds.ref_modesign
+            LEFT JOIN mwarna ON mwarna.kode = xorderds.ref_warna
+            LEFT JOIN xorderd ON xorderd. ID = xorderds.ref_orderd
+            LEFT JOIN mbarang ON mbarang.kode = xorderd.ref_brg
+            LEFT JOIN xorder ON xorder.kode = xorderd.ref_order
+            WHERE xorder.kode = '$kode'";
+
+        $masterwarna  = "
+            SELECT
+                mwarna.*
+            FROM
+                mwarna";
+
+        $warna  = "
+            SELECT
+                sum(xorderd.jumlah) jumlah,
+                mwarna.nama
+            FROM
+                xorderds
+            LEFT JOIN xorderd ON xorderds.ref_orderd = xorderd. ID
+            LEFT JOIN mwarna ON xorderds.ref_warna = mwarna.kode
+            WHERE
+                xorderd.ref_order = '$kode'
+            GROUP BY
+                mwarna.nama,
+                mwarna.colorc";
+
+        $resorder   = $this->db->query($order)->row();
+        $resqty     = $this->db->query($qty)->row();
+        $resmwarna  = $this->db->query($masterwarna)->result();
+        $reswarna   = $this->db->query($warna)->result();
+        $resspek    = $this->db->query($spek)->result();
+
+        $data['title']      = "SPK PRODUKSI";
+        $data['order']      = $resorder;
+        $data['qty']        = $resqty;
+        $data['masterwarna']= $resmwarna;
+        $data['warna']      = $reswarna;
+        $data['spek']       = $resspek;
+        $this->load->view('po/p_po_spk',$data);
+    }
+
     function move_ftp()
     {
         $uploadpath         = '/uploads/po/2.png';

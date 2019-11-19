@@ -506,6 +506,7 @@
                         <button class="btn btn-act bg-navy btn-flat file-btn" onclick="open_file()"><i class="fa fa-file"></i> File</button>
                         <button class="btn btn-act btn-danger btn-flat delete-btn invisible" onclick="hapus_data()" ><i class="fa fa-trash"></i> Void</button>
                         <button class="btn btn-act bg-olive btn-flat" onclick="cetak_data()" ><i class="fa fa-print"></i> Cetak</button>
+                        <button class="btn btn-act btn-hijau btn-flat" onclick="cetak_spk()" ><i class="fa fa-print"></i> Cetak SPK</button>
                       </div>
                     </div>
                     <div class="box-body">
@@ -1354,8 +1355,13 @@
       window.open(`${apiurl}/cetak?kode=${kode}`);
   }
 
-
-  
+  function cetak_spk() {
+      kode = table.cell(idx, 3).data();
+      if (idx == -1) {
+          return false;
+      }
+      window.open(`${apiurl}/cetakspk?kode=${kode}`);
+  }  
   </script>
 </body>
 </html>
