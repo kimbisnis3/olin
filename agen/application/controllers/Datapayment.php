@@ -1,26 +1,26 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 class Datapayment extends CI_Controller {
-    
+
     public $table       = 'xpelunasan';
     public $foldername  = 'xpelunasan';
     public $indexpage   = 'datapayment/v_datapayment';
     function __construct() {
         parent::__construct();
         include(APPPATH.'libraries/sessionakses.php');
-        include(APPPATH.'libraries/dbinclude.php');  
+        include(APPPATH.'libraries/dbinclude.php');
     }
     function index(){
         $data['jenisbayar'] = $this->dbtwo->get('mjenbayar')->result();
         $data['cust'] = $this->dbtwo->get('mcustomer')->result();
-        $this->load->view($this->indexpage,$data);  
+        $this->load->view($this->indexpage,$data);
     }
 
     public function getall(){
         $filterawal = date('Y-m-d', strtotime($this->input->post('filterawal')));
         $filterakhir = date('Y-m-d', strtotime($this->input->post('filterakhir')));
         $filteragen = $this->input->post('filteragen');
-        $q = "SELECT 
+        $q = "SELECT
                 xpelunasan.id,
                 xpelunasan.kode,
                 xpelunasan.tgl tgl_real,
@@ -35,14 +35,14 @@ class Datapayment extends CI_Controller {
                 mcustomer.nama mcustomer_nama,
                 mgudang.nama mgudang_nama,
                 mjenbayar.nama mjenbayar_nama
-            FROM 
+            FROM
                 xpelunasan
             LEFT JOIN mcustomer ON mcustomer.kode = xpelunasan.ref_cust
             LEFT JOIN mgudang ON mgudang.kode = xpelunasan.ref_gud
             LEFT JOIN mjenbayar ON mjenbayar.kode = xpelunasan.ref_jenbayar
             WHERE xpelunasan.void IS NOT TRUE
             AND
-                xpelunasan.tgl 
+                xpelunasan.tgl
             BETWEEN '$filterawal' AND '$filterakhir'";
         if ($filteragen) {
             $q .= " AND ref_cust = '$filteragen'";
@@ -118,7 +118,7 @@ class Datapayment extends CI_Controller {
 
     public function getorder(){
         $q = "select qr.*, (COALESCE(qr.total,0))- (COALESCE(qr.dibayar,0)) kurang from (
-                select 
+                select
                 xorder.id,
                 xorder.kode,
                 xorder.tgl,
@@ -129,12 +129,12 @@ class Datapayment extends CI_Controller {
                 xorder.ref_cust,
                 xorder.ref_kirim,
                 mcustomer.nama mcustomer_nama,
-                case xorder.ref_kirim 
+                case xorder.ref_kirim
                 when 'GX0002' then xorder.total
                 when 'GX0001' then xorder.total - xorder.bykirim
                 end as total,
                 (select sum(xpelunasan.bayar) from xpelunasan
-                where xpelunasan.void is not true 
+                where xpelunasan.void is not true
                 and xpelunasan.ref_jual = xorder.kode) dibayar
                 from xorder
                 join mcustomer on mcustomer.kode = xorder.ref_cust
@@ -155,12 +155,12 @@ class Datapayment extends CI_Controller {
             $row['ket']             = $r->ket;
 
             $list[] = $row;
-        }   
+        }
         echo json_encode(array('data' => $list));
     }
 
     public function savedata()
-    {   
+    {
         $this->dbtwo->trans_begin();
         $a['useri']     = $this->session->userdata('username');
         $a['ref_cust']  = $this->input->post('ref_cust');
@@ -195,7 +195,7 @@ class Datapayment extends CI_Controller {
         if ($this->dbtwo->trans_status() === FALSE) {
             $this->dbtwo->trans_rollback();
             $r = array(
-                'sukses' => 'fail', 
+                'sukses' => 'fail',
             );
         }
         else {
@@ -211,7 +211,7 @@ class Datapayment extends CI_Controller {
     public function edit()
     {
         $this->input->post('kode');
-        $q = "SELECT 
+        $q = "SELECT
                 xpelunasan.id,
                 xpelunasan.kode,
                 xpelunasan.tgl tgl_real,
@@ -226,7 +226,7 @@ class Datapayment extends CI_Controller {
                 mcustomer.nama mcustomer_nama,
                 mgudang.nama mgudang_nama,
                 mjenbayar.nama mjenbayar_nama
-            FROM 
+            FROM
                 xpelunasan
             LEFT JOIN mcustomer ON mcustomer.kode = xpelunasan.ref_cust
             LEFT JOIN mgudang ON mgudang.kode = xpelunasan.ref_gud
@@ -270,7 +270,7 @@ class Datapayment extends CI_Controller {
         if ($this->dbtwo->trans_status() === FALSE) {
             $this->dbtwo->trans_rollback();
             $r = array(
-                'sukses' => 'fail', 
+                'sukses' => 'fail',
             );
         }
         else {
@@ -284,38 +284,58 @@ class Datapayment extends CI_Controller {
 
     function validdata() {
         $d['posted']    = 't';
-        $w['id']        = $this->input->post('id');   
+        $d['tglposted'] = date("Y-m-d");
+        $w['id']        = $this->input->post('id');
         $result         = $this->dbtwo->update('xpelunasan',$d,$w);
         $kodeorder      = $this->dbtwo->get_where('xpelunasan',$w)->row();
+        $q = "SELECT
+                xorder.kode,
+                mmodesign.nama,
+                xorderd.jumlah,
+                xpelunasan.tglposted + INTEGER '15' tglposted,
+                _product_id,
+                _design_id,
+                _order_id
+              FROM
+                xorder
+              LEFT JOIN xpelunasan ON xorder.kode = xpelunasan.ref_jual
+              LEFT JOIN xorderd ON xorder.kode = xorderd.ref_order
+              LEFT JOIN xorderds ON xorderd. ID = xorderds.ref_orderd
+              LEFT JOIN mmodesign ON mmodesign.kode = xorderds.ref_modesign
+              WHERE
+                xorder.kode = '$kodeorder->ref_jual'";
+        $data['dataorder'] = $this->dbtwo->query($q)->result_array();
+        $message = $this->load->view('datapayment/e_datapayment',$data, true);
         if ($kodeorder != NULL || $kodeorder != '')
         {
-            $this->sendemail($kodeorder->ref_jual);
+            $this->sendemail($kodeorder->ref_jual, $message);
         }
         $r['sukses']    = $result ? 'success' : 'fail' ;
         echo json_encode($r);
     }
 
-    public function sendemail($kodeorder = '')
+    public function sendemail($kodeorder = '', $message)
     {
-        $emailto        = 'kimbisnis3@gmail.com';
+        $emailto        = 'ihsanwst@yahoo.com';
+        // $emailto        = 'kimbisnis3@gmail.com';
         // adm_taspromo@yahoo.co.id
         $subject        = 'No Reply';
-        $message        = 'Pembayaran Untuk Pesanan '.$kodeorder.' Sudah divalidasi';
+        // $message        = 'Pembayaran Untuk Pesanan '.$kodeorder.' Sudah divalidasi';
         $config_name    = 'Pabrik Tas Custom';
         $config_email   = 'gongsoft.olinbags@gmail.com';
         $config_pass    = 'gongsoft2019mkj';
 
-        $config = Array( 
-                'protocol'  => 'smtp', 
-                'smtp_host' => 'ssl://smtp.gmail.com', 
-                'smtp_port' => 465, 
-                'smtp_user' => $config_email, 
+        $config = Array(
+                'protocol'  => 'smtp',
+                'smtp_host' => 'ssl://smtp.gmail.com',
+                'smtp_port' => 465,
+                'smtp_user' => $config_email,
                 'smtp_pass' => $config_pass,
-                'mailtype'  => 'html', 
-                'charset'   => 'iso-8859-1', 
-                'wordwrap'  => TRUE 
-                ); 
-        
+                'mailtype'  => 'html',
+                'charset'   => 'iso-8859-1',
+                'wordwrap'  => TRUE
+                );
+
         $this->load->library('email',$config);
         $this->email->set_newline("\r\n");
         $this->email->from($config_email, $config_name);
@@ -324,21 +344,44 @@ class Datapayment extends CI_Controller {
         $this->email->message($message);
         $this->email->send();
         if ($this->email->send()) {
-                return 1;  
+                return 1;
         }else{
                 return 0;
         }
     }
 
-    function voiddata() 
+    function voiddata()
     {
         $d['void']  = 't';
         $d['tglvoid'] = 'now()';
-        $w['id']    = $this->input->post('id');   
+        $w['id']    = $this->input->post('id');
         $result     = $this->dbtwo->update($this->table,$d,$w);
         $r['sukses'] = $result ? 'success' : 'fail' ;
         echo json_encode($r);
 
     }
-    
+
+    function html_email()
+    {
+        $q = "SELECT
+                xorder.kode,
+                mmodesign.nama,
+                xorderd.jumlah,
+                xpelunasan.tglposted + INTEGER '15' tglposted,
+                _product_id,
+                _design_id,
+                _order_id
+              FROM
+                xorder
+              LEFT JOIN xpelunasan ON xorder.kode = xpelunasan.ref_jual
+              LEFT JOIN xorderd ON xorder.kode = xorderd.ref_order
+              LEFT JOIN xorderds ON xorderd. ID = xorderds.ref_orderd
+              LEFT JOIN mmodesign ON mmodesign.kode = xorderds.ref_modesign
+              WHERE
+                xorder.kode = '0038/PO/MKJ/XI/2019'";
+        $data['dataorder'] = $this->dbtwo->query($q)->result_array();
+        $message = $this->load->view('datapayment/e_datapayment',$data, true);
+        $this->sendemail($kodeorder = '', $message);
+    }
+
 }
