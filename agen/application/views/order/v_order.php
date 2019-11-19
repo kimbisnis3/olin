@@ -427,7 +427,7 @@
             </div>
             </div>  <!-- END MODAL INPUT-->
             <div class="modal fade" id="modal-status" role="dialog" data-backdrop="static">
-              <div class="modal-dialog modal-lg">
+              <div class="modal-dialog modal-sm">
                 <div class="modal-content">
                   <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -440,7 +440,7 @@
                       <div class="box-body pad">
                         <form id="form-status">
                           <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-12">
                               <div class="form-group">
                                 <label>Status </label>
                                 <input type="hidden" name="kode_po">
@@ -459,6 +459,7 @@
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-warning btn-flat" data-dismiss="modal">Tutup</button>
+                    <button type="button" class="btn btn-primary btn-flat" onclick="savestatus()">Simpan</button>
                   </div>
                 </div>
               </div>
@@ -847,7 +848,6 @@
           return false;
       }
       $('#modal-status').modal('show');
-      $('#modal-title').modal('Status');
       $.ajax({
             url: `${apiurl}/getstatus`,
             type: "POST",
@@ -867,7 +867,7 @@
 
   }
 
-  function send_status()
+  function savestatus()
   {
       $.ajax({
             url: `${apiurl}/updatestatus`,
