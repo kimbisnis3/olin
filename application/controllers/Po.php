@@ -217,17 +217,66 @@ class Po extends CI_Controller {
         $result     = $this->db->query($q)->result();
         $list       = [];
         foreach ($result as $i => $r) {
-            $row['no']      = $i + 1;
-            $row['id']          = $r->id;
-            $row['kode']        = $r->kode;
-            $row['elempathcorel']   = btndownload($r->pathcorel);
-            $row['elempathimage']   = dlimage($r->pathimage);
-            $row['pathcorel']   = $r->pathcorel;
-            $row['pathimage']   = imghandler($r->pathimage,60);
+            $row['no']              = $i + 1;
+            $row['id']              = $r->id;
+            $row['kode']            = $r->kode;
+            $row['elempathcorel']   = dlcorel(file_url($r->pathcorel));
+            $row['elempathimage']   = dlimage(file_url($r->pathimage));
+            $row['pathcorel']       = link_file_url($r->pathcorel);
+            $row['pathimage']       = link_file_url($r->pathimage);
             $list[] = $row;
         }   
         echo json_encode(array('data' => $list));
     }
+
+    function updatefile()
+    {
+        if (!empty($_FILES['editcorel']['name'])) {
+            $upcorel    = $this->libre->goUpload('editcorel','corel-'.time(),$this->foldername);
+            $a['pathcorel'] = '_pusat'.$upcorel;
+            $oldpath = $this->input->post('editpathcorel');
+            @unlink(".".$oldpath);
+        }
+        if (!empty($_FILES['editimage']['name'])) {
+            $upimage    = $this->libre->goUpload('editimage','image-'.time(),$this->foldername);
+            $a['pathimage'] = '_pusat'.$upimage;
+            $oldpath = $this->input->post('editpathimage');
+            @unlink(".".$oldpath);
+        } 
+        if (isset($a)) {
+            $result = $this->db->update('xorder',$a,array('kode' => $this->input->post('editkodefile')));
+            $r['sukses']    = $result ? 'success' : 'fail' ;
+            echo json_encode($r);
+        } else {
+            $r['sukses']    = 'success';
+            echo json_encode($r);
+        }
+    }
+
+    // function updatefile()
+    // {
+    //     if (!empty($_FILES['editcorel']['name'])) {
+    //         $upcorel    = $this->libre->goUpload('editcorel','corel-'.time(),$this->foldername);
+    //         $a['pathcorel'] = $upcorel;
+    //         $oldpath = $this->input->post('editpathcorel');
+    //         @unlink(".".$oldpath);
+    //     } else {
+    //         $a['pathcorel'] = $this->input->post('editpathcorel');
+    //     }
+
+    //     if (!empty($_FILES['editimage']['name'])) {
+    //         $upimage    = $this->libre->goUpload('editimage','image-'.time(),$this->foldername);
+    //         $a['pathimage'] = $upimage;
+    //         $oldpath = $this->input->post('editpathimage');
+    //         @unlink(".".$oldpath);
+    //     } else {
+    //         $a['pathimage'] = $this->input->post('editpathimage');
+    //     }
+
+    //     $result = $this->db->update('xorder',$a,array('kode' => $this->input->post('editkodefile')));
+    //     $r['sukses']    = $result ? 'success' : 'fail' ;
+    //     echo json_encode($r);
+    // }
 
     function gethargalayanan($ref_layanan)
     {
@@ -240,8 +289,8 @@ class Po extends CI_Controller {
         $upcorel    = $this->libre->goUpload('corel','corel-'.time(),$this->foldername);
         $upimage    = $this->libre->goUpload('image','img-'.time(),$this->foldername);
         $this->db->trans_begin();
-        $a['pathcorel'] = $upcorel;
-        $a['pathimage'] = $upimage;
+        $a['pathcorel'] = '_pusat'.$upcorel;
+        $a['pathimage'] = '_pusat'.$upimage;
         $a['useri']     = $this->session->userdata('username');
         $a['ref_cust']  = $this->input->post('ref_cust');
         $a['tgl']       = date('Y-m-d', strtotime($this->input->post('tgl')));
@@ -439,31 +488,6 @@ class Po extends CI_Controller {
                 'sukses' => 'success'
                 );
         }
-        echo json_encode($r);
-    }
-
-    function updatefile()
-    {
-        if (!empty($_FILES['editcorel']['name'])) {
-            $upcorel    = $this->libre->goUpload('editcorel','corel-'.time(),$this->foldername);
-            $a['pathcorel'] = $upcorel;
-            $oldpath = $this->input->post('editpathcorel');
-            @unlink(".".$oldpath);
-        } else {
-            $a['pathcorel'] = $this->input->post('editpathcorel');
-        }
-
-        if (!empty($_FILES['editimage']['name'])) {
-            $upimage    = $this->libre->goUpload('editimage','image-'.time(),$this->foldername);
-            $a['pathimage'] = $upimage;
-            $oldpath = $this->input->post('editpathimage');
-            @unlink(".".$oldpath);
-        } else {
-            $a['pathimage'] = $this->input->post('editpathimage');
-        }
-
-        $result = $this->db->update('xorder',$a,array('kode' => $this->input->post('editkodefile')));
-        $r['sukses']    = $result ? 'success' : 'fail' ;
         echo json_encode($r);
     }
 

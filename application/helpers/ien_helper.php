@@ -3,15 +3,104 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 /** If empty null helper **/
 if (!function_exists('status')) {
 
-    function image_url() {
-        $url    = 'http://localhost/olin/';
-        // $url    = 'https://mkj.olinbags.com/';
-        return $url
-    }
-
     function insert_id($table){
       $ci =& get_instance();
       return $ci->db->insert_id('public."'.$table.'_id_seq"');
+    }
+
+    function file_url($i) {
+        // $url_pusat  = 'https://mkj.olinbags.com/';
+        // $url_agen   = 'https://agen.olinbags.com/';
+        $url_pusat  = 'http://localhost/olin/';
+        $url_agen   = 'http://localhost/olin/agen/';
+        
+        if (strpos($i, '_pusat') !== false || strpos($i, '/pusat/') !== false) {
+            return $url_pusat.str_replace("_pusat","",$i);
+        } else if (strpos($i, '_agen') !== false || strpos($i, '/agen/') !== false) {
+            return $url_agen.str_replace("_agen","",$i);
+        } else {
+            return '';
+        }
+    }
+
+    function link_file_url($i) 
+    {
+        if (strpos($i, '_pusat') !== false || strpos($i, '/pusat/') !== false) {
+            return str_replace("_pusat","",$i);
+        } else if (strpos($i, '_agen') !== false || strpos($i, '/agen/') !== false) {
+            return str_replace("_agen","",$i);
+        } else {
+            return '';
+        }
+    }
+
+     //IMAGE MANIPULATION
+
+    function showimage($i){
+         
+        if ($i == NULL){
+            $i = "(Noimage)";
+        } else {
+            $img = base_url().''.$i;
+            $i = "<img onerror='imgError(this)' style='max-width : 60px;' src='".$img."'>";
+        }
+
+        return $i;
+    }
+
+    function dlimage($img){
+        $path = ".".$img;
+        if ($img == null || $img == "") {
+            $img = "(Noimage)";
+        } else {
+            $img = '<a href="'.$img.'" title="ImageName"  download="img_'.time().'" ><img onerror="imgError(this)" style="max-width : 60px;" src="'.$img.'" alt="ImageName"></a>';
+        }
+        return $img;
+    }
+
+    function dlcorel($img)
+    {
+        $path = ".".$img;
+        if ($img == null || $img == "") {
+            $img = "(Noimage)";
+        } else {
+            $img = '<a href="'.$img.'" class="btn btn-md btn-primary" title="ImageName" download="corel_'.time().'" ><i class="fa fa-download"></i> Unduh</a>';
+        }
+        return $img;
+    }
+
+    function imgerr($img)
+    {
+        $path = ".".$img;
+
+        if ($img == null || $img == "") {
+            $img = "(Noimage)";
+        } else {
+            if (file_exists($path)) {
+                $img = $img;
+            } else {
+                $img = '/agen/assets/gambar/noimage.png';
+            }
+        }
+        return $img;
+        
+    }
+
+    function imghandler($img,$maxw)
+    {
+        $path = ".".$img;
+
+        if ($img == null || $img == "") {
+            $img = "(Noimage)";
+        } else {
+            if (file_exists($path)) {
+                $img = "<img style='max-width : ".$maxw."px;' src='".base_url().$img."'>";
+            } else {
+                $img = "<img style='max-width : ".$maxw."px;'  src='".base_url()."/agen/assets/gambar/noimage.png'>";
+            }
+        }
+        return $img;
+        
     }
 
     function ien($text)
@@ -113,140 +202,5 @@ if (!function_exists('status')) {
        
         return $s;
     }
-
-    //IMAGE MANIPULATION
-
-    function showimage($i){
-         
-        if ($i == NULL){
-            $i = "(Noimage)";
-        } else {
-            $img = base_url().''.$i;
-            $i = "<img onerror='imgError(this)' style='max-width : 60px;' src='".$img."'>";
-        }
-
-        return $i;
-    }
-
-    function showimagecustom($i,$maxw){
-        if ($i == NULL){
-            $i = "(Noimage)";
-        } else {
-            $img = base_url().''.$i;
-            $i = "<img style='max-width : ".$maxw."px;' src='".$img."'>";
-        }
-
-        return $i;
-    }
-
-    function dlimage($img){
-
-        $path = ".".$img;
-
-        if ($img == null || $img == "") {
-            $img = "(Noimage)";
-        } else {
-            if (file_exists($path)) {
-                $img = '<a href="'.$img.'" title="ImageName"  download="img_'.time().'" ><img style="max-width : 60px;" src="'.base_url().$img.'" alt="ImageName"></a>';
-            } else {
-                $img = "<img style='max-width : 60px;'  src='".base_url()."/agen/assets/gambar/noimage.png'>";
-            }
-        }
-        return $img;
-    }
-
-    function imgerr($img)
-    {
-        $path = ".".$img;
-
-        if ($img == null || $img == "") {
-            $img = "(Noimage)";
-        } else {
-            if (file_exists($path)) {
-                $img = $img;
-            } else {
-                $img = '/agen/assets/gambar/noimage.png';
-            }
-        }
-        return $img;
-
-        
-    }
-
-    function imghandler($img,$maxw)
-    {
-        $path = ".".$img;
-
-        if ($img == null || $img == "") {
-            $img = "(Noimage)";
-        } else {
-            if (file_exists($path)) {
-                $img = "<img style='max-width : ".$maxw."px;' src='".base_url().$img."'>";
-            } else {
-                $img = "<img style='max-width : ".$maxw."px;'  src='".base_url()."/agen/assets/gambar/noimage.png'>";
-            }
-        }
-        return $img;
-
-        
-    }
-
-    // function pref_file()
-    // {
-    //     return '/_pusat';
-    // }
-
-    // function image_url($i) {
-    //     // $url_pusat  = 'https://mkj.olinbags.com/';
-    //     // $url_agen   = 'https://agen.olinbags.com/';
-    //     $url_pusat  = 'http://localhost/olin/';
-    //     $url_agen   = 'http://localhost/olin/agen/';
-        
-    //     if (strpos($i, '_pusat') !== false || strpos($i, '/pusat/') !== false) {
-    //         return $url_pusat.str_replace("_pusat/","",$i);
-    //     } else if (strpos($i, '_agen') !== false || strpos($i, '/agen/') !== false) {
-    //         return $url_agen.str_replace("_agen/","",$i);
-    //     } else {
-    //         return '';
-    //     }
-    // }
-
-    // //IMAGE MANIPULATION
-
-    // function showimage($i){
-         
-    //     if ($i == NULL){
-    //         $i = "(Noimage)";
-    //     } else {
-    //         $img = image_url($i);
-    //         $i = "<img style='max-width : 60px;' src='".$img."'>";
-    //     }
-
-    //     return $i;
-    // }
-
-    // function dlimage($img){
-
-    //     $path = ".".$img;
-
-    //     if ($img == null || $img == "") {
-    //         $img = "(Noimage)";
-    //     } else {
-    //         $img = '<a href="'.$img.'" title="ImageName"  download="img_'.time().'" ><img style="max-width : 60px;" src="'.image_url($img).'" alt="ImageName"></a>';
-    //     }
-    //     return $img;
-    // }
-
-    // function imghandler($img,$maxw)
-    // {
-    //     $path = ".".$img;
-
-    //     if ($img == null || $img == "") {
-    //         $img = "(Noimage)";
-    //     } else {
-    //         $img = "<img onerror='imgError(this)' style='max-width : ".$maxw."px;' src='".image_url($img)."'>";
-    //     }
-    //     return $img;
-    // }
 
 }

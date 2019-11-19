@@ -176,7 +176,7 @@
                   $(".loop-card").append(`
                     <div class="col-md-3 loop-inside bounceIn animated"><div class="box box-widget widget-user-2"><div class="widget-user-header ${v.status >= 4 ? "bg-green" : "bg-yellow"}">
                     <div class="widget-user-image">
-                      <img class="" src="<?php echo base_url() ?>${v.pathimage}" alt="Img Produk"></div>
+                      <img class="" src="${v.pathimage}" alt="Img Produk"></div>
                       <h5 class="widget-user-desc">${v.kode}</h5>
                       <h5 class="widget-user-desc">${v.mbarang_nama}</h5>
                       <h5 class="widget-user-desc">Jumlah : ${v.jumlah} ${v.msatuan_nama}</h5>
