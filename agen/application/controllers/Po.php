@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 class Po extends CI_Controller {
-    
+
     public $table       = 'xorder';
     public $foldername  = 'po';
     public $indexpage   = 'po_agen/v_po_agen';
@@ -15,7 +15,7 @@ class Po extends CI_Controller {
         $data['mlayanan'] = $this->db->get('mlayanan')->result();
         $data['mkirim'] = $this->db->get('mkirim')->result();
         $data['mbank'] = $this->db->get('mbank')->result();
-        $this->load->view($this->indexpage,$data);  
+        $this->load->view($this->indexpage,$data);
     }
 
     public function getall(){
@@ -53,7 +53,7 @@ class Po extends CI_Controller {
             LEFT JOIN xsuratjalan ON xsuratjalan.ref_order = xorder.kode
             WHERE xorder.void IS NOT TRUE
             AND
-                xorder.tgl 
+                xorder.tgl
             BETWEEN '$filterawal' AND '$filterakhir'";
         if ($kodecust) {
             $q .= " AND xorder.ref_cust = '$kodecust'";
@@ -83,7 +83,7 @@ class Po extends CI_Controller {
             $row['orderdone']   = $r->orderdone;
             $row['statusorder'] = ($r->orderdone == $r->jmlorder) ? '<span class="label label-success">Selesai Semua</span>' : '<span class="label label-warning">Belum Selesai</span>' ;
             $list[] = $row;
-        }   
+        }
         echo json_encode(array('data' => $list));
     }
 
@@ -167,8 +167,8 @@ class Po extends CI_Controller {
                             <td>'.statuspo($r->statusd).'</td>
                         </tr>
                         </tbody>';
-        }       
-        $tabs .= '</table>';       
+        }
+        $tabs .= '</table>';
         $tabs .=    '</div>
                     <div class="tab-pane" id="tab_2">';
 
@@ -195,7 +195,7 @@ class Po extends CI_Controller {
                         </tr>
                         </tbody>';
         }
-        $tabs .= '</table>';              
+        $tabs .= '</table>';
         $tabs .='   </div>
                   </div>
                 </div>';
@@ -214,16 +214,40 @@ class Po extends CI_Controller {
         $result     = $this->db->query($q)->result();
         $list       = [];
         foreach ($result as $i => $r) {
-            $row['no']      = $i + 1;
-            $row['id']          = $r->id;
-            $row['kode']        = $r->kode;
-            $row['elempathcorel']   = btndownload(str_replace('/agen/','',$r->pathcorel));
-            $row['elempathimage']   = "<img style='max-width : 60px;'  src='".base_url().str_replace('/agen/','',$r->pathimage)."'>";
-            $row['pathcorel']   = $r->pathcorel;
-            $row['pathimage']   = $r->pathimage;
+            $row['no']              = $i + 1;
+            $row['id']              = $r->id;
+            $row['kode']            = $r->kode;
+            $row['elempathcorel']   = dlcorel(file_url($r->pathcorel));
+            $row['elempathimage']   = dlimage(file_url($r->pathimage));
+            $row['pathcorel']       = link_file_url($r->pathcorel);
+            $row['pathimage']       = link_file_url($r->pathimage);
             $list[] = $row;
-        }   
+        }
         echo json_encode(array('data' => $list));
+    }
+
+    function updatefile()
+    {
+        if (!empty($_FILES['editcorel']['name'])) {
+            $upcorel    = $this->libre->goUpload('editcorel','corel-'.time(),$this->foldername);
+            $a['pathcorel'] = '_agen'.$upcorel;
+            $oldpath = $this->input->post('editpathcorel');
+            @unlink(".".$oldpath);
+        }
+        if (!empty($_FILES['editimage']['name'])) {
+            $upimage    = $this->libre->goUpload('editimage','image-'.time(),$this->foldername);
+            $a['pathimage'] = '_agen'.$upimage;
+            $oldpath = $this->input->post('editpathimage');
+            @unlink(".".$oldpath);
+        }
+        if (isset($a)) {
+            $result = $this->db->update('xorder',$a,array('kode' => $this->input->post('editkodefile')));
+            $r['sukses']    = $result ? 'success' : 'fail' ;
+            echo json_encode($r);
+        } else {
+            $r['sukses']    = 'success';
+            echo json_encode($r);
+        }
     }
 
     function gethargalayanan($ref_layanan)
@@ -233,12 +257,12 @@ class Po extends CI_Controller {
     }
 
     public function savedata()
-    {   
+    {
         $upcorel    = $this->libre->goUpload('corel','corel-'.time(),$this->foldername);
         $upimage    = $this->libre->goUpload('image','img-'.time(),$this->foldername);
         $this->db->trans_begin();
-        $a['pathcorel'] = '/agen'.$upcorel;
-        $a['pathimage'] = '/agen'.$upimage;
+        $a['pathcorel'] = '_agen'.$upcorel;
+        $a['pathimage'] = '_agen'.$upimage;
         $a['useri']     = $this->session->userdata('username');
         $a['ref_cust']  = $this->session->userdata('kodecust');
         $a['tgl']       = date('Y-m-d', strtotime($this->input->post('tgl')));
@@ -250,7 +274,7 @@ class Po extends CI_Controller {
         $a['alamat']    = $this->input->post('alamat');
         $a['telp']      = $this->input->post('telp');
         $a['ref_bank']  = ien($this->input->post('ref_bank'));
-        if ($this->input->post('ref_kirim') == 'GX0002') {    
+        if ($this->input->post('ref_kirim') == 'GX0002') {
             $a['kodeprovfrom']  = $this->input->post('provinsi');
             $a['kodeprovto']    = $this->input->post('provinsito');
             $a['kodecityfrom']  = $this->input->post('city');
@@ -271,17 +295,17 @@ class Po extends CI_Controller {
         $arr_produk = $this->input->post('arr_produk');
         foreach (json_decode($arr_produk) as $r) {
             $Brg = $this->db->query("
-            SELECT 
+            SELECT
                 msatbrg.kode msatbrg_kode,
                 msatbrg.ref_brg msatbrg_ref_brg,
                 msatbrg.harga msatbrg_harga,
                 msatbrg.ref_gud msatbrg_ref_gud,
                 msatbrg.ket msatbrg_ket
-            FROM 
-                mbarang 
-            LEFT JOIN msatbrg ON msatbrg.ref_brg = mbarang.kode 
-            WHERE 
-                msatbrg.def = 't' 
+            FROM
+                mbarang
+            LEFT JOIN msatbrg ON msatbrg.ref_brg = mbarang.kode
+            WHERE
+                msatbrg.def = 't'
             AND mbarang.kode = '$r->kode'")->row();
             $rowb['useri']     = $this->session->userdata('username');
             $rowb['ref_order'] = $kodeOrder;
@@ -324,7 +348,7 @@ class Po extends CI_Controller {
             @unlink(".".$upcorel);
             @unlink(".".$upimage);
             $r = array(
-                'sukses' => 'fail', 
+                'sukses' => 'fail',
             );
         }
         else
@@ -339,7 +363,7 @@ class Po extends CI_Controller {
 
     public function edit()
     {
-        $q_po = "SELECT 
+        $q_po = "SELECT
                 xorder.*,
                 xorder.id,
                 xorder.kode,
@@ -364,19 +388,19 @@ class Po extends CI_Controller {
                 xorder.kirimke,
                 xorder.ref_bank,
                 mcustomer.nama mcustomer_nama
-            FROM 
+            FROM
                 xorder
             LEFT JOIN mcustomer ON mcustomer.kode = xorder.ref_cust
             WHERE xorder.kode = '{$this->input->post('kode')}'";
 
-        $q_barang ="SELECT 
+        $q_barang ="SELECT
                 xorderd.id,
                 xorderd.jumlah,
                 xorderd.harga,
                 mbarang.nama,
                 mbarang.kode,
                 msatbrg.beratkg
-            FROM 
+            FROM
                 xorderd
             LEFT JOIN mbarang ON mbarang.kode = xorderd.ref_brg
             LEFT JOIN msatbrg ON mbarang.kode = msatbrg.ref_brg
@@ -386,12 +410,12 @@ class Po extends CI_Controller {
         $barang     = $this->db->query($q_barang)->result();
         echo json_encode(
             array(
-                'po'    => $po, 
-                'barang'=> $barang, 
+                'po'    => $po,
+                'barang'=> $barang,
         ));
     }
 
-    public function updatedata() 
+    public function updatedata()
     {
         $this->db->trans_begin();
         $kodeorder      = $this->input->post('kode');
@@ -429,7 +453,7 @@ class Po extends CI_Controller {
         {
             $this->db->trans_rollback();
             $r = array(
-                'sukses' => 'fail', 
+                'sukses' => 'fail',
             );
         }
         else
@@ -442,30 +466,30 @@ class Po extends CI_Controller {
         echo json_encode($r);
     }
 
-    function updatefile()
-    {
-        if (!empty($_FILES['editcorel']['name'])) {
-            $upcorel    = $this->libre->goUpload('editcorel','corel-'.time(),$this->foldername);
-            $a['pathcorel'] = '/agen'.$upcorel;
-            $oldpath = $this->input->post('editpathcorel');
-            @unlink(".".str_replace('/agen','',$oldpath));
-        } else {
-            $a['pathcorel'] = $this->input->post('editpathcorel');
-        }
-
-        if (!empty($_FILES['editimage']['name'])) {
-            $upcorel    = $this->libre->goUpload('editimage','image-'.time(),$this->foldername);
-            $a['pathimage'] = '/agen'.$upcorel;
-            $oldpath = $this->input->post('editpathimage');
-            @unlink(".".str_replace('/agen','',$oldpath));
-        } else {
-            $a['pathimage'] = $this->input->post('editpathimage');
-        }
-
-        $result = $this->db->update('xorder',$a,array('kode' => $this->input->post('editkodefile')));
-        $r['sukses']    = $result ? 'success' : 'fail' ;
-        echo json_encode($r);
-    }
+    // function updatefile()
+    // {
+    //     if (!empty($_FILES['editcorel']['name'])) {
+    //         $upcorel    = $this->libre->goUpload('editcorel','corel-'.time(),$this->foldername);
+    //         $a['pathcorel'] = '/agen'.$upcorel;
+    //         $oldpath = $this->input->post('editpathcorel');
+    //         @unlink(".".str_replace('/agen','',$oldpath));
+    //     } else {
+    //         $a['pathcorel'] = $this->input->post('editpathcorel');
+    //     }
+    //
+    //     if (!empty($_FILES['editimage']['name'])) {
+    //         $upcorel    = $this->libre->goUpload('editimage','image-'.time(),$this->foldername);
+    //         $a['pathimage'] = '/agen'.$upcorel;
+    //         $oldpath = $this->input->post('editpathimage');
+    //         @unlink(".".str_replace('/agen','',$oldpath));
+    //     } else {
+    //         $a['pathimage'] = $this->input->post('editpathimage');
+    //     }
+    //
+    //     $result = $this->db->update('xorder',$a,array('kode' => $this->input->post('editkodefile')));
+    //     $r['sukses']    = $result ? 'success' : 'fail' ;
+    //     echo json_encode($r);
+    // }
 
     function loadcustomer(){
         $q = "SELECT
@@ -494,7 +518,7 @@ class Po extends CI_Controller {
             $row['email']   = $r->email;
 
             $list[] = $row;
-        }   
+        }
         echo json_encode(array('data' => $list));
     }
 
@@ -552,7 +576,7 @@ class Po extends CI_Controller {
             $row['beratkg']     = $r->beratkg;
 
             $list[] = $row;
-        }   
+        }
         echo json_encode(array('data' => $list));
     }
 
@@ -572,19 +596,19 @@ class Po extends CI_Controller {
         $kodebarang = $this->input->post('kode');
         $kodeorder  = $this->input->post('kodeorder');
         $Brg = $this->db->query("
-            SELECT 
+            SELECT
                 msatbrg.kode msatbrg_kode,
                 msatbrg.ref_brg msatbrg_ref_brg,
                 msatbrg.harga msatbrg_harga,
                 msatbrg.ref_gud msatbrg_ref_gud,
                 msatbrg.ket msatbrg_ket
-            FROM 
-                mbarang 
-            LEFT JOIN msatbrg ON msatbrg.ref_brg = mbarang.kode 
-            WHERE 
-                msatbrg.def = 't' 
+            FROM
+                mbarang
+            LEFT JOIN msatbrg ON msatbrg.ref_brg = mbarang.kode
+            WHERE
+                msatbrg.def = 't'
             AND mbarang.kode = '$kodebarang'")->row();
-            
+
         $a['useri']     = $this->session->userdata('username');
         $a['ref_order'] = $kodeorder;
         $a['ref_brg']   = $Brg->msatbrg_ref_brg;
@@ -611,14 +635,14 @@ class Po extends CI_Controller {
         if (count($design) > 0) {
             $this->db->insert_batch('xorderds',$c);
         }
-        $q_barang = " SELECT 
+        $q_barang = " SELECT
                 xorderd.id,
                 xorderd.jumlah,
                 xorderd.harga,
                 mbarang.nama,
                 mbarang.kode,
                 msatbrg.beratkg
-            FROM 
+            FROM
                 xorderd
             LEFT JOIN mbarang ON mbarang.kode = xorderd.ref_brg
             LEFT JOIN msatbrg ON mbarang.kode = msatbrg.ref_brg
@@ -629,7 +653,7 @@ class Po extends CI_Controller {
         {
             $this->db->trans_rollback();
             $r = array(
-                'sukses' => 'fail', 
+                'sukses' => 'fail',
             );
         }
         else
@@ -649,19 +673,19 @@ class Po extends CI_Controller {
         $idorderd = $this->input->post('id');
         $kodeorder  = $this->input->post('kodeorder');
         $Brg = $this->db->query("
-            SELECT 
+            SELECT
                 msatbrg.kode msatbrg_kode,
                 msatbrg.ref_brg msatbrg_ref_brg,
                 msatbrg.harga msatbrg_harga,
                 msatbrg.ref_gud msatbrg_ref_gud,
                 msatbrg.ket msatbrg_ket
-            FROM 
-                mbarang 
-            LEFT JOIN msatbrg ON msatbrg.ref_brg = mbarang.kode 
-            WHERE 
-                msatbrg.def = 't' 
+            FROM
+                mbarang
+            LEFT JOIN msatbrg ON msatbrg.ref_brg = mbarang.kode
+            WHERE
+                msatbrg.def = 't'
             AND mbarang.kode = '$kodebarang'")->row();
-            
+
         $a['useru']     = $this->session->userdata('username');
         $a['dateu']     = 'now()';
         $a['ref_order'] = $kodeorder;
@@ -689,14 +713,14 @@ class Po extends CI_Controller {
         if (count($design) > 0) {
             $this->db->insert_batch('xorderds',$c);
         }
-        $q_barang = " SELECT 
+        $q_barang = " SELECT
                 xorderd.id,
                 xorderd.jumlah,
                 xorderd.harga,
                 mbarang.nama,
                 mbarang.kode,
                 msatbrg.beratkg
-            FROM 
+            FROM
                 xorderd
             LEFT JOIN mbarang ON mbarang.kode = xorderd.ref_brg
             LEFT JOIN msatbrg ON mbarang.kode = msatbrg.ref_brg
@@ -707,7 +731,7 @@ class Po extends CI_Controller {
         {
             $this->db->trans_rollback();
             $r = array(
-                'sukses' => 'fail', 
+                'sukses' => 'fail',
             );
         }
         else
@@ -733,42 +757,42 @@ class Po extends CI_Controller {
 
     function request_province() {
         $response = $this->libre->get_province_ro();
-        $data = json_decode($response, true); 
+        $data = json_decode($response, true);
         $op = "<option value=''>-</option>";
-            for ($i=0; $i < count($data['rajaongkir']['results']); $i++) {  
+            for ($i=0; $i < count($data['rajaongkir']['results']); $i++) {
                 $op .="<option value='".$data['rajaongkir']['results'][$i]['province_id']."'>".$data['rajaongkir']['results'][$i]['province']."</option>";
-              }  
-        echo $op; 
+              }
+        echo $op;
 
     }
 
     function request_city() {
         $provincecode = $this->input->get('province');
         $response = $this->libre->get_city_ro($provincecode);
-        $data = json_decode($response, true); 
+        $data = json_decode($response, true);
         $op = "<option value=''>-</option>";
-            for ($i=0; $i < count($data['rajaongkir']['results']); $i++) { 
-              $op .=  "<option value='".$data['rajaongkir']['results'][$i]['city_id']."'>".$data['rajaongkir']['results'][$i]['city_name']."</option>"; 
-              }  
+            for ($i=0; $i < count($data['rajaongkir']['results']); $i++) {
+              $op .=  "<option value='".$data['rajaongkir']['results'][$i]['city_id']."'>".$data['rajaongkir']['results'][$i]['city_name']."</option>";
+              }
         echo $op;
 
     }
 
     function request_ongkir() {
-        $origin         = $this->input->get('origin'); 
-        $destination    = $this->input->get('destination'); 
+        $origin         = $this->input->get('origin');
+        $destination    = $this->input->get('destination');
         // $weight         = $this->input->get('weight') * 1000;
         $weight         = 1 * 1000;
         $courier        = $this->input->get('courier');
         $response = $this->libre->get_ongkir_ro($origin,$destination,$weight,$courier);
-        $data = json_decode($response, true); 
+        $data = json_decode($response, true);
         $op = "<option value=''>-</option>";
-            for ($i=0; $i < count($data['rajaongkir']['results'][0]['costs']); $i++) {  
+            for ($i=0; $i < count($data['rajaongkir']['results'][0]['costs']); $i++) {
             $res = $data['rajaongkir']['results'][0]['costs'][$i];
             $op .= "<option value='@".$res['service']."@?".$res['cost'][0]['value']."?'>".$res['service']." (".$res['description']." | Perkilo | ".number_format($res['cost'][0]['value']).")</option>";
             }
-        echo $op; 
-        
+        echo $op;
+
     }
 
 
@@ -868,5 +892,5 @@ class Po extends CI_Controller {
         $data['spek']   = $resspek;
         $this->load->view($this->printpage,$data);
     }
-    
+
 }
