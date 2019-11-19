@@ -137,9 +137,9 @@ class Qc extends CI_Controller {
         $emailto = $this->db->get('tcompany')->row();
         $subject = 'No Reply';
         $message = 'Jumlah stok produk '.$ref_brg.' Saat Ini adalah '.$stok.' Kurang dari stok aman yaitu '.$minstok;
-        $config_name    = 'Mr Robot';
-        $config_email   = 'eps.sangkrah@gmail.com';
-        $config_pass    = 'eps2019wkwk';
+        $config_name    = 'Pabrik Tas Custom';
+        $config_email   = 'gongsoft.olinbags@gmail.com';
+        $config_pass    = 'gongsoft2019mkj';
 
         $config = Array( 
                 'protocol'  => 'smtp', 
