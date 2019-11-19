@@ -76,7 +76,7 @@ echo '</table>';
     </tbody>
 
     <!-- Total -->
-    <tbody style="display : <?php echo isset($usetotal) ? "": "none";?>">
+    <!-- <tbody style="display : <?php echo isset($usetotal) ? "": "none";?>">
     <tr></tr>
     <?php $sum = 0; ?>
     <?php foreach ($result as $i => $t) {  ?>
@@ -87,7 +87,7 @@ echo '</table>';
         <?php } ?>
       </tr>
     <?php } ?>
-    </tbody>
+    </tbody> -->
 
   </table>
 <?php } ?>  
