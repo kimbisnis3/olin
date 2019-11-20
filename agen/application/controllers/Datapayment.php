@@ -117,29 +117,29 @@ class Datapayment extends CI_Controller {
     }
 
     public function getorder(){
-        $q = "select qr.*, (COALESCE(qr.total,0))- (COALESCE(qr.dibayar,0)) kurang from (
-                select
-                xorder.id,
-                xorder.kode,
-                xorder.tgl,
-                xorder.ket,
-                xorder.pic,
-                xorder.kgkirim,
-                xorder.bykirim,
-                xorder.ref_cust,
-                xorder.ref_kirim,
-                mcustomer.nama mcustomer_nama,
-                case xorder.ref_kirim
-                when 'GX0002' then xorder.total
-                when 'GX0001' then xorder.total - xorder.bykirim
-                end as total,
-                (select sum(xpelunasan.bayar) from xpelunasan
-                where xpelunasan.void is not true
-                and xpelunasan.ref_jual = xorder.kode) dibayar
-                from xorder
-                join mcustomer on mcustomer.kode = xorder.ref_cust
-                ) qr
-                where (qr.total - (COALESCE(qr.dibayar,0))) > 0";
+      $q = "select qr.*, (qr.total- qr.dibayar) kurang from (
+              select
+              xorder.id,
+              xorder.kode,
+              xorder.tgl,
+              xorder.ket,
+              xorder.pic,
+              xorder.kgkirim,
+              xorder.bykirim,
+              xorder.ref_cust,
+              xorder.ref_kirim,
+              mcustomer.nama mcustomer_nama,
+              case xorder.ref_kirim
+              when 'GX0002' then (coalesce(xorder.total,0))
+              when 'GX0001' then ((coalesce(xorder.total,0) - coalesce(xorder.bykirim,0)))
+              end as total,
+              (select coalesce(sum(xpelunasan.bayar),0) from xpelunasan
+              where xpelunasan.void is not true
+              and xpelunasan.ref_jual = xorder.kode) dibayar
+              from xorder
+              left outer join mcustomer on mcustomer.kode = xorder.ref_cust
+              ) qr
+              where (qr.total - (qr.dibayar)) > 0";
         $result     = $this->dbtwo->query($q)->result();
         $list       = [];
         foreach ($result as $i => $r) {

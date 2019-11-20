@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 class Pembayaran extends CI_Controller {
-    
+
     public $table       = 'xpelunasan';
     public $foldername  = 'xpelunasan';
     public $indexpage   = 'pembayaran_agen/v_pembayaran_agen';
@@ -12,14 +12,14 @@ class Pembayaran extends CI_Controller {
     function index(){
         $data['jenisbayar'] = $this->db->get('mjenbayar')->result();
         $data['mbank']      = $this->db->get('mbank')->result();
-        $this->load->view($this->indexpage,$data);  
+        $this->load->view($this->indexpage,$data);
     }
 
     public function getall(){
         $filterawal = date('Y-m-d', strtotime($this->input->post('filterawal')));
         $filterakhir = date('Y-m-d', strtotime($this->input->post('filterakhir')));
         $kodecust = $this->session->userdata('kodecust');
-        $q = "SELECT 
+        $q = "SELECT
                 xpelunasan.id,
                 xpelunasan.kode,
                 xpelunasan.tgl tgl_real,
@@ -37,7 +37,7 @@ class Pembayaran extends CI_Controller {
                 mcustomer.nama mcustomer_nama,
                 mgudang.nama mgudang_nama,
                 mjenbayar.nama mjenbayar_nama
-            FROM 
+            FROM
                 xpelunasan
             LEFT JOIN mcustomer ON mcustomer.kode = xpelunasan.ref_cust
             LEFT JOIN mgudang ON mgudang.kode = xpelunasan.ref_gud
@@ -45,7 +45,7 @@ class Pembayaran extends CI_Controller {
             LEFT JOIN mbank ON mbank.kode = xpelunasan.ref_bank
             WHERE xpelunasan.void IS NOT TRUE
             AND
-                xpelunasan.tgl 
+                xpelunasan.tgl
             BETWEEN '$filterawal' AND '$filterakhir'";
         if ($kodecust) {
             $q .= " AND ref_cust = '$kodecust'";
@@ -122,31 +122,32 @@ class Pembayaran extends CI_Controller {
 
     public function getorder(){
         $kodecust = $this->session->userdata('kodecust');
-        $q = "select qr.*, (COALESCE(qr.total,0))- (COALESCE(qr.dibayar,0)) kurang from (
-            select 
+        $q = "select qr.*, (qr.total)- (qr.dibayar) kurang from (
+            select
             xorder.id,
             xorder.kode,
             xorder.tgl,
             xorder.ket,
             xorder.pic,
             xorder.kgkirim,
-            xorder.bykirim, 
+            xorder.bykirim,
             xorder.ref_cust,
             xorder.ref_kirim,
             mcustomer.nama mcustomer_nama,
-            case xorder.ref_kirim 
-            when 'GX0002' then xorder.total
-            when 'GX0001' then xorder.total - xorder.bykirim
+            case xorder.ref_kirim
+            when 'GX0002' then coalesce(xorder.total,0)
+            when 'GX0001' then (coalesce(xorder.total,0) - coalesce(xorder.bykirim,0))
             end as total,
-            (select sum(xpelunasan.bayar) from xpelunasan
-            where xpelunasan.void is not true 
+            (select coalesce(sum(xpelunasan.bayar),0) from xpelunasan
+            where xpelunasan.void is not true
             and xpelunasan.ref_jual = xorder.kode) dibayar
             from xorder
             join mcustomer on mcustomer.kode = xorder.ref_cust
+            order by xorder.datei desc
             ) qr
-            where (COALESCE(qr.total,0))- (COALESCE(qr.dibayar,0)) > 0
+            where (qr.total)- (qr.dibayar) > 0
             AND qr.ref_cust ='$kodecust'";
-            
+
         $result     = $this->db->query($q)->result();
         $list       = [];
         foreach ($result as $i => $r) {
@@ -162,12 +163,12 @@ class Pembayaran extends CI_Controller {
             $row['ket']             = $r->ket;
 
             $list[] = $row;
-        }   
+        }
         echo json_encode(array('data' => $list));
     }
 
     public function savedata()
-    {   
+    {
         $this->db->trans_begin();
         $a['useri']     = $this->session->userdata('username');
         $a['ref_cust']  = $this->session->userdata('kodecust');
@@ -219,7 +220,7 @@ class Pembayaran extends CI_Controller {
     public function edit()
     {
         $this->input->post('kode');
-        $q = "SELECT 
+        $q = "SELECT
                 xpelunasan.id,
                 xpelunasan.kode,
                 xpelunasan.tgl tgl_real,
@@ -235,7 +236,7 @@ class Pembayaran extends CI_Controller {
                 mcustomer.nama mcustomer_nama,
                 mgudang.nama mgudang_nama,
                 mjenbayar.nama mjenbayar_nama
-            FROM 
+            FROM
                 xpelunasan
             LEFT JOIN mcustomer ON mcustomer.kode = xpelunasan.ref_cust
             LEFT JOIN mgudang ON mgudang.kode = xpelunasan.ref_gud
@@ -280,7 +281,7 @@ class Pembayaran extends CI_Controller {
         if ($this->db->trans_status() === FALSE) {
             $this->db->trans_rollback();
             $r = array(
-                'sukses' => 'fail', 
+                'sukses' => 'fail',
             );
         }
         else {
@@ -294,22 +295,22 @@ class Pembayaran extends CI_Controller {
 
     function validdata() {
         $d['posted']    = 't';
-        $w['id']        = $this->input->post('id');   
+        $w['id']        = $this->input->post('id');
         $result         = $this->db->update('xpelunasan',$d,$w);
         $r['sukses']    = $result ? 'success' : 'fail' ;
         echo json_encode($r);
 
     }
 
-    function voiddata() 
+    function voiddata()
     {
         $d['void']  = 't';
         $d['tglvoid'] = 'now()';
-        $w['id']    = $this->input->post('id');   
+        $w['id']    = $this->input->post('id');
         $result     = $this->db->update($this->table,$d,$w);
         $r['sukses'] = $result ? 'success' : 'fail' ;
         echo json_encode($r);
 
     }
-    
+
 }
