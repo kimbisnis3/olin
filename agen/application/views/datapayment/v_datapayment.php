@@ -252,11 +252,11 @@
 
       table = $('#table').DataTable({
           "processing": true,
-          "createdRow": function( row, data, dataIndex ) 
+          "createdRow": function( row, data, dataIndex )
           {
-            if ( data.posted == "t" ) {        
+            if ( data.posted == "t" ) {
               $(row).addClass('uni-green');
-            }else {        
+            }else {
               $(row).addClass('uni-red');
             }
           },
@@ -270,12 +270,12 @@
               },
           },
           "columns": [
-          { "data": "id", "visible" : false }, 
-          { "data": "id", "note" : "numbers" }, 
+          { "data": "id", "visible" : false },
+          { "data": "id", "note" : "numbers" },
           { "data": "id" , "visible" : false},
           { "data": "kode" , "visible" : false},
           { "data": "posted" , "visible" : false},
-          { "data": "tgl" }, 
+          { "data": "tgl" },
           { "data": "mcustomer_nama" },
           { "data": "ref_jual" },
           { "data": "mjenbayar_nama" },
@@ -373,7 +373,7 @@
               "defaultContent": "<button id='pilih-order' class='btn btn-sm btn-success btn-flat'><i class='fa fa-check'></i></button>"
           }],
           "columns": [
-            { "data": "no" }, 
+            { "data": "no" },
             { "data": "id" , "visible" : false},
             { "data": "kode" , "visible" : true},
             { "data": "ref_cust" , "visible" : false},
@@ -515,6 +515,8 @@
   }
 
   function validation_data(id) {
+      barloading(1)
+      showNotif('', 'Processing', 'warning')
       $.ajax({
           url: `${apiurl}/validdata`,
           type: "POST",
@@ -527,10 +529,12 @@
                   refresh();
                   showNotif('Sukses', 'Data Berhasil di Validasi', 'success')
                   $('#modal-konfirmasi').modal('hide');
+                  barloading(0)
               } else if (data.sukses == 'fail') {
                   refresh();
                   showNotif('Gagal', 'Data Gagal di Validasi', 'danger')
                   $('#modal-konfirmasi').modal('hide');
+                  barloading(0)
               }
           },
           error: function(jqXHR, textStatus, errorThrown) {
