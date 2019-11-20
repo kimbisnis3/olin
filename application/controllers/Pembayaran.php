@@ -287,16 +287,19 @@ class Pembayaran extends CI_Controller {
         $result         = $this->db->update('xpelunasan',$d,$w);
         $resorder       = $this->db->get_where('xpelunasan',$w)->row();
         $attach         = $this->db->get_where('xorder',array('kode' => $resorder->ref_jual))->row();
-        $q = "SELECT
+        $q = "SELECT distinct
                 xorder.kode,
                 xorder.pathcorel,
-                mmodesign.nama,
+                mmodesign.nama namajen,
+                mbarang.nama,
+                xorderd.ref_brg,
                 xorderd.jumlah,
                 xpelunasan.tglposted + INTEGER '15' tglposted
               FROM
                 xorder
               LEFT JOIN xpelunasan ON xorder.kode = xpelunasan.ref_jual
               LEFT JOIN xorderd ON xorder.kode = xorderd.ref_order
+              LEFT JOIN mbarang ON mbarang.kode = xorderd.ref_brg
               LEFT JOIN xorderds ON xorderd. ID = xorderds.ref_orderd
               LEFT JOIN mmodesign ON mmodesign.kode = xorderds.ref_modesign
               WHERE
