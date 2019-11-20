@@ -512,6 +512,8 @@
   }
 
   function validation_data(id) {
+      barloading(1)
+      showNotif('', 'Processing', 'warning')
       $.ajax({
           url: `${apiurl}/validdata`,
           type: "POST",
@@ -524,10 +526,12 @@
                   refresh();
                   showNotif('Sukses', 'Data Berhasil di Validasi', 'success')
                   $('#modal-konfirmasi').modal('hide');
+                  barloading(0)
               } else if (data.sukses == 'fail') {
                   refresh();
                   showNotif('Gagal', 'Data Gagal di Validasi', 'danger')
                   $('#modal-konfirmasi').modal('hide');
+                  barloading(0)
               }
           },
           error: function(jqXHR, textStatus, errorThrown) {
@@ -535,7 +539,6 @@
           }
       });
   }
-
 
   function void_data() {
       id = table.cell( idx, 2).data();
