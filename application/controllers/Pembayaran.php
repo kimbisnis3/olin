@@ -282,11 +282,74 @@ class Pembayaran extends CI_Controller {
 
     function validdata() {
         $d['posted']    = 't';
+        $d['tglposted'] = date("Y-m-d");
         $w['id']        = $this->input->post('id');   
         $result         = $this->db->update('xpelunasan',$d,$w);
+        $resorder       = $this->db->get_where('xpelunasan',$w)->row();
+        $attach         = $this->db->get_where('xorder',array('kode' => $resorder->ref_jual))->row();
+        $q = "SELECT
+                xorder.kode,
+                xorder.pathcorel,
+                mmodesign.nama,
+                xorderd.jumlah,
+                xpelunasan.tglposted + INTEGER '15' tglposted
+              FROM
+                xorder
+              LEFT JOIN xpelunasan ON xorder.kode = xpelunasan.ref_jual
+              LEFT JOIN xorderd ON xorder.kode = xorderd.ref_order
+              LEFT JOIN xorderds ON xorderd. ID = xorderds.ref_orderd
+              LEFT JOIN mmodesign ON mmodesign.kode = xorderds.ref_modesign
+              WHERE
+                xorder.kode = '$resorder->ref_jual'";
+        $data['dataorder'] = $this->db->query($q)->result_array();
+        $message = $this->load->view('pembayaran/e_pembayaran',$data, true);
+        if ($resorder != NULL || $resorder != '')
+        {
+            if ($resorder->ref_jenbayar == 'GX0003') {
+                $this->sendemail($resorder->ref_jual, $message, file_url($attach->pathcorel));
+            }
+        }
         $r['sukses']    = $result ? 'success' : 'fail' ;
+        $r['link']      = file_url($attach->pathcorel) ;
         echo json_encode($r);
+    }
 
+    public function sendemail($kodeorder = '', $message, $attach)
+    {
+        // $emailto        = 'ihsanwst@yahoo.com';
+        $emailto        = 'kimbisnis3@gmail.com';
+        // adm_taspromo@yahoo.co.id
+        $subject        = 'No Reply';
+        $config_name    = 'Pabrik Tas Custom';
+        $config_email   = 'gongsoft.olinbags@gmail.com';
+        $config_pass    = 'gongsoft2019mkj';
+
+        $config = Array(
+                'protocol'  => 'smtp',
+                'smtp_host' => 'ssl://smtp.gmail.com',
+                'smtp_port' => 465,
+                'smtp_user' => $config_email,
+                'smtp_pass' => $config_pass,
+                'mailtype'  => 'html',
+                'charset'   => 'iso-8859-1',
+                'wordwrap'  => TRUE
+                );
+
+        $this->load->library('email',$config);
+        $this->email->set_newline("\r\n");
+        $this->email->from($config_email, $config_name);
+        $this->email->to($emailto);
+        $this->email->subject($subject);
+        $this->email->message($message);
+        if ($attach != null || $attach != '') {
+            $this->email->attach($attach);
+        }
+        $this->email->send();
+        if ($this->email->send()) {
+                return 1;
+        }else{
+                return 0;
+        }
     }
 
     function voiddata() 
