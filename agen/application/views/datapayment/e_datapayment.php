@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><?php echo $title; ?></title>
+    <title>Pembayaran</title>
     <style media="screen">
       table {
           font-family: arial, sans-serif;
