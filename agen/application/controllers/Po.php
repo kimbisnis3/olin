@@ -9,6 +9,7 @@ class Po extends CI_Controller {
 
     function __construct() {
         parent::__construct();
+        include(APPPATH . 'libraries/dbinclude.php');
     }
     function index(){
         include(APPPATH.'libraries/sessionakses.php');
@@ -200,6 +201,51 @@ class Po extends CI_Controller {
                   </div>
                 </div>';
         echo $tabs;
+    }
+
+    public function getpesanan()
+    {
+        $q = "SELECT
+              	mbarang. ID,
+              	mbarang.kode kodebrg,
+              	mbarang.nama,
+              	mbarang.ket,
+              	msatbrg. ID idsatbarang,
+              	msatbrg.konv,
+              	msatbrg.ket ketsat,
+              	msatuan.nama satuan,
+              	mcustomer.nama customer_nama,
+                xorder.tgl,
+                xorder.kode kodeorder,
+              	xorderd.ref_order,
+              	xorderd.harga,
+              	xorderd.jumlah,
+              	xorderd._product_id,
+              	xorderd._design_id,
+              	xorderd._order_id
+              FROM
+              	xorderd
+              LEFT JOIN xorder ON xorder.kode = xorderd.ref_order
+              LEFT JOIN mcustomer ON mcustomer.kode = xorder.ref_cust
+              LEFT JOIN mbarang ON mbarang.kode = xorderd.ref_brg
+              LEFT JOIN msatbrg ON msatbrg.kode = xorderd.ref_satbrg
+              LEFT JOIN msatuan ON msatuan.kode = msatbrg.ref_sat";
+        $q .=" ORDER BY xorder.id DESC" ;
+        $result     = $this->dbtwo->query($q)->result();
+        $list       = [];
+        foreach ($result as $i => $r) {
+            $row['no']          = $i + 1;
+            $row['id']          = $r->id;
+            $row['kodebrg']     = $r->kodebrg;
+            $row['kodeorder']   = $r->kodeorder;
+            $row['nama']        = $r->nama;
+            $row['tgl']         = normal_date($r->tgl);
+            $row['customer_nama']    = $r->customer_nama;
+            $row['jumlah']      = $r->jumlah;
+            $row['harga']       = $r->harga;
+            $list[] = $row;
+        }
+        echo json_encode(array('data' => $list));
     }
 
     public function loadfilelist(){
@@ -582,6 +628,55 @@ class Po extends CI_Controller {
             $list[] = $row;
         }
         echo json_encode(array('data' => $list));
+    }
+
+    function loadbrgbykode() {
+        $kodebrg = $this->input->get('kodebrg');
+        $q = "SELECT
+                mbarang. ID,
+                mbarang.kode,
+                mbarang.nama,
+                mbarang.ket,
+                msatbrg. ID idsatbarang,
+                msatbrg.konv,
+                msatbrg.ket,
+                msatbrg.harga,
+                ( COALESCE( msatbrg.beratkg, 0 )) beratkg,
+                msatbrg.ref_brg,
+                msatbrg.ref_sat,
+                msatbrg.ref_gud,
+                msatuan.nama namasatuan,
+                mgudang.nama namagudang,
+                (
+                    SELECT
+                        COUNT (mbarangs. ID)
+                    FROM
+                        mbarangs
+                    WHERE
+                        mbarangs.ref_brg = mbarang.kode
+                ) jumlahspek
+            FROM
+                mbarang
+            LEFT JOIN msatbrg ON msatbrg.ref_brg = mbarang.kode
+            LEFT JOIN msatuan ON msatuan.kode = msatbrg.ref_sat
+            LEFT JOIN mgudang ON mgudang.kode = msatbrg.ref_gud
+            WHERE
+                msatbrg.def = 't'
+            AND (
+                SELECT
+                    COUNT (mbarangs. ID)
+                FROM
+                    mbarangs
+                WHERE
+                    mbarangs.ref_brg = mbarang.kode
+            ) > 0
+            AND mbarang.ref_ktg != 'GX0002'";
+
+            $q .=" AND mbarang.kode = '$kodebrg'";
+
+            $res_row = $this->db->query($q)->row();
+            echo json_encode($res_row);
+
     }
 
     public function deletedata()
