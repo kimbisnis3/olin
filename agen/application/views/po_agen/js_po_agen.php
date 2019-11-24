@@ -430,6 +430,7 @@ function edit_barang(index) {
   $('[name="kodebrg"]').val(arr_produk[index]['kode'])
   $('[name="jumlah"]').val(arr_produk[index]['jumlah'])
   $('[name="harga"]').val(arr_produk[index]['harga'])
+  $('[name="beratkg"]').val(arr_produk[index]['beratkg'])
   state_edsatuan()
   $('#btn-simpan-barang').attr('onclick', 'update_barang(' + index + ')');
   total_harga()
@@ -442,7 +443,8 @@ function update_barang(index) {
         'nama': $('[name="namabarang"]').val(),
         'kode': $('[name="kodebrg"]').val(),
         'jumlah': $('[name="jumlah"]').val(),
-        'harga': $('[name="harga"]').val()
+        'harga': $('[name="harga"]').val(),
+        'beratkg': $('[name="beratkg"]').val(),
     };
     arr_produk[index] = newval;
     reloadbarang()
