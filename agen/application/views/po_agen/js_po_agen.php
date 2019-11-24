@@ -3,6 +3,7 @@ var path = 'po';
 var title = 'Purchase Order';
 var grupmenu = 'Transaksi';
 var apiurl = "<?php echo base_url('') ?>" + path;
+var designUrl = "<?php echo lumise_url() ?>" + 'editor.php';
 var state;
 var idx     = -1;
 var table ;
@@ -323,6 +324,7 @@ function clearbarang() {
     $('[name="kodebrg"]').val('')
     $('[name="jumlah"]').val('')
     $('[name="harga"]').val('')
+    $('[name="xorderd_id"]').val('')
     $('#total-harga').html('');
     $('#input-total-harga').val('');
 }
@@ -352,7 +354,7 @@ function loadpesanan()
     table_pesanan();
 }
 
-function add_pesanan(kodebrg, jumlah)
+function add_pesanan(kodebrg, jumlah, xorderd_id)
 {
   $.ajax({
       url: `${apiurl}/loadbrgbykode`,
@@ -367,6 +369,7 @@ function add_pesanan(kodebrg, jumlah)
         $('[name="harga"]').val(data.harga);
         $('[name="namabarang"]').val(data.nama);
         $('[name="jumlah"]').val(jumlah);
+        $('[name="xorderd_id"]').val(xorderd_id);
         $('#modal-pesanan').modal('hide');
       },
       error: function(jqXHR, textStatus, errorThrown) {
@@ -395,7 +398,7 @@ function table_pesanan()
       { "data": "customer_nama" },
       { "data": "jumlah" },
       { "data": "harga" , "visible" : false  },
-      { "render" : (data,type,row,meta) => { return `<button type="button" class="btn btn-sm btn-hijau btn-flat" onclick="add_pesanan('${row.kodebrg}','${row.jumlah}')"><i class="fa fa-check"></i></button>` }},
+      { "render" : (data,type,row,meta) => { return `<button type="button" class="btn btn-sm btn-hijau btn-flat" onclick="add_pesanan('${row.kodebrg}','${row.jumlah}','${row.xorderd_id}')"><i class="fa fa-check"></i></button>` }},
       ]
   });
 
@@ -418,6 +421,7 @@ function tabel_add_barang() {
         { "data": "jumlah" },
         { "data": "beratkg" },
         { "data": "harga" },
+        { "data": "xorderd_id" , "visible" : false   },
         { "render" : (data,type,row,meta) => { return `<button type="button" class="btn btn-sm btn-oren btn-flat" onclick="edit_barang(${meta.row})"><i class="fa fa-pencil"></i></button>
         <button type="button" class="btn btn-sm btn-merah btn-flat" onclick="del_barang(${meta.row},${row.id})"><i class="fa fa-trash"></i></button>` }},
         ]
@@ -445,6 +449,7 @@ function update_barang(index) {
         'jumlah': $('[name="jumlah"]').val(),
         'harga': $('[name="harga"]').val(),
         'beratkg': $('[name="beratkg"]').val(),
+        'xorderd_id': $('[name="xorderd_id"]').val(),
     };
     arr_produk[index] = newval;
     reloadbarang()
@@ -509,6 +514,7 @@ function add_barang() {
             'jumlah': $('[name="jumlah"]').val(),
             'harga': $('[name="harga"]').val(),
             'beratkg': $('[name="beratkg"]').val(),
+            'xorderd_id': $('[name="xorderd_id"]').val(),
         });
         reloadbarang();
         clearbarang();
@@ -873,6 +879,13 @@ function cetak_data() {
         return false;
     }
     window.open(`${apiurl}/cetak?kode=${kode}`);
+}
+
+function grab_design(product_id, design_id, order_id) {
+  window.open(
+    `${designUrl}?product=${product_id}&design_print=${design_id}&order_print=${order_id}`,
+    `_blank`
+  );
 }
 
 

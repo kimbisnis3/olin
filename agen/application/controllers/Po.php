@@ -106,6 +106,9 @@ class Po extends CI_Controller {
                 mgudang.nama gudang,
                 xorderd.jumlah,
                 xorderd.statusd,
+                xorderd._product_id,
+                xorderd._design_id,
+                xorderd._order_id,
                 xorderd.jumlah * xorderd.harga subtotal
             FROM
                 xorderd
@@ -152,6 +155,7 @@ class Po extends CI_Controller {
                             <th>Subtotal</th>
                             <th>Keterangan</th>
                             <th>Status</th>
+                            <th>Design</th>
                         </tr>
                         <thead>';
         foreach ($brg as $i => $r) {
@@ -166,6 +170,7 @@ class Po extends CI_Controller {
                             <td>'.number_format($r->subtotal).'</td>
                             <td>'.$r->ket.'</td>
                             <td>'.statuspo($r->statusd).'</td>
+                            <td><button class="btn btn-success btn-flat btn-sm" onclick="grab_design(\''.$r->_product_id.'\',\''.$r->_design_id.'\',\''.$r->_order_id.'\')">Design</button></td>
                         </tr>
                         </tbody>';
         }
@@ -217,6 +222,7 @@ class Po extends CI_Controller {
               	mcustomer.nama customer_nama,
                 xorder.tgl,
                 xorder.kode kodeorder,
+                xorderd.id xorderd_id,
               	xorderd.ref_order,
               	xorderd.harga,
               	xorderd.jumlah,
@@ -235,6 +241,7 @@ class Po extends CI_Controller {
         $list       = [];
         foreach ($result as $i => $r) {
             $row['no']          = $i + 1;
+            $row['xorderd_id']  = $r->xorderd_id;
             $row['id']          = $r->id;
             $row['kodebrg']     = $r->kodebrg;
             $row['kodeorder']   = $r->kodeorder;
@@ -353,14 +360,18 @@ class Po extends CI_Controller {
             WHERE
                 msatbrg.def = 't'
             AND mbarang.kode = '$r->kode'")->row();
-            $rowb['useri']     = $this->session->userdata('username');
-            $rowb['ref_order'] = $kodeOrder;
-            $rowb['ref_brg']   = $Brg->msatbrg_ref_brg;
-            $rowb['jumlah']    = $r->jumlah;
-            $rowb['harga']     = str_replace(",","",$r->harga);
-            $rowb['ref_satbrg']= $Brg->msatbrg_kode;
-            $rowb['ref_gud']   = $Brg->msatbrg_ref_gud;
-            $rowb['ket']       = $Brg->msatbrg_ket;
+            $rowb['useri']            = $this->session->userdata('username');
+            $rowb['ref_order']        = $kodeOrder;
+            $rowb['ref_brg']          = $Brg->msatbrg_ref_brg;
+            $rowb['jumlah']           = $r->jumlah;
+            $rowb['harga']            = str_replace(",","",$r->harga);
+            $rowb['ref_satbrg']       = $Brg->msatbrg_kode;
+            $rowb['ref_gud']          = $Brg->msatbrg_ref_gud;
+            $rowb['ket']              = $Brg->msatbrg_ket;
+            $rowb['_agen_orderd_id']  = $r->xorderd_id;
+            $rowb['_product_id']      = $this->get_data_design($r->xorderd_id)->_product_id;
+            $rowb['_design_id']       = $this->get_data_design($r->xorderd_id)->_design_id;
+            $rowb['_order_id']        = $this->get_data_design($r->xorderd_id)->_order_id;
             $b[] = $rowb;
         }
         $this->db->delete('xorderd',array('ref_order' => $kodeOrder));
@@ -409,6 +420,12 @@ class Po extends CI_Controller {
         echo json_encode($r);
     }
 
+    public function get_data_design($agen_orderd_id)
+    {
+        $result = $this->dbtwo->get_where('xorderd',array('id' => $agen_orderd_id))->row();
+        return $result;
+    }
+
     public function edit()
     {
         $q_po = "SELECT
@@ -445,6 +462,7 @@ class Po extends CI_Controller {
                 xorderd.id,
                 xorderd.jumlah,
                 xorderd.harga,
+                xorderd._agen_orderd_id xorderd_id,
                 mbarang.nama,
                 mbarang.kode,
                 msatbrg.beratkg

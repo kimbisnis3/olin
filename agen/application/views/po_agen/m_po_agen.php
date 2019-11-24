@@ -60,6 +60,7 @@
                     <input type="number" class="form-control" name="jumlah" id="jumlah">
                     <input type="hidden" class="form-control" name="beratkg" id="beratkg">
                     <input type="hidden" class="form-control" name="total" id="input-total-harga">
+                    <input type="hidden" class="form-control" name="xorderd_id" id="xorderd_id">
                   </div>
                 </div>
                 <div class="col-md-4">
@@ -96,6 +97,7 @@
                           <th>Jumlah</th>
                           <th>Berat p/item (kg)</th>
                           <th>Harga</th>
+                          <th>Xorder_id</th>
                           <th>Opsi</th>
                         </tr>
                       </thead>
