@@ -8,6 +8,11 @@ if (!function_exists('status')) {
       return $ci->db->insert_id('public."'.$table.'_id_seq"');
     }
 
+    function lumise_url() {
+        // return 'https://pabriktascustom.com/designapp/';
+        return 'http://localhost/lumise_new/';
+    }
+
     function file_url($i) {
         // $url_pusat  = 'https://mkj.olinbags.com/';
         // $url_agen   = 'https://agen.olinbags.com/';
