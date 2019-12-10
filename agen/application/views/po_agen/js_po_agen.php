@@ -883,7 +883,7 @@ function cetak_data() {
 
 function grab_design(product_id, design_id, order_id) {
   window.open(
-    `${designUrl}?product=${product_id}&design_print=${design_id}&order_print=${order_id}`,
+    `${designUrl}?product_base=${product_id}&design_print=${design_id}&order_print=${order_id}`,
     `_blank`
   );
 }

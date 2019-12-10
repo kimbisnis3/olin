@@ -597,7 +597,7 @@
       $('#select-city').select2({ disabled: true });
       $('#select-city-to').select2({ disabled: true });
       $('#select-service').select2({ disabled: true });
-      
+
       nilaimax('berat',30)
 
       table = $('#table').DataTable({
@@ -612,13 +612,13 @@
                 filterproses : function() { return $('[name="filterproses"').val() },
               },
           },
-          "columns": [{ 
+          "columns": [{
               "className": 'details-control',
               "orderable": false,
               "data": null,
               "defaultContent": ''
           },
-          { "data": "no" }, 
+          { "data": "no" },
           { "data": "id" , "visible" : false},
           { "data": "kode" },
           { "data": "tgl" },
@@ -734,7 +734,7 @@
               "defaultContent": "<button class='btn btn-sm btn-success btn-flat'><i class='fa fa-check'></i></button>"
           }],
           "columns": [
-            { "data": "no" }, 
+            { "data": "no" },
             { "data": "id" , "visible" : false},
             { "data": "kode" , "visible" : false},
             { "data": "nama" },
@@ -771,7 +771,7 @@
               "defaultContent": "<button class='btn btn-sm btn-success btn-flat'><i class='fa fa-check'></i></button>"
           }],
           "columns": [
-            { "data": "no", "visible" : false }, 
+            { "data": "no", "visible" : false },
             { "data": "id" , "visible" : false},
             { "data": "kode" , "visible" : false},
             { "data": "nama" },
@@ -819,7 +819,7 @@
               "defaultContent": "<button id='btn-edit-file' class='btn btn-sm btn-warning btn-flat'><i class='fa fa-pencil'></i></button>"
           }],
           "columns": [
-            { "data": "no" }, 
+            { "data": "no" },
             { "data": "id" , "visible" : false},
             { "data": "kode" , "visible" : false},
             { "data": "elempathcorel" },
@@ -1206,19 +1206,19 @@
               $('[name="provinsi"]').val(data.po.kodeprovfrom);
               $('[name="provinsito"]').val(data.po.kodeprovto);
               $('[name="city"]').val(data.po.kodecityfrom);
-              setTimeout(function(){ 
+              setTimeout(function(){
                 $('[name="cityto"]').val(data.po.kodecityto);
                 $('[name="kurir"]').val(data.po.kurir);
-                $('[name="kurir"]').trigger('change'); 
-                $('[name="cityto"]').trigger('change'); 
+                $('[name="kurir"]').trigger('change');
+                $('[name="cityto"]').trigger('change');
               }, 4000);
-              setTimeout(function(){ 
+              setTimeout(function(){
                 $('[name="biaya"]').val(data.po.bykirim);
                 $('[name="kodekurir"]').val(data.po.kodekurir);
                 $('[name="biaya"], [name="kodekurir"]').trigger('change');
                 $('[name="serv"]').val(`@${data.po.kodekurir}@?${data.po.bykirim / data.po.kgkirim}?`);
-                $('[name="serv"]').trigger('change'); 
-                $('#btnSimpan').prop('disabled',false); 
+                $('[name="serv"]').trigger('change');
+                $('#btnSimpan').prop('disabled',false);
               }, 5000);
               console.log($('[name="cityto"]').val());
               $('.select2').trigger('change');
@@ -1394,8 +1394,8 @@
         $('#select-service').select2({ disabled: false });
       });
       }
-      
-      $('[name="biaya"]').val($('#select-service').val()) ; 
+
+      $('[name="biaya"]').val($('#select-service').val()) ;
       $('[name="biaya"]').val('');
       $('[name="kodekurir"]').val('');
       return false;
@@ -1436,7 +1436,7 @@
 
   function grab_design(product_id, design_id, order_id) {
     window.open(
-      `${designUrl}?product=${product_id}&design_print=${design_id}&order_print=${order_id}`,
+      `${designUrl}?product_base=${product_id}&design_print=${design_id}&order_print=${order_id}`,
       `_blank`
     );
   }
