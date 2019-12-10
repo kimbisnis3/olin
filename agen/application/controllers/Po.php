@@ -368,10 +368,17 @@ class Po extends CI_Controller {
             $rowb['ref_satbrg']       = $Brg->msatbrg_kode;
             $rowb['ref_gud']          = $Brg->msatbrg_ref_gud;
             $rowb['ket']              = $Brg->msatbrg_ket;
-            $rowb['_agen_orderd_id']  = $r->xorderd_id;
-            $rowb['_product_id']      = $this->get_data_design($r->xorderd_id)->_product_id;
-            $rowb['_design_id']       = $this->get_data_design($r->xorderd_id)->_design_id;
-            $rowb['_order_id']        = $this->get_data_design($r->xorderd_id)->_order_id;
+            if ($r->xorderd_id != null || $r->xorderd_id != '') {
+              $rowb['_agen_orderd_id']  = $r->xorderd_id;
+              $rowb['_product_id']      = $this->get_data_design($r->xorderd_id)->_product_id;
+              $rowb['_design_id']       = $this->get_data_design($r->xorderd_id)->_design_id;
+              $rowb['_order_id']        = $this->get_data_design($r->xorderd_id)->_order_id;
+            } else {
+              $rowb['_agen_orderd_id']  = '';
+              $rowb['_product_id']      = '';
+              $rowb['_design_id']       = '';
+              $rowb['_order_id']        = '';
+            }
             $b[] = $rowb;
         }
         $this->db->delete('xorderd',array('ref_order' => $kodeOrder));
