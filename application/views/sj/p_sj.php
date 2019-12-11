@@ -55,15 +55,15 @@
           padding: 15px !important;
       }
 
-      hr{ 
-        border: 0.5px solid black; 
+      hr{
+        border: 0.5px solid black;
       }
       @media print{@page {size: landscape}}
     </style>
   </head>
   <body onload="window.print()">
 <!-- <body> -->
-  <div class="container"> 
+  <div class="container">
     <section class="header-report" style="margin-bottom: 20px">
       <div class="row">
         <div class="col-xs-12">
@@ -183,8 +183,8 @@
               <th>Kode</th>
               <th>Nama Produk</th>
               <th>Jumlah</th>
-              <th>Harga</th>
-              <th>Total</th>
+              <!-- <th>Harga</th>
+              <th>Total</th> -->
               <th>Design</th>
               <th>Warna</th>
             </tr>
@@ -193,8 +193,8 @@
               <td><?php echo $v->kode ?></td>
               <td><?php echo $v->nama ?></td>
               <td><?php echo $v->jumlah ?> <?php echo $v->satuan ?></td>
-              <td><?php echo number_format($v->harga) ?></td>
-              <td><?php echo number_format($v->subtotal) ?></td>
+              <!-- <td><?php echo number_format($v->harga) ?></td>
+              <td><?php echo number_format($v->subtotal) ?></td> -->
               <td><?php echo $v->mmodesign_nama ?></td>
               <td><?php echo $v->mwarna_nama ?></td>
             </tr>
