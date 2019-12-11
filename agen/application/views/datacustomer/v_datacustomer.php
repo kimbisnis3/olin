@@ -133,7 +133,7 @@
                       <button class="btn btn-primary btn-flat add-btn invisible" onclick="add_data()" ><i class="fa fa-plus"></i> Tambah</button>
                     </div>
                     <div class="pull-right">
-                      <button class="btn btn-warning btn-flat edit-btn invisible" onclick="edit_data()"><i class="fa fa-pencil"></i> Ubah</button>
+                      <button class="btn btn-warning btn-flat edit-btn " onclick="edit_data()"><i class="fa fa-pencil"></i> Ubah</button>
                       <button class="btn btn-success btn-flat edit-btn invisible" onclick="aktif_data()"><i class="fa fa-check"></i> Aktif</button>
                       <button class="btn btn-danger btn-flat delete-btn invisible" onclick="hapus_data()" ><i class="fa fa-trash"></i> Hapus</button>
                     </div>
@@ -187,12 +187,12 @@
 
       table = $('#table').DataTable({
           "processing": true,
-          "createdRow": function( row, data, dataIndex ) 
+          "createdRow": function( row, data, dataIndex )
           {
-            if ( data.aktif == "t" ) {        
+            if ( data.aktif == "t" ) {
               $(row).addClass('uni-green');
               console.log(row)
-            }else {        
+            }else {
               $(row).addClass('uni-red');
             }
           },
@@ -202,9 +202,9 @@
               "data": {},
           },
           "columns": [
-          { "data": "no" }, 
+          { "data": "no" },
           { "data": "id" , "visible" : false},
-          { "data": "nama" }, 
+          { "data": "nama" },
           { "data": "jencust" },
           { "data": "alamat" },
           { "data": "telp" },
