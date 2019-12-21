@@ -194,6 +194,7 @@
                         <button class="btn btn-act btn-primary btn-flat add-btn invisible" onclick="add_data()" ><i class="fa fa-plus"></i> Tambah</button>
                       </div>
                       <div class="pull-right">
+                        <button class="btn btn-act btn-primary btn-flat edit-btn" onclick="sendemail()"><i class="fa fa-paper-plane"></i> Email</button>
                         <button class="btn btn-act btn-warning btn-flat edit-btn invisible" onclick="edit_data()"><i class="fa fa-pencil"></i> Ubah</button>
                         <button class="btn btn-act btn-success btn-flat option-btn" onclick="valid_data()"><i class="fa fa-check"></i> Validasi</button>
                         <button class="btn btn-danger btn-flat delete-btn invisible" onclick="void_data()" ><i class="fa fa-trash"></i> Void</button>
@@ -542,6 +543,43 @@
           }
       });
   }
+
+  function sendemail()
+  {
+      barloading(1)
+      id = table.cell( idx, 2).data();
+      let validasiValue = table.cell( idx, 4).data();
+      if (validasiValue != 't') {
+        showNotif('', 'Pembayaran Belum Tervalidasi', 'warning')
+        barloading(0)
+        return true
+      }
+      showNotif('', 'Sedang mengirim pesan', 'warning')
+      $.ajax({
+          url: `${apiurl}/sendemail_manual`,
+          type: "POST",
+          dataType: "JSON",
+          data: {
+              id: id,
+          },
+          success: function(data) {
+              if (data.sukses == 'success') {
+                  refresh();
+                  showNotif('Sukses', 'Pesan Terkirim', 'success')
+                  barloading(0)
+              } else if (data.sukses == 'fail') {
+                  refresh();
+                  showNotif('Gagal', 'Pesan Tidak Terkirim', 'danger')
+                  barloading(0)
+              }
+          },
+          error: function(jqXHR, textStatus, errorThrown) {
+              showNotif('Fail', 'Internal Error', 'danger');
+              barloading(0)
+          }
+      });
+  }
+
 
 
   function void_data() {

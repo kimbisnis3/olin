@@ -314,6 +314,34 @@ class Datapayment extends CI_Controller {
         echo json_encode($r);
     }
 
+    public function sendemail_manual()
+    {
+        $w['id']        = $this->input->post('id');
+        $kodeorder      = $this->dbtwo->get_where('xpelunasan',$w)->row();
+        $q = "SELECT
+                xorder.kode,
+                mmodesign.nama,
+                xorderd.jumlah,
+                xpelunasan.tglposted + INTEGER '15' tglposted,
+                _product_id,
+                _design_id,
+                _order_id
+              FROM
+                xorder
+              LEFT JOIN xpelunasan ON (xorder.kode = xpelunasan.ref_jual and xpelunasan.ref_jenbayar = 'GX0003' and xpelunasan.tglposted is not null)
+              LEFT JOIN xorderd ON xorder.kode = xorderd.ref_order
+              LEFT JOIN xorderds ON xorderd. ID = xorderds.ref_orderd
+              LEFT JOIN mmodesign ON mmodesign.kode = xorderds.ref_modesign
+              WHERE
+                xorder.kode = '$kodeorder->ref_jual'";
+        $data['dataorder'] = $this->dbtwo->query($q)->result_array();
+        $message = $this->load->view('datapayment/e_datapayment',$data, true);
+        $result = $this->sendemail($kodeorder->ref_jual, $message);
+        $r['sukses']    = 'success' ;
+        $r['result']    = $result ;
+        echo json_encode($r);
+    }
+
     public function sendemail($kodeorder = '', $message)
     {
         // $emailto        = 'ihsanwst@yahoo.com';
