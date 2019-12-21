@@ -556,6 +556,7 @@
                               <th>Customer</th>
                               <th>Layanan</th>
                               <th>Pengiriman</th>
+                              <th>Total</th>
                               <th>Keterangan</th>
                               <th>Status</th>
                             </tr>
@@ -625,6 +626,7 @@
           { "data": "namacust" },
           { "data": "mlayanan_nama" },
           { "data": "mkirim_nama" },
+          { "data": "totalall" },
           { "data": "ket" },
           { "data": "status" }
           ]

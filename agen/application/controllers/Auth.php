@@ -10,18 +10,22 @@ class Auth extends CI_Controller{
         $this->load->view('auth/v_auth');
     }
 
-    function auth_process(){
-        $username = $this->input->post('username');
-        $password = $this->input->post('pass');
-            $where = array(
-                'aktif'     => 't',
-                'user'      => $username,
-                'pass'      => md5($password),
-                );
-            $cek = $this->db->get_where("mcustomer",$where)->num_rows();
-            if($cek > 0){
+    function auth_process()
+    {
+        $useurl         = false;
+        $url            = base_url();
+        $username       = $this->input->post('username');
+        $password       = $this->input->post('pass');
+        $where['aktif'] = 't';
+        $where['user']  = $username;
+        $where['pass']  = md5($password);
+        if ($useurl == true) {
+          $where['url']   = $url;
+        }
+        $cek = $this->db->get_where("mcustomer",$where)->num_rows();
+        if($cek > 0){
                 $this->db->trans_start();
-                $q = "SELECT 
+                $q = "SELECT
                         mcustomer.id,
                         mcustomer.kode,
                         mcustomer.nama,
@@ -33,8 +37,8 @@ class Auth extends CI_Controller{
                         mcustomer.user,
                         mcustomer.pass,
                         mjencust.nama mjencust_nama
-                    FROM 
-                        mcustomer 
+                    FROM
+                        mcustomer
                     LEFT JOIN mjencust ON mjencust.kode = mcustomer.ref_jenc
                     WHERE mcustomer.user = '$username'";
                 $result = $this->db->query($q)->row();
@@ -64,20 +68,9 @@ class Auth extends CI_Controller{
                 echo json_encode($r);
             }
     }
-    
+
     function logout(){
         $this->session->sess_destroy();
-        // $arr = array(
-        //     'status', 
-        //     'in_cl',
-        //     'id',
-        //     'nama',
-        //     'user',
-        //     'kodecust',
-        //     'access',
-        //     'mjencust_nama',
-        // );
-        $this->session->unset_userdata($arr);
         redirect(base_url('auth'));
     }
 }

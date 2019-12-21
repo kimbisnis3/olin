@@ -36,7 +36,7 @@
                         </div>
                       </div>
                     <?php }  ?>
-                    <?php if (isset($gb) && $gb != '') { ?> 
+                    <?php if (isset($gb) && $gb != '') { ?>
                     <div class="col-md-3">
                       <div class="form-group">
                         <label>Group By</label>
@@ -53,7 +53,13 @@
                     <div class="col-md-2">
                       <div class="form-group">
                         <label style="color: #ffffff">zzzz</label>
-                        <button class="btn btn-success btn-flat btn-block"><i class="fa fa-print"></i> Cetak Laporan</button>
+                        <button class="btn btn-biru btn-flat btn-block"><i class="fa fa-print"></i> Cetak Laporan</button>
+                      </div>
+                    </div>
+                    <div class="col-md-2">
+                      <div class="form-group">
+                        <label style="color: #ffffff">zzzz</label>
+                        <button class="btn btn-hijau btn-flat btn-block" name="aksi_button" value="xls"><i class="fa fa-file-excel-o"></i> Export Excel</button>
                       </div>
                     </div>
                     </div>

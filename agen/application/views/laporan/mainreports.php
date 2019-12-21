@@ -1,3 +1,9 @@
+<?php
+if ($this->input->post('aksi_button') == 'xls') {
+  header("Content-type: application/vnd-ms-excel");
+  header("Content-Disposition: attachment; filename=".$title.".xls");
+}
+?>
 <!DOCTYPE html>
 <html>
   <head>
@@ -11,7 +17,7 @@
   <h4><?php echo (isset($filter) ? $filter : ''); ?></h4>
 
 <?php if (isset($gb) && $gb != '' && $gb != null){ ?>
-<?php 
+<?php
 $id = 1;
 foreach ($result as $index => $t) {
 
@@ -84,6 +90,6 @@ echo '</table>';
     </tbody>
 
   </table>
-<?php } ?>  
+<?php } ?>
 </body>
 </html>
