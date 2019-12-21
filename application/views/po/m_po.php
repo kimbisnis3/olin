@@ -123,6 +123,13 @@
                           </select>
                           <input type="hidden" name="mask-city">
                         </div>
+                        <div class="form-group">
+                          <label>Kecamatan Asal</label>
+                          <select class="form-control select2" id="select-dist" name="dist">
+                            <option value="">- Pilih Data -</option>
+                          </select>
+                          <input type="hidden" name="mask-dist">
+                        </div>
                       </div>
                       <div class="col-md-4">
                         <div class="form-group">
@@ -134,10 +141,17 @@
                         </div>
                         <div class="form-group">
                           <label>Kota Tujuan</label>
-                          <select class="form-control select2" id="select-city-to" name="cityto">
+                          <select class="form-control select2" id="select-city-to" name="cityto" onchange="setDistTo()">
                             <option value="">- Pilih Data -</option>
                           </select>
                           <input type="hidden" name="mask-cityto">
+                        </div>
+                        <div class="form-group">
+                          <label>Kecamatan Tujuan</label>
+                          <select class="form-control select2" id="select-dist-to" name="distto">
+                            <option value="">- Pilih Data -</option>
+                          </select>
+                          <input type="hidden" name="mask-distto">
                         </div>
                       </div>
                       <div class="col-md-4">
