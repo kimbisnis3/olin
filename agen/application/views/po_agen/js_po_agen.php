@@ -17,6 +17,7 @@ $(document).ready(function() {
     activemenux('transaksi', 'purchaseorder');
     dpicker();
     setProvince();
+    $('#select-provinsi').select2({ disabled: true });
     $('#select-city').select2({ disabled: true });
     $('#select-city-to').select2({ disabled: true });
     $('#select-service').select2({ disabled: true });
@@ -805,13 +806,13 @@ function setProvince() {
 
 function setCity() {
     let id_province = $('#select-provinsi').val();
-    $('#select-city').select2({ disabled: false });
+    $('#select-city').select2({ disabled: true });
     if (id_province.length) {
         $('#select-city').load(`${apiurl}/request_city?province=${id_province}`, function() {
           console.log('finish City');
-          $('#select-city').select2({ disabled: false });
           $('#select-city').val('445');
           $('#select-city').trigger('change');
+          setDist()
         });
     }
     return false;
@@ -829,9 +830,34 @@ function setCityTo() {
     return false;
 }
 
+function setDist() {
+    let id_city = $('#select-city').val();
+    $('#select-dist').select2({ disabled: true });
+    if (id_city.length) {
+        $('#select-dist').load(`${apiurl}/request_dist?city=${id_city}`, function() {
+          console.log('finish Dist');
+          $('#select-dist').val('6164');
+          $('#select-dist').trigger('change');
+        });
+    }
+    return false;
+}
+
+function setDistTo() {
+    let id_city = $('#select-city-to').val();
+    $('#select-dist-to').select2({ disabled: true });
+    if (id_city) {
+        $('#select-dist-to').load(`${apiurl}/request_dist?city=${id_city}`, function () {
+          console.log('finish Dist to');
+          $('#select-dist-to').select2({ disabled: false });
+        });
+    }
+    return false;
+}
+
 function setService() {
-    let origin      = $('[name="city"]').val();
-    let destination = $('[name="cityto"]').val();
+    let origin      = $('[name="dist"]').val();
+    let destination = $('[name="distto"]').val();
     let weight      = $('[name="berat"]').val();
     let courier     = $('[name="kurir"]').val();
     if ($('#select-kurir').val()) {

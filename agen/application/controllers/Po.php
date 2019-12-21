@@ -332,12 +332,14 @@ class Po extends CI_Controller {
             $a['kodeprovto']    = $this->input->post('provinsito');
             $a['kodecityfrom']  = $this->input->post('city');
             $a['kodecityto']    = $this->input->post('cityto');
-            $a['lokasidari']= $this->input->post('mask-provinsi').' - '.$this->input->post('mask-city');
-            $a['lokasike']  = $this->input->post('mask-provinsito').' - '.$this->input->post('mask-cityto');
-            $a['kgkirim']   = $this->input->post('berat');
-            $a['bykirim']   = $this->input->post('biaya');
-            $a['kodekurir'] = $this->input->post('kodekurir');
-            $a['kurir']     = $this->input->post('kurir');
+            $a['kodedistfrom']  = $this->input->post('dist');
+            $a['kodedistto']    = $this->input->post('distto');
+            $a['lokasidari']    = $this->input->post('mask-provinsi').' - '.$this->input->post('mask-city');
+            $a['lokasike']      = $this->input->post('mask-provinsito').' - '.$this->input->post('mask-cityto');
+            $a['kgkirim']       = $this->input->post('berat');
+            $a['bykirim']       = $this->input->post('biaya');
+            $a['kodekurir']     = $this->input->post('kodekurir');
+            $a['kurir']         = $this->input->post('kurir');
         }
         $this->db->insert('xorder',$a);
 
@@ -491,30 +493,32 @@ class Po extends CI_Controller {
     public function updatedata()
     {
         $this->db->trans_begin();
-        $kodeorder      = $this->input->post('kode');
-        $a['useru']     = $this->session->userdata('username');
-        $a['dateu']     = 'now()';
-        $a['ref_cust']  = $this->session->userdata('kodecust');
-        $a['tgl']       = date('Y-m-d', strtotime($this->input->post('tgl')));
-        $a['ref_gud']   = $this->libre->gud_def();
-        $a['ket']       = $this->input->post('ket');
-        $a['ref_kirim'] = $this->input->post('ref_kirim');
+        $kodeorder        = $this->input->post('kode');
+        $a['useru']       = $this->session->userdata('username');
+        $a['dateu']       = 'now()';
+        $a['ref_cust']    = $this->session->userdata('kodecust');
+        $a['tgl']         = date('Y-m-d', strtotime($this->input->post('tgl')));
+        $a['ref_gud']     = $this->libre->gud_def();
+        $a['ket']         = $this->input->post('ket');
+        $a['ref_kirim']   = $this->input->post('ref_kirim');
         $a['ref_layanan'] = $this->input->post('ref_layanan');
-        $a['kirimke']   = $this->input->post('kirimke');
-        $a['alamat']    = $this->input->post('alamat');
-        $a['telp']      = $this->input->post('telp');
-        $a['ref_bank']  = $this->input->post('ref_bank');
+        $a['kirimke']     = $this->input->post('kirimke');
+        $a['alamat']      = $this->input->post('alamat');
+        $a['telp']        = $this->input->post('telp');
+        $a['ref_bank']    = $this->input->post('ref_bank');
         if ($this->input->post('ref_kirim') == 'GX0002') {
             $a['kodeprovfrom']  = $this->input->post('provinsi');
-            $a['kodeprovto'] = $this->input->post('provinsito');
+            $a['kodeprovto']    = $this->input->post('provinsito');
             $a['kodecityfrom']  = $this->input->post('city');
             $a['kodecityto']    = $this->input->post('cityto');
-            $a['lokasidari']= $this->input->post('mask-provinsi').' - '.$this->input->post('mask-city');
-            $a['lokasike']  = $this->input->post('mask-provinsito').' - '.$this->input->post('mask-cityto');
-            $a['kgkirim']   = $this->input->post('berat');
-            $a['bykirim']   = $this->input->post('biaya');
-            $a['kodekurir'] = $this->input->post('kodekurir');
-            $a['kurir']     = $this->input->post('kurir');
+            $a['kodedistfrom']  = $this->input->post('dist');
+            $a['kodedistto']    = $this->input->post('distto');
+            $a['lokasidari']    = $this->input->post('mask-provinsi').' - '.$this->input->post('mask-city');
+            $a['lokasike']      = $this->input->post('mask-provinsito').' - '.$this->input->post('mask-cityto');
+            $a['kgkirim']       = $this->input->post('berat');
+            $a['bykirim']       = $this->input->post('biaya');
+            $a['kodekurir']     = $this->input->post('kodekurir');
+            $a['kurir']         = $this->input->post('kurir');
         }
         $this->db->update('xorder',$a,array('kode' => $kodeorder));
         $kodebrg = $this->input->post('kodebrg');
@@ -880,7 +884,7 @@ class Po extends CI_Controller {
     }
 
     function request_province() {
-        $response = $this->libre->get_province_ro();
+        $response = $this->libre->get_province_pro();
         $data = json_decode($response, true);
         $op = "<option value=''>-</option>";
             for ($i=0; $i < count($data['rajaongkir']['results']); $i++) {
@@ -892,7 +896,7 @@ class Po extends CI_Controller {
 
     function request_city() {
         $provincecode = $this->input->get('province');
-        $response = $this->libre->get_city_ro($provincecode);
+        $response = $this->libre->get_city_pro($provincecode);
         $data = json_decode($response, true);
         $op = "<option value=''>-</option>";
             for ($i=0; $i < count($data['rajaongkir']['results']); $i++) {
@@ -902,14 +906,29 @@ class Po extends CI_Controller {
 
     }
 
-    function request_ongkir() {
+    function request_dist() {
+        $citycode   = $this->input->get('city');
+        $response   = $this->libre->get_dist_pro($citycode);
+        $data       = json_decode($response, true);
+        $op = "<option value=''>-</option>";
+            for ($i=0; $i < count($data['rajaongkir']['results']); $i++) {
+              $op .=  "<option value='".$data['rajaongkir']['results'][$i]['subdistrict_id']."'>".$data['rajaongkir']['results'][$i]['subdistrict_name']."</option>";
+              }
+        echo $op;
+
+    }
+
+    function request_ongkir()
+    {
+        $origintype     = 'subdistrict';
+        $destinationtype= 'subdistrict';
         $origin         = $this->input->get('origin');
         $destination    = $this->input->get('destination');
         // $weight         = $this->input->get('weight') * 1000;
         $weight         = 1 * 1000;
         $courier        = $this->input->get('courier');
-        $response = $this->libre->get_ongkir_ro($origin,$destination,$weight,$courier);
-        $data = json_decode($response, true);
+        $response       = $this->libre->get_ongkir_pro($origin, $origintype, $destination, $destinationtype, $weight, $courier);
+        $data           = json_decode($response, true);
         $op = "<option value=''>-</option>";
             for ($i=0; $i < count($data['rajaongkir']['results'][0]['costs']); $i++) {
             $res = $data['rajaongkir']['results'][0]['costs'][$i];

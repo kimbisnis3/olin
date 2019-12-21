@@ -3,8 +3,8 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 
 class libre
-{   
-    public $roapi = '5c8590c12ef6879e2b829c4ab6aa955e';
+{
+    public $roapi = 'af0f53b5091a4d355a9a425cd6c802ac';
 
     public function pathupload()
     {
@@ -109,6 +109,95 @@ class libre
         curl_close($curl);
         return $response;
 
+    }
+
+    function get_province_pro()
+    {
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+        CURLOPT_URL => "https://pro.rajaongkir.com/api/province",
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => "",
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 30,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => "GET",
+        CURLOPT_HTTPHEADER => array(
+          "key: $this->roapi"
+        ),
+        ));
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+        curl_close($curl);
+        return $response;
+    }
+
+    function get_city_pro($provincecode)
+    {
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+        CURLOPT_URL => "https://pro.rajaongkir.com/api/city?province={$provincecode}",
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => "",
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 30,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => "GET",
+        CURLOPT_HTTPHEADER => array(
+          "key: $this->roapi"
+        ),
+        ));
+
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+        curl_close($curl);
+        return $response;
+    }
+
+    function get_dist_pro($citycode)
+    {
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+        CURLOPT_URL => "https://pro.rajaongkir.com/api/subdistrict?city={$citycode}",
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => "",
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 30,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => "GET",
+        CURLOPT_HTTPHEADER => array(
+          "key: $this->roapi"
+        ),
+        ));
+
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+        curl_close($curl);
+        return $response;
+    }
+
+    function get_ongkir_pro($origin, $origintype, $destination, $destinationtype, $weight, $courier)
+    {
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+          CURLOPT_URL => "https://pro.rajaongkir.com/api/cost",
+          CURLOPT_RETURNTRANSFER => true,
+          CURLOPT_ENCODING => "",
+          CURLOPT_MAXREDIRS => 10,
+          CURLOPT_TIMEOUT => 30,
+          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+          CURLOPT_CUSTOMREQUEST => "POST",
+          CURLOPT_POSTFIELDS => "origin={$origin}&originType={$origintype}&destination={$destination}&destinationType={$destinationtype}&weight={$weight}&courier={$courier}",
+          CURLOPT_HTTPHEADER => array(
+            "content-type: application/x-www-form-urlencoded",
+            "key: $this->roapi"
+          ),
+        ));
+
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+        curl_close($curl);
+        return $response;
     }
 
     public function companydata() {
