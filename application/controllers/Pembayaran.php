@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 class Pembayaran extends CI_Controller {
-    
+
     public $table       = 'xpelunasan';
     public $foldername  = 'xpelunasan';
     public $indexpage   = 'pembayaran/v_pembayaran';
@@ -11,14 +11,14 @@ class Pembayaran extends CI_Controller {
     }
     function index(){
         $data['jenisbayar'] = $this->db->get('mjenbayar')->result();
-        $this->load->view($this->indexpage,$data);  
+        $this->load->view($this->indexpage,$data);
     }
 
     public function getall(){
         $filterawal = date('Y-m-d', strtotime($this->input->post('filterawal')));
         $filterakhir = date('Y-m-d', strtotime($this->input->post('filterakhir')));
         $filteragen = $this->input->post('filteragen');
-        $q = "SELECT 
+        $q = "SELECT
                 xpelunasan.id,
                 xpelunasan.kode,
                 xpelunasan.tgl tgl_real,
@@ -33,14 +33,14 @@ class Pembayaran extends CI_Controller {
                 mcustomer.nama mcustomer_nama,
                 mgudang.nama mgudang_nama,
                 mjenbayar.nama mjenbayar_nama
-            FROM 
+            FROM
                 xpelunasan
             LEFT JOIN mcustomer ON mcustomer.kode = xpelunasan.ref_cust
             LEFT JOIN mgudang ON mgudang.kode = xpelunasan.ref_gud
             LEFT JOIN mjenbayar ON mjenbayar.kode = xpelunasan.ref_jenbayar
             WHERE xpelunasan.void IS NOT TRUE
             AND
-                xpelunasan.tgl 
+                xpelunasan.tgl
             BETWEEN '$filterawal' AND '$filterakhir'";
         if ($filteragen) {
             $q .= " AND ref_cust = '$filteragen'";
@@ -116,7 +116,7 @@ class Pembayaran extends CI_Controller {
 
     public function getorder(){
         $q = "select qr.*, (qr.total - qr.dibayar) kurang from (
-                select 
+                select
                 xorder.id,
                 xorder.kode,
                 xorder.tgl,
@@ -127,12 +127,12 @@ class Pembayaran extends CI_Controller {
                 xorder.ref_cust,
                 xorder.ref_kirim,
                 mcustomer.nama mcustomer_nama,
-                case xorder.ref_kirim 
+                case xorder.ref_kirim
                 when 'GX0002' then xorder.total
                 when 'GX0001' then xorder.total - xorder.bykirim
                 end as total,
                 (select coalesce(sum(xpelunasan.bayar),0) from xpelunasan
-                where xpelunasan.void is not true 
+                where xpelunasan.void is not true
                 and xpelunasan.ref_jual = xorder.kode) dibayar
                 from xorder
                 join mcustomer on mcustomer.kode = xorder.ref_cust
@@ -153,12 +153,12 @@ class Pembayaran extends CI_Controller {
             $row['ket']             = $r->ket;
 
             $list[] = $row;
-        }   
+        }
         echo json_encode(array('data' => $list));
     }
 
     public function savedata()
-    {   
+    {
         $this->db->trans_begin();
         $a['useri']     = $this->session->userdata('username');
         $a['ref_cust']  = $this->input->post('ref_cust');
@@ -193,7 +193,7 @@ class Pembayaran extends CI_Controller {
         if ($this->db->trans_status() === FALSE) {
             $this->db->trans_rollback();
             $r = array(
-                'sukses' => 'fail', 
+                'sukses' => 'fail',
             );
         }
         else {
@@ -209,7 +209,7 @@ class Pembayaran extends CI_Controller {
     public function edit()
     {
         $this->input->post('kode');
-        $q = "SELECT 
+        $q = "SELECT
                 xpelunasan.id,
                 xpelunasan.kode,
                 xpelunasan.tgl tgl_real,
@@ -224,7 +224,7 @@ class Pembayaran extends CI_Controller {
                 mcustomer.nama mcustomer_nama,
                 mgudang.nama mgudang_nama,
                 mjenbayar.nama mjenbayar_nama
-            FROM 
+            FROM
                 xpelunasan
             LEFT JOIN mcustomer ON mcustomer.kode = xpelunasan.ref_cust
             LEFT JOIN mgudang ON mgudang.kode = xpelunasan.ref_gud
@@ -268,7 +268,7 @@ class Pembayaran extends CI_Controller {
         if ($this->db->trans_status() === FALSE) {
             $this->db->trans_rollback();
             $r = array(
-                'sukses' => 'fail', 
+                'sukses' => 'fail',
             );
         }
         else {
@@ -283,7 +283,7 @@ class Pembayaran extends CI_Controller {
     function validdata() {
         $d['posted']    = 't';
         $d['tglposted'] = date("Y-m-d");
-        $w['id']        = $this->input->post('id');   
+        $w['id']        = $this->input->post('id');
         $result         = $this->db->update('xpelunasan',$d,$w);
         $resorder       = $this->db->get_where('xpelunasan',$w)->row();
         $attach         = $this->db->get_where('xorder',array('kode' => $resorder->ref_jual))->row();
@@ -314,6 +314,34 @@ class Pembayaran extends CI_Controller {
         }
         $r['sukses']    = $result ? 'success' : 'fail' ;
         $r['link']      = file_url($attach->pathcorel) ;
+        echo json_encode($r);
+    }
+
+    public function sendemail_manual()
+    {
+        $w['id']        = $this->input->post('id');
+        $kodeorder      = $this->db->get_where('xpelunasan',$w)->row();
+        $q = "SELECT
+                xorder.kode,
+                mmodesign.nama,
+                xorderd.jumlah,
+                xpelunasan.tglposted + INTEGER '15' tglposted,
+                _product_id,
+                _design_id,
+                _order_id
+              FROM
+                xorder
+              LEFT JOIN xpelunasan ON (xorder.kode = xpelunasan.ref_jual and xpelunasan.ref_jenbayar = 'GX0003' and xpelunasan.tglposted is not null)
+              LEFT JOIN xorderd ON xorder.kode = xorderd.ref_order
+              LEFT JOIN xorderds ON xorderd. ID = xorderds.ref_orderd
+              LEFT JOIN mmodesign ON mmodesign.kode = xorderds.ref_modesign
+              WHERE
+                xorder.kode = '$kodeorder->ref_jual'";
+        $data['dataorder'] = $this->db->query($q)->result_array();
+        $message = $this->load->view('pembayaran/e_pembayaran',$data, true);
+        $result = $this->sendemail($kodeorder->ref_jual, $message, null);
+        $r['sukses']    = 'success' ;
+        $r['result']    = $result ;
         echo json_encode($r);
     }
 
@@ -355,15 +383,15 @@ class Pembayaran extends CI_Controller {
         }
     }
 
-    function voiddata() 
+    function voiddata()
     {
         $d['void']  = 't';
         $d['tglvoid'] = 'now()';
-        $w['id']    = $this->input->post('id');   
+        $w['id']    = $this->input->post('id');
         $result     = $this->db->update($this->table,$d,$w);
         $r['sukses'] = $result ? 'success' : 'fail' ;
         echo json_encode($r);
 
     }
-    
+
 }
