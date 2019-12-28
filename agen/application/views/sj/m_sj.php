@@ -116,7 +116,7 @@
                       <th>Kirim Ke</th>
                       <th>Alamat</th>
                       <th>Kurir</th>
-                      <th>Kode Kurir</th>
+                      <th>Nama Customer</th>
                       <th>Tanggal</th>
                       <th>Status</th>
                       <th>Keterangan</th>

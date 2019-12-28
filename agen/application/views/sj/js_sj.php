@@ -143,7 +143,7 @@ function open_proc() {
           { "data": "kirimke" , "visible" : false},
           { "data": "alamat" , "visible" : false},
           { "data": "kurir" , "visible" : false},
-          { "data": "kodekurir" , "visible" : false},
+          { "data": "mcustomer_nama" , "visible" : false},
           { "data": "tgl" },
           { "data": "status" },
           { "data": "ket" },
