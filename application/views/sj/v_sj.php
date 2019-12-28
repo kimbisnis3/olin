@@ -276,11 +276,11 @@
 
       table = $('#table').DataTable({
           "processing": true,
-          "createdRow": function( row, data, dataIndex ) 
+          "createdRow": function( row, data, dataIndex )
           {
-            if ( data.posted == "t" ) {        
+            if ( data.posted == "t" ) {
               $(row).addClass('uni-green');
-            }else {        
+            }else {
               $(row).addClass('uni-red');
             }
           },
@@ -293,17 +293,17 @@
                 filteragen : function() { return $('[name="filteragen"').val() },
               },
           },
-          "columns": [{ 
+          "columns": [{
               "className": 'details-control',
               "orderable": false,
               "data": null,
               "defaultContent": ''
           },
-          { "data": "id" , "note" : "num" }, 
+          { "data": "id" , "note" : "num" },
           { "data": "id" , "visible" : false},
           { "data": "kode" , "visible" : false},
           { "data": "posted" , "visible" : false},
-          { "data": "tgl" }, 
+          { "data": "tgl" },
           { "data": "tglkirim" },
           { "data": "mcustomer_nama" },
           { "data": "kirim" },
@@ -395,9 +395,9 @@
               "defaultContent": "<button id='pilih-data' class='btn btn-sm btn-success btn-flat'><i class='fa fa-check'></i></button>"
           }],
           "columns": [
-            { "data": "id" }, 
+            { "data": "id" },
             { "data": "id" , "visible" : false},
-            { "data": "xorder_kode" , "visible" : false},
+            { "data": "xorder_kode" , "visible" : true},
             { "data": "ref_cust" , "visible" : false},
             { "data": "ref_cust" , "visible" : false},
             { "data": "bykirim" , "visible" : false},
@@ -405,9 +405,9 @@
             { "data": "alamat" , "visible" : false},
             { "data": "kurir" , "visible" : false},
             { "data": "kodekurir" , "visible" : false},
-            { "data": "mbarang_nama" },
+            { "data": "mcustomer_nama" , "visible" : true },
             { "data": "tgl" },
-            { "data": "status" },
+            { "data": "status" , "visible" : false },
             { "data": "ket" },
             { "data": "opsi" },
           ]
