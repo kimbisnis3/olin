@@ -79,7 +79,7 @@
   var title = '<?php echo $title ?>';
 
   $(document).ready(function() {
-      getAkses(title);
+      // getAkses(title);
       select2();
       activemenux('reports', title.replace(/ /g, "").toLowerCase());
       dpicker();
