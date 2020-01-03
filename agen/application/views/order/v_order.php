@@ -556,6 +556,7 @@
                               <th>Customer</th>
                               <th>Layanan</th>
                               <th>Pengiriman</th>
+                              <th>By. Kirim</th>
                               <th>Total</th>
                               <th>Keterangan</th>
                               <th>Status</th>
@@ -626,6 +627,7 @@
           { "data": "namacust" },
           { "data": "mlayanan_nama" },
           { "data": "mkirim_nama" },
+          { "data": "bykirim" },
           { "data": "totalall" },
           { "data": "ket" },
           { "data": "status" }

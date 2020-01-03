@@ -24,22 +24,7 @@ class Po extends CI_Controller {
         $filterakhir = date('Y-m-d', strtotime($this->input->post('filterakhir')));
         $kodecust   = $this->session->userdata('kodecust');
         $q = "SELECT
-                xorder.id,
-                xorder.kode,
-                xorder.tgl,
-                xorder.ket,
-                xorder.pic,
-                xorder.kgkirim,
-                xorder.kirimke,
-                xorder.bykirim,
-                xorder.ref_layanan,
-                xorder.kurir,
-                xorder.kodekurir,
-                xorder.lokasidari,
-                xorder.lokasike,
-                xorder.pathcorel,
-                xorder.pathimage,
-                xorder.status,
+                xorder.*,
                 xsuratjalan.noresi,
                 mcustomer.nama namacust,
                 mkirim.nama mkirim_nama,
@@ -82,6 +67,7 @@ class Po extends CI_Controller {
             $row['status']      = statuspo($r->status);
             $row['jmlorder']    = $r->jmlorder;
             $row['orderdone']   = $r->orderdone;
+            $row['totalall']    = number_format($r->total + $r->bykirim);
             $row['statusorder'] = ($r->orderdone == $r->jmlorder) ? '<span class="label label-success">Selesai Semua</span>' : '<span class="label label-warning">Belum Selesai</span>' ;
             $list[] = $row;
         }

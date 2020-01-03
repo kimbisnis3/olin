@@ -50,6 +50,8 @@ $(document).ready(function() {
         { "data": "mlayanan_nama" },
         { "data": "mkirim_nama" },
         { "data": "noresi" },
+        { "data": "bykirim" },
+        { "data": "totalall" },
         { "data": "ket" },
         { "data": "statusorder" }
         ]

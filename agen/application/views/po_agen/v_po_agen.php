@@ -74,6 +74,8 @@
                               <th>Layanan</th>
                               <th>Pengiriman</th>
                               <th>No. Resi</th>
+                              <th>By. Kirim</th>
+                              <th>Total</th>
                               <th>Keterangan</th>
                               <th>Status</th>
                             </tr>
