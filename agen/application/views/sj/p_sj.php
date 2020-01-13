@@ -162,6 +162,17 @@
           </div>
           <div class="row">
             <div class="col-xs-3">
+              <p>Biaya Kirim.</p>
+            </div>
+            <div class="col-xs-1">
+              <p>:</p>
+            </div>
+            <div class="col-xs-4  ">
+              <p>Rp. <?php echo number_format($sj->bykirim) ?></p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-3">
               <p>Telp.</p>
             </div>
             <div class="col-xs-1">
