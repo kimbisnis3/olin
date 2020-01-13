@@ -289,6 +289,7 @@ class Pembayaran extends CI_Controller {
         $attach         = $this->db->get_where('xorder',array('kode' => $resorder->ref_jual))->row();
         $q = "SELECT distinct
                 xorder.kode,
+                xorder.ref_cust,
                 xorder.pathcorel,
                 mmodesign.nama namajen,
                 mbarang.nama,
@@ -324,10 +325,13 @@ class Pembayaran extends CI_Controller {
     {
         $w['id']        = $this->input->post('id');
         $kodeorder      = $this->db->get_where('xpelunasan',$w)->row();
+        $attach         = $this->db->get_where('xorder',array('kode' => $kodeorder->ref_jual))->row();
         $q = "SELECT
                 xorder.kode,
                 mmodesign.nama,
                 xorderd.jumlah,
+                xorder.ref_cust,
+                xorder.pathcorel,
                 xpelunasan.tglposted + INTEGER '15' tglposted,
                 _product_id,
                 _design_id,
@@ -342,7 +346,7 @@ class Pembayaran extends CI_Controller {
                 xorder.kode = '$kodeorder->ref_jual'";
         $data['dataorder'] = $this->db->query($q)->result_array();
         $message = $this->load->view('pembayaran/e_pembayaran',$data, true);
-        $result = $this->sendemail($kodeorder->ref_jual, $message, null);
+        $result = $this->sendemail($kodeorder->ref_jual, $message, file_url($attach->pathcorel));
         $r['sukses']    = 'success' ;
         $r['result']    = $result ;
         echo json_encode($r);
