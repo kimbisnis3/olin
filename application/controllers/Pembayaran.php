@@ -294,7 +294,10 @@ class Pembayaran extends CI_Controller {
                 mbarang.nama,
                 xorderd.ref_brg,
                 xorderd.jumlah,
-                xpelunasan.tglposted + INTEGER '15' tglposted
+                xpelunasan.tglposted + INTEGER '15' tglposted,
+                _product_id,
+                _design_id,
+                _order_id
               FROM
                 xorder
               LEFT JOIN xpelunasan ON xorder.kode = xpelunasan.ref_jual
