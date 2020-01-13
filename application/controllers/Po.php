@@ -110,13 +110,15 @@ class Po extends CI_Controller {
                 xorderd._product_id,
                 xorderd._design_id,
                 xorderd._order_id,
-                xorderd.jumlah * xorderd.harga subtotal
+                xorderd.jumlah * xorderd.harga subtotal,
+                xorder.ref_cust
             FROM
                 xorderd
             LEFT JOIN mbarang ON mbarang.kode = xorderd.ref_brg
             LEFT JOIN msatbrg ON msatbrg.kode = xorderd.ref_satbrg
             LEFT JOIN msatuan ON msatuan.kode = msatbrg.ref_sat
             LEFT JOIN mgudang ON mgudang.kode = msatbrg.ref_gud
+            LEFT JOIN xorder ON xorder.kode = xorderd.ref_order
             WHERE xorderd.ref_order = '$xorderkode'";
         $brg     = $this->db->query($q)->result();
 
@@ -171,7 +173,7 @@ class Po extends CI_Controller {
                             <td>'.number_format($r->subtotal).'</td>
                             <td>'.$r->ket.'</td>
                             <td>'.statuspo($r->statusd).'</td>
-                            <td><button class="btn btn-success btn-flat btn-sm" onclick="grab_design(\''.$r->_product_id.'\',\''.$r->_design_id.'\',\''.$r->_order_id.'\')">Design</button></td>
+                            <td><a class="btn btn-success btn-flat btn-sm" href="'.lumise_url($r->ref_cust, $r->_product_id, $r->_design_id, $r->_order_id).'" target="_blank">Design</a></td>
                         </tr>
                         </tbody>';
         }

@@ -8,9 +8,16 @@ if (!function_exists('status')) {
       return $ci->db->insert_id('public."'.$table.'_id_seq"');
     }
 
-    function lumise_url() {
+    function lumise_url($ref_cust, $_product_id, $_design_id, $_order_id) {
         // return 'https://pabriktascustom.com/designapp/';
-        return 'http://localhost/lumise_new/';
+        // return 'http://localhost/lumise_new/';
+        $ci =& get_instance();
+        $basedesign = $ci->db->get_where('mcustomer', array('kode' => $ref_cust))->row()->urldesign;
+        if ($basedesign != null || $basedesign != '') {
+          return $basedesign.'/editor.php?product_base='.$_product_id.'&design_print='.$_design_id.'&order_print='.$_order_id;
+        } else {
+          return '';
+        }
     }
 
     function file_url($i) {
@@ -18,7 +25,7 @@ if (!function_exists('status')) {
         // $url_agen   = 'https://agen.olinbags.com/';
         $url_pusat  = 'http://localhost/olin/';
         $url_agen   = 'http://localhost/olin/agen/';
-        
+
         if (strpos($i, '_pusat') !== false || strpos($i, '/pusat/') !== false) {
             return $url_pusat.str_replace("_pusat","",$i);
         } else if (strpos($i, '_agen') !== false || strpos($i, '/agen/') !== false) {
@@ -28,7 +35,7 @@ if (!function_exists('status')) {
         }
     }
 
-    function link_file_url($i) 
+    function link_file_url($i)
     {
         if (strpos($i, '_pusat') !== false || strpos($i, '/pusat/') !== false) {
             return str_replace("_pusat","",$i);
@@ -42,7 +49,7 @@ if (!function_exists('status')) {
      //IMAGE MANIPULATION
 
     function showimage($i){
-         
+
         if ($i == NULL){
             $i = "(Noimage)";
         } else {
@@ -88,7 +95,7 @@ if (!function_exists('status')) {
             }
         }
         return $img;
-        
+
     }
 
     function imghandler($img,$maxw)
@@ -105,7 +112,7 @@ if (!function_exists('status')) {
             }
         }
         return $img;
-        
+
     }
 
     function ien($text)
@@ -116,7 +123,7 @@ if (!function_exists('status')) {
         else {
             $text = $text;
         }
-       
+
         return $text;
     }
 
@@ -128,7 +135,7 @@ if (!function_exists('status')) {
         else {
             $text = date('Y-m-d', strtotime($text));
         }
-       
+
         return $text;
     }
 
@@ -140,7 +147,7 @@ if (!function_exists('status')) {
         else {
             $text = $this->input->post($text);
         }
-       
+
         return $text;
     }
 
@@ -152,7 +159,7 @@ if (!function_exists('status')) {
         else {
             $text = '<span class="label label-danger" style="align: center;"><i class="glyphicon glyphicon-remove" aria-hidden="true"></i></span>';
         }
-       
+
         return $text;
     }
 
@@ -172,14 +179,14 @@ if (!function_exists('status')) {
         else {
             $data = '<span class="label label-success">'.$labeltrue.'</span>';
         }
-       
+
         return $data;
     }
 
     function normal_date($date)
     {
         if ($date != NULL) {
-            
+
         $indonesian_month = array("Jan", "Feb", "Mar",
             "Apr", "May", "Jun",
             "Jul", "Aug", "Sep",
@@ -204,7 +211,7 @@ if (!function_exists('status')) {
         } else if($s >= 5) {
             $s = '<span class="label label-info">Dikirim</span>';
         }
-       
+
         return $s;
     }
 
