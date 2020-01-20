@@ -50,6 +50,7 @@
               <th>QTY Order</th>
               <th>Dateline</th>
               <th>Link Design</th>
+              <th>File Corel</th>
             </tr>
           </thead>
           <tbody>
@@ -61,6 +62,7 @@
                 <td><?php echo normal_date($v['tglposted']); ?></td>
                 <td><a href="<?php echo lumise_url($v['ref_cust'], $v['_product_id'], $v['_design_id'], $v['_order_id'])?>"><button type="button" class="btn btn-md btn-success">Link Design</button></a></td>
                 <!-- http://localhost/lumise_new/editor.php?product=2&design_print=2019/11/jWYM98fgdi&order_print=121 -->
+                <td><?php echo dlcorel(file_url($v['pathcorel'])); ?></td>
               </tr>
             <?php endforeach; ?>
           </tbody>

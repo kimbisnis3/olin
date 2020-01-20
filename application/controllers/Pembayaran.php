@@ -379,9 +379,9 @@ class Pembayaran extends CI_Controller {
         $this->email->to($emailto);
         $this->email->subject($subject);
         $this->email->message($message);
-        if ($attach != null || $attach != '') {
-            $this->email->attach($attach);
-        }
+        // if ($attach != null || $attach != '') {
+        //     $this->email->attach($attach);
+        // }
         $this->email->send();
         if ($this->email->send()) {
                 return 1;
