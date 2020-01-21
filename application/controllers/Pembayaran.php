@@ -338,7 +338,8 @@ class Pembayaran extends CI_Controller {
                 _order_id
               FROM
                 xorder
-              LEFT JOIN xpelunasan ON (xorder.kode = xpelunasan.ref_jual and xpelunasan.ref_jenbayar = 'GX0003' and xpelunasan.tglposted is not null)
+              -- LEFT JOIN xpelunasan ON (xorder.kode = xpelunasan.ref_jual and xpelunasan.ref_jenbayar = 'GX0003' and xpelunasan.tglposted is not null)
+              LEFT JOIN xpelunasan ON xorder.kode = xpelunasan.ref_jual
               LEFT JOIN xorderd ON xorder.kode = xorderd.ref_order
               LEFT JOIN xorderds ON xorderd. ID = xorderds.ref_orderd
               LEFT JOIN mmodesign ON mmodesign.kode = xorderds.ref_modesign
