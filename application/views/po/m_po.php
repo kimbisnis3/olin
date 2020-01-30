@@ -96,6 +96,20 @@
                   </div>
                 </div>
                 <div class="row">
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label>Nama Pengirim</label>
+                      <input type="text" class="form-control" name="namakirim">
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label>No. Hp Pengirim</label>
+                      <input type="text" class="form-control" name="hpkirim">
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
                   <div class="col-md-8">
                     <div class="form-group">
                       <label>Alamat Lengkap</label>
