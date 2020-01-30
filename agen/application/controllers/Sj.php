@@ -327,6 +327,8 @@ class Sj extends CI_Controller {
                 xorder.alamat,
                 xorder.telp,
                 xorderd.jumlah,
+                xorder.namakirim,
+                xorder.hpkirim,
                 mbarang.kode mbarang_kode,
                 mbarang.nama mbarang_nama
             FROM

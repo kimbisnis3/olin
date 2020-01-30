@@ -182,6 +182,28 @@
               <p><?php echo strtok($sj->telp, '-') ?></p>
             </div>
           </div>
+          <div class="row">
+            <div class="col-xs-3">
+              <p>Nama Pengirim</p>
+            </div>
+            <div class="col-xs-1">
+              <p>:</p>
+            </div>
+            <div class="col-xs-4  ">
+              <p><?php echo strtok($sj->namakirim, '-') ?></p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-3">
+              <p>No. HP Pengirim</p>
+            </div>
+            <div class="col-xs-1">
+              <p>:</p>
+            </div>
+            <div class="col-xs-4  ">
+              <p><?php echo strtok($sj->hpkirim, '-') ?></p>
+            </div>
+          </div>
         </div>
       </div>
     </section>
