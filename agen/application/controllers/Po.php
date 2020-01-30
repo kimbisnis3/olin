@@ -326,6 +326,8 @@ class Po extends CI_Controller {
             $a['bykirim']       = $this->input->post('biaya');
             $a['kodekurir']     = $this->input->post('kodekurir');
             $a['kurir']         = $this->input->post('kurir');
+            $a['namakirim']     = $this->input->post('namakirim');
+            $a['hpkirim']       = $this->input->post('hpkirim');
         }
         $this->db->insert('xorder',$a);
 
@@ -505,6 +507,8 @@ class Po extends CI_Controller {
             $a['bykirim']       = $this->input->post('biaya');
             $a['kodekurir']     = $this->input->post('kodekurir');
             $a['kurir']         = $this->input->post('kurir');
+            $a['namakirim']     = $this->input->post('namakirim');
+            $a['hpkirim']       = $this->input->post('hpkirim');
         }
         $this->db->update('xorder',$a,array('kode' => $kodeorder));
         $kodebrg = $this->input->post('kodebrg');
