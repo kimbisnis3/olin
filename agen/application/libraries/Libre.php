@@ -205,4 +205,11 @@ class libre
       $result = $ci->db->get('tcompany')->row();
       return $result;
     }
+
+    public function companydata2() {
+      $ci=& get_instance();
+      $ci->dbtwo  = $ci->load->database('two', TRUE);
+      $result     = $ci->dbtwo->get('tcompany')->row();
+      return $result;
+    }
 }

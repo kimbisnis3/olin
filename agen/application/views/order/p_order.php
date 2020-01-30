@@ -7,7 +7,7 @@
   </head>
   <body onload="window.print()">
 <!-- <body> -->
-  <div class="container"> 
+  <div class="container">
     <section class="header-report" style="margin-bottom: 20px">
       <div class="row">
         <div class="col-xs-12">
@@ -27,7 +27,7 @@
               <p>:</p>
             </div>
             <div class="col-xs-5">
-              <p><?php echo $this->libre->companydata()->nama ?></p>
+              <p><?php echo $this->libre->companydata2()->nama ?></p>
             </div>
           </div>
           <div class="row">
@@ -38,7 +38,7 @@
               <p>:</p>
             </div>
             <div class="col-xs-5">
-              <p><?php echo $this->libre->companydata()->alamat ?></p>
+              <p><?php echo $this->libre->companydata2()->alamat ?></p>
             </div>
           </div>
           <div class="row">
@@ -49,7 +49,7 @@
               <p>:</p>
             </div>
             <div class="col-xs-5">
-              <p><?php echo $order->telp ?></p>
+              <p><?php echo $this->libre->companydata2()->telp ?></p>
             </div>
           </div>
         </div>
@@ -137,11 +137,11 @@
               <div>
                 <div class="row">
                   <div class="col-xs-8">
-                    <?php 
+                    <?php
                       $colkiri = '4';
                       $coltengah = '2';
                       $colkanan = '6';
-                    ?>  
+                    ?>
                     <div class="row">
                       <div class="col-xs-<?php echo $colkiri ?>">
                         <p>Jasa Pengiriman </p>
