@@ -197,7 +197,7 @@
                         <button class="btn btn-act btn-primary btn-flat edit-btn" onclick="sendemail()"><i class="fa fa-paper-plane"></i> Email</button>
                         <button class="btn btn-act btn-warning btn-flat edit-btn invisible" onclick="edit_data()"><i class="fa fa-pencil"></i> Ubah</button>
                         <button class="btn btn-act btn-success btn-flat option-btn" onclick="valid_data()"><i class="fa fa-check"></i> Validasi</button>
-                        <button class="btn btn-danger btn-flat delete-btn invisible" onclick="void_data()" ><i class="fa fa-trash"></i> Void</button>
+                        <button class="btn btn-danger btn-flat delete-btn" onclick="void_data()" ><i class="fa fa-trash"></i> Void</button>
                       </div>
                     </div>
                     <div class="box-body">
