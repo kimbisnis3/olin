@@ -59,7 +59,7 @@
                       <div class="col-md-6">
                         <div class="form-group">
                           <label>Telp</label>
-                          <input type="text" class="form-control" name="telp" >
+                          <input type="text" class="form-control" name="telp" onkeypress="return inputangka(event)">
                         </div>
                       </div>
                       <div class="col-md-6">

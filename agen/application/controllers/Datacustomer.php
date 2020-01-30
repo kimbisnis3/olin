@@ -1,18 +1,18 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 class Datacustomer extends CI_Controller {
-    
+
     public $table       = 'mcustomer';
     public $foldername  = 'mcustomer';
     public $indexpage   = 'datacustomer/v_datacustomer';
     function __construct() {
         parent::__construct();
         include(APPPATH.'libraries/sessionakses.php');
-        include(APPPATH.'libraries/dbinclude.php');  
+        include(APPPATH.'libraries/dbinclude.php');
     }
     function index(){
         $data['jenc'] = $this->dbtwo->get('mjencust')->result();
-        $this->load->view($this->indexpage,$data);  
+        $this->load->view($this->indexpage,$data);
     }
 
     public function getall(){
@@ -41,12 +41,12 @@ class Datacustomer extends CI_Controller {
             $row['pass']    = '****';
 
             $list[] = $row;
-        }   
+        }
         echo json_encode(array('data' => $list));
     }
 
     public function savedata()
-    {   
+    {
         $d['useri']     = $this->session->userdata('username');
         $d['nama']      = $this->input->post('nama');
         $d['alamat']    = $this->input->post('alamat');
@@ -88,7 +88,9 @@ class Datacustomer extends CI_Controller {
         $d['ket']       = $this->input->post('ket');
         $d['ref_jenc']  = $this->input->post('ref_jenc');
         $d['user']      = $this->input->post('user');
-        $d['pass']      = md5($this->input->post('pass'));
+        if ($this->input->post('pass') != '' || $this->input->post('pass') != null) {
+          $d['pass'] = md5($this->input->post('pass'));
+        }
         $w['id'] = $this->input->post('id');
         $result = $this->dbtwo->update($this->table,$d,$w);
         $r['sukses'] = $result ? 'success' : 'fail' ;
@@ -100,7 +102,7 @@ class Datacustomer extends CI_Controller {
         $s = $this->dbtwo->query($sql)->row()->aktif;
         $s == 't' ? $status = 'f' : $status = 't';
         $d['aktif'] = $status;
-        $w['id'] = $this->input->post('id');   
+        $w['id'] = $this->input->post('id');
         $result = $this->dbtwo->update($this->table,$d,$w);
         $r['sukses'] = $result > 0 ? 'success' : 'fail' ;
         echo json_encode($r);
@@ -114,5 +116,5 @@ class Datacustomer extends CI_Controller {
         $r['sukses'] = $result ? 'success' : 'fail' ;
         echo json_encode($r);
     }
-    
+
 }
