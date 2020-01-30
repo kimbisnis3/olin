@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 class Laporanpo extends CI_Controller {
-    
+
     public $table       = 'laporanpo';
     public $indexpage   = 'laporan/prevreports';
     public $printpage   = 'laporan/mainreports';
@@ -18,8 +18,8 @@ class Laporanpo extends CI_Controller {
             {"val":"layanan_nama","label":"Layanan"},
             {"val":"ketlunas","label":"Status"}
         ]';
-        $data['gb']             = json_decode($setGb); 
-        $data['filter_date']    = 1; 
+        $data['gb']             = json_decode($setGb);
+        $data['filter_date']    = 1;
         $data['title']  = $this->titlepage;
         $this->load->view($this->indexpage,$data);
     }
@@ -40,6 +40,7 @@ class Laporanpo extends CI_Controller {
                     xorderd.harga,
                     xorder.bykirim,
                     xorder.total,
+                    xorder.ket,
                 CASE xpelunasan.ref_jenbayar
                 WHEN 'GX0003' THEN
                     xpelunasan.bayar
@@ -86,7 +87,7 @@ class Laporanpo extends CI_Controller {
                     xorder.void IS NOT TRUE";
         if ($st || $en) {
             $q  .=" AND
-                    xorder.tgl 
+                    xorder.tgl
                 BETWEEN '$st' AND '$en'";
         }
         if ($ref_cust) {
@@ -98,8 +99,8 @@ class Laporanpo extends CI_Controller {
         $data['result'] = $this->db->query($q)->result_array();
         $data['periodestart'] = $this->input->post('awal');
         $data['periodeend']   = $this->input->post('akhir');
-        $data['header'] = ['KODE','TANGGAL','AGEN','JENIS ORDER','LAYANAN','DATELINE','QTY','HARGA','ONGKIR','GRAND TOTAL','DP','TGL DP','PELUNASAN','TGL PELUNASAN','KETERANGAN'];
-        $data['body']   = ['kode','tgl','customer_nama','barang_nama','layanan_nama','dateline','jumlah','harga','bykirim','total','dp','tgldp','lunas','tgllunas','ketlunas'];
+        $data['header'] = ['KODE','TANGGAL','AGEN','JENIS ORDER','LAYANAN','DATELINE','QTY','HARGA','ONGKIR','GRAND TOTAL','DP','TGL DP','PELUNASAN','TGL PELUNASAN','KET LUNAS', 'KET'];
+        $data['body']   = ['kode','tgl','customer_nama','barang_nama','layanan_nama','dateline','jumlah','harga','bykirim','total','dp','tgldp','lunas','tgllunas','ketlunas','ket'];
         $data['maskgb'] = $this->input->post('mask-gb');
         $data['title']  = $this->titlepage;;
         $data['gb']     = $this->input->post('gb');
@@ -143,7 +144,7 @@ class Laporanpo extends CI_Controller {
     //                 xorder.void IS NOT TRUE";
     //     if ($st || $en) {
     //         $q  .=" AND
-    //                 xorder.tgl 
+    //                 xorder.tgl
     //             BETWEEN '$st' AND '$en'";
     //     }
     //     if ($ref_cust) {
@@ -162,5 +163,5 @@ class Laporanpo extends CI_Controller {
     //     $data['gb']     = $this->input->post('gb');
     //     $this->load->view($this->printpage,$data);
     // }
-    
+
 }
