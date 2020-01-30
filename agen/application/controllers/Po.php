@@ -196,6 +196,10 @@ class Po extends CI_Controller {
 
     public function getpesanan()
     {
+        $arr_produk = $this->input->post('arr_produk');
+        $ns = str_replace('[','',$arr_produk);
+        $ns = str_replace(']','',$ns);
+        $ns = str_replace('"',"'",$ns);
         $q = "SELECT
               	mbarang. ID,
               	mbarang.kode kodebrg,
@@ -222,6 +226,9 @@ class Po extends CI_Controller {
               LEFT JOIN mbarang ON mbarang.kode = xorderd.ref_brg
               LEFT JOIN msatbrg ON msatbrg.kode = xorderd.ref_satbrg
               LEFT JOIN msatuan ON msatuan.kode = msatbrg.ref_sat";
+        if ($ns != '') {
+          $q .=" WHERE xorderd.id NOT IN ($ns)" ;
+        }
         $q .=" ORDER BY xorder.id DESC" ;
         $result     = $this->dbtwo->query($q)->result();
         $list       = [];
@@ -238,7 +245,12 @@ class Po extends CI_Controller {
             $row['harga']       = $r->harga;
             $list[] = $row;
         }
-        echo json_encode(array('data' => $list));
+        echo json_encode(
+          array(
+            'data' => $list,
+            'produk' => $ns,
+          )
+      );
     }
 
     public function loadfilelist(){

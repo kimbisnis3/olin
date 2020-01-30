@@ -396,13 +396,20 @@ function add_pesanan(kodebrg, jumlah, xorderd_id, kodeorder)
 
 function table_pesanan()
 {
+  var _id = [];
+  $.each(arr_produk, function( key, value ) {
+    // console.log(value['xorderd_id']);
+    _id.push(value['xorderd_id'])
+  });
   tablepesanan = $('#table-pesanan').DataTable({
       "processing": true,
       "destroy" : true,
       "ajax": {
           "url": `${apiurl}/getpesanan`,
           "type": "POST",
-          "data": {},
+          "data": {
+            arr_produk  : function() { return JSON.stringify(_id) },
+          },
       },
       "columns": [
       { "data": "no" },
