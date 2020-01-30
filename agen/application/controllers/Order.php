@@ -799,6 +799,8 @@ class Order extends CI_Controller {
                 xorder.pathimage,
                 xorder.alamat,
                 xorder.total,
+                xorder.namakirim,
+                xorder.hpkirim,
                 mcustomer.telp,
                 mcustomer.nama namacust,
                 mkirim.nama mkirim_nama,

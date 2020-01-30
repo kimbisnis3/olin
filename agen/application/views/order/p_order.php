@@ -214,6 +214,30 @@
                       </div>
                     </div>
 
+                    <div class="row">
+                      <div class="col-xs-<?php echo $colkiri ?>">
+                        <p>Nama Pengirim</p>
+                      </div>
+                      <div class="col-xs-<?php echo $coltengah ?>">
+                        <p>:</p>
+                      </div>
+                      <div class="col-xs-<?php echo $colkanan ?>">
+                        <p><?php echo $order->namakirim ?></p>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-xs-<?php echo $colkiri ?>">
+                        <p>No. Hp Pengirim</p>
+                      </div>
+                      <div class="col-xs-<?php echo $coltengah ?>">
+                        <p>:</p>
+                      </div>
+                      <div class="col-xs-<?php echo $colkanan ?>">
+                        <p><?php echo $order->hpkirim ?></p>
+                      </div>
+                    </div>
+
 
                   </div>
                   <div class="col-xs-3">
