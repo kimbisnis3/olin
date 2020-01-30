@@ -232,6 +232,9 @@
                               <button class="btn btn-act btn-success btn-flat refresh-btn" onclick="refresh()"><i class="fa fa-refresh"></i> Refresh</button>
                               <!-- <button class="btn btn-act btn-primary btn-flat add-btn invisible" onclick="add_data()" ><i class="fa fa-plus"></i> Tambah</button> -->
                             </div>
+                            <div class="pull-right">
+                              <button class="btn btn-act btn-danger btn-flat delete-btn" onclick="void_data()" ><i class="fa fa-trash"></i> Void</button>
+                            </div>
                           </div>
                           <div class="box-body">
                             <div class="table-responsive mailbox-messages">
@@ -291,11 +294,11 @@
 
       table = $('#table').DataTable({
           "processing": true,
-          "createdRow": function( row, data, dataIndex ) 
+          "createdRow": function( row, data, dataIndex )
           {
-            if ( data.posted == "t" ) {        
+            if ( data.posted == "t" ) {
               $(row).addClass('uni-green');
-            }else {        
+            }else {
               $(row).addClass('uni-red');
             }
           },
@@ -308,12 +311,12 @@
               },
           },
           "columns": [
-          { "data": "id", "visible" : false }, 
-          { "data": "id", "note" : "numbers" }, 
+          { "data": "id", "visible" : false },
+          { "data": "id", "note" : "numbers" },
           { "data": "id" , "visible" : false},
           { "data": "kode" , "visible" : false},
           { "data": "posted" , "visible" : false},
-          { "data": "tgl" }, 
+          { "data": "tgl" },
           { "data": "mcustomer_nama", "visible" : false },
           { "data": "ref_jual" },
           { "data": "mjenbayar_nama" },
@@ -390,13 +393,13 @@
             { "data": "dibayar" },
             { "data": "kurang" },
             { "data": "kurang" },
-            { "render" : (data,type,row,meta) => 
-            { 
+            { "render" : (data,type,row,meta) =>
+            {
               if (row['dibayar'] <= 0 || row['dibayar'] == null || row['dibayar'] == '') {
                 return "<button type='button' class='btn btn-hijau btn-flat btn-block' id='pilih-order'>Bayar</button>"
               } else {
                 return "<button type='button' class='btn btn-biru btn-flat btn-block' id='pilih-order'>Lunasi</button>"
-              } 
+              }
             }
             }
           ]
