@@ -166,6 +166,8 @@
                             <option value="jne">JNE</option>
                             <option value="tiki">TIKI</option>
                             <option value="pos">POS</option>
+                            <option value="jnt">J&T</option>
+                            <option value="sicepat">SICEPAT</option>
                           </select>
                         </div>
                       </div>
