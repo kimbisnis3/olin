@@ -650,7 +650,8 @@ class Po extends CI_Controller {
     }
 
     function loadbrgbykode() {
-        $kodebrg = $this->input->get('kodebrg');
+        $kodebrg    = $this->input->get('kodebrg');
+        $kodeorder  = $this->input->get('kodeorder');
         $q = "SELECT
                 mbarang. ID,
                 mbarang.kode,
@@ -693,8 +694,9 @@ class Po extends CI_Controller {
 
             $q .=" AND mbarang.kode = '$kodebrg'";
 
-            $res_row = $this->db->query($q)->row();
-            echo json_encode($res_row);
+            $r['barang']  = $this->db->query($q)->row();
+            $r['order']   = $this->dbtwo->get_where('xorder', array('kode' => $kodeorder))->row();
+            echo json_encode($r);
 
     }
 

@@ -357,22 +357,34 @@ function loadpesanan()
     table_pesanan();
 }
 
-function add_pesanan(kodebrg, jumlah, xorderd_id)
+function add_pesanan(kodebrg, jumlah, xorderd_id, kodeorder)
 {
   $.ajax({
       url: `${apiurl}/loadbrgbykode`,
       type: "GET",
       dataType: "JSON",
       data: {
-          kodebrg: kodebrg
+          kodebrg   : kodebrg,
+          kodeorder : kodeorder,
       },
       success: function(data) {
-        $('[name="kodebrg"]').val(data.kode);
-        $('[name="beratkg"]').val(data.beratkg);
-        $('[name="harga"]').val(data.harga);
-        $('[name="namabarang"]').val(data.nama);
+        $('[name="kodebrg"]').val(data.barang.kode);
+        $('[name="beratkg"]').val(data.barang.beratkg);
+        $('[name="harga"]').val(data.barang.harga);
+        $('[name="namabarang"]').val(data.barang.nama);
         $('[name="jumlah"]').val(jumlah);
         $('[name="xorderd_id"]').val(xorderd_id);
+        //form
+        $('[name="alamat"]').val(data.order.alamat);
+        $('[name="telp"]').val(data.order.telp);
+        $('[name="ket"]').val(data.order.ket);
+        $('[name="kirimke"]').val(data.order.kirimke);
+        $('[name="ref_layanan"]').val(data.order.ref_layanan);
+        $('[name="ref_layanan"]').trigger('change');
+        $('[name="ref_kirim"]').val(data.order.ref_kirim);
+        $('[name="ref_kirim"]').trigger('change');
+        $('[name="namakirim"]').val(data.order.namakirim);
+        $('[name="hpkirim"]').val(data.order.hpkirim);
         $('#modal-pesanan').modal('hide');
       },
       error: function(jqXHR, textStatus, errorThrown) {
@@ -401,7 +413,7 @@ function table_pesanan()
       { "data": "customer_nama" },
       { "data": "jumlah" },
       { "data": "harga" , "visible" : false  },
-      { "render" : (data,type,row,meta) => { return `<button type="button" class="btn btn-sm btn-hijau btn-flat" onclick="add_pesanan('${row.kodebrg}','${row.jumlah}','${row.xorderd_id}')"><i class="fa fa-check"></i></button>` }},
+      { "render" : (data,type,row,meta) => { return `<button type="button" class="btn btn-sm btn-hijau btn-flat" onclick="add_pesanan('${row.kodebrg}','${row.jumlah}','${row.xorderd_id}','${row.kodeorder}')"><i class="fa fa-check"></i></button>` }},
       ]
   });
 
