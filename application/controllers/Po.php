@@ -224,10 +224,17 @@ class Po extends CI_Controller {
         $result     = $this->db->query($q)->result();
         $list       = [];
         foreach ($result as $i => $r) {
+            $btn_corel ='';
+            if (link_file_url($r->pathcorel) == '' || link_file_url($r->pathcorel) == null) {
+              $btn_corel = 'kosong';
+            } else {
+              $btn_corel = dlcorel(file_url($r->pathcorel));
+            }
             $row['no']              = $i + 1;
             $row['id']              = $r->id;
             $row['kode']            = $r->kode;
-            $row['elempathcorel']   = dlcorel(file_url($r->pathcorel));
+            // $row['elempathcorel']   = dlcorel(file_url($r->pathcorel));
+            $row['elempathcorel']   = $btn_corel;
             $row['elempathimage']   = dlimage(file_url($r->pathimage));
             $row['pathcorel']       = link_file_url($r->pathcorel);
             $row['pathimage']       = link_file_url($r->pathimage);
