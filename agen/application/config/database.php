@@ -6,7 +6,7 @@ $query_builder = TRUE;
 
 $db['one'] = array(
 	'dsn'	=> '',
-	'hostname' => 'cloudz.gongsoft.com',
+	'hostname' => 'cloud.gongsoft.com',
 	'username' => 'gongsoft',
 	'password' => 'gongsoft2019go',
 	'database' => 'olindb',
@@ -28,7 +28,7 @@ $db['one'] = array(
 
 $db['two'] = array(
 	'dsn'	=> '',
-	'hostname' => 'cloudz.gongsoft.com',
+	'hostname' => 'cloud.gongsoft.com',
 	'username' => 'gongsoft',
 	'password' => 'gongsoft2019go',
 	'database' => 'pabriktascustom',
