@@ -584,18 +584,25 @@
               $('[name="provinsi"]').val(data.po.kodeprovfrom);
               $('[name="provinsito"]').val(data.po.kodeprovto);
               $('[name="city"]').val(data.po.kodecityfrom);
+              $('[name="namakirim"]').val(data.po.namakirim);
+              $('[name="hpkirim"]').val(data.po.hpkirim);
               setTimeout(function(){
                 $('[name="cityto"]').val(data.po.kodecityto);
-                $('[name="kurir"]').val(data.po.kurir);
-                $('[name="kurir"]').trigger('change');
                 $('[name="cityto"]').trigger('change');
+              }, 3000);
+              setTimeout(function(){
+                $('[name="distto"]').val(data.po.kodedistto);
+                $('[name="kurir"]').val(data.po.kurir);
+                $('[name="distto"]').trigger('change');
+                $('[name="kurir"]').trigger('change');
               }, 4000);
               setTimeout(function(){
-                $('[name="biaya"]').val(data.po.bykirim);
-                $('[name="kodekurir"]').val(data.po.kodekurir);
-                $('[name="biaya"], [name="kodekurir"]').trigger('change');
                 $('[name="serv"]').val(`@${data.po.kodekurir}@?${data.po.bykirim / data.po.kgkirim}?`);
                 $('[name="serv"]').trigger('change');
+                $('[name="kodekurir"]').val(data.po.kodekurir);
+                $('[name="kodekurir"]').trigger('change');
+                $('[name="biaya"]').val(data.po.bykirim);
+                $('[name="biaya"]').trigger('change');
                 $('#btnSimpan').prop('disabled',false);
               }, 5000);
               console.log($('[name="cityto"]').val());
@@ -738,7 +745,7 @@
   function setCity() {
       let id_province = $('#select-provinsi').val();
       $('#select-city').select2({ disabled: true });
-      if (id_province.length) {
+      if (id_province) {
           $('#select-city').load(`${apiurl}/request_city?province=${id_province}`, function() {
             console.log('finish City');
             $('#select-city').val('445');
@@ -764,7 +771,7 @@
   function setDist() {
       let id_city = $('#select-city').val();
       $('#select-dist').select2({ disabled: true });
-      if (id_city.length) {
+      if (id_city) {
           $('#select-dist').load(`${apiurl}/request_dist?city=${id_city}`, function() {
             console.log('finish Dist');
             $('#select-dist').val('6164');
@@ -807,7 +814,7 @@
   function setPrice() {
     let s = $('#select-service').val()
     let berat = $('[name="berat"]').val()
-    if (s.length > 0) {
+    if (s != '' || s != null) {
       let b = getbiayakirim(s);
       let k = kodekurir(s);
       $('[name="biaya"]').val(b * Math.ceil(berat));
