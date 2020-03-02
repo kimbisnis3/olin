@@ -324,6 +324,9 @@ class Po extends CI_Controller {
 
     public function savedata()
     {
+        $kodeprov   = 10; //jateng
+        $kodecity   = 445; //solo
+        $kodedist   = 6164; //laweyan
         $upcorel    = $this->libre->goUpload('corel','corel-'.time(),$this->foldername);
         $upimage    = $this->libre->goUpload('image','img-'.time(),$this->foldername);
         $this->db->trans_begin();
@@ -341,11 +344,14 @@ class Po extends CI_Controller {
         $a['telp']      = $this->input->post('telp');
         $a['ref_bank']  = ien($this->input->post('ref_bank'));
         if ($this->input->post('ref_kirim') == 'GX0002') {
-            $a['kodeprovfrom']  = $this->input->post('provinsi');
+            // $a['kodeprovfrom']  = $this->input->post('provinsi');
+            // $a['kodecityfrom']  = $this->input->post('city');
+            // $a['kodedistfrom']  = $this->input->post('dist');
+            $a['kodeprovfrom']  = $kodeprov;
+            $a['kodecityfrom']  = $kodecity;
+            $a['kodedistfrom']  = $kodedist;
             $a['kodeprovto']    = $this->input->post('provinsito');
-            $a['kodecityfrom']  = $this->input->post('city');
             $a['kodecityto']    = $this->input->post('cityto');
-            $a['kodedistfrom']  = $this->input->post('dist');
             $a['kodedistto']    = $this->input->post('distto');
             $a['lokasidari']    = $this->input->post('mask-provinsi').' - '.$this->input->post('mask-city');
             $a['lokasike']      = $this->input->post('mask-provinsito').' - '.$this->input->post('mask-cityto');
@@ -476,6 +482,8 @@ class Po extends CI_Controller {
                 xorder.alamat,
                 xorder.kirimke,
                 xorder.ref_bank,
+                xorder.namakirim,
+                xorder.hpkirim,
                 mcustomer.nama mcustomer_nama
             FROM
                 xorder
@@ -507,6 +515,9 @@ class Po extends CI_Controller {
 
     public function updatedata()
     {
+        $kodeprov   = 10; //jateng
+        $kodecity   = 445; //solo
+        $kodedist   = 6164; //laweyan
         $this->db->trans_begin();
         $kodeorder        = $this->input->post('kode');
         $a['useru']       = $this->session->userdata('username');
@@ -522,9 +533,13 @@ class Po extends CI_Controller {
         $a['telp']        = $this->input->post('telp');
         $a['ref_bank']    = $this->input->post('ref_bank');
         if ($this->input->post('ref_kirim') == 'GX0002') {
-            $a['kodeprovfrom']  = $this->input->post('provinsi');
+            // $a['kodeprovfrom']  = $this->input->post('provinsi');
+            // $a['kodecityfrom']  = $this->input->post('city');
+            // $a['kodedistfrom']  = $this->input->post('dist');
+            $a['kodeprovfrom']  = $kodeprov;
+            $a['kodecityfrom']  = $kodecity;
+            $a['kodedistfrom']  = $kodedist;
             $a['kodeprovto']    = $this->input->post('provinsito');
-            $a['kodecityfrom']  = $this->input->post('city');
             $a['kodecityto']    = $this->input->post('cityto');
             $a['kodedistfrom']  = $this->input->post('dist');
             $a['kodedistto']    = $this->input->post('distto');
