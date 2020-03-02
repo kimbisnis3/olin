@@ -53,7 +53,9 @@ $(document).ready(function() {
         { "data": "bykirim" },
         { "data": "totalall" },
         { "data": "ket" },
-        { "data": "statusorder" }
+        { "data": "statusorder" },
+        { "data": "lunas" , "visible" : false },
+        { "data": "validasi" , "visible" : false},
         ]
     });
 
@@ -228,9 +230,15 @@ function open_barang() {
 
 function open_file() {
     xorderkode = table.cell( idx, 3).data();
+	validasi = table.cell(idx, 14).data();
     if (idx == -1) {
         return false;
     }
+	if (validasi == 't') {
+    	showNotif('Fail', 'PO sudah divalidasi!', 'danger')
+        return false;
+    }
+
     $('#modal-file').modal('show');
     $('#modal-title').modal('Data File');
     tablefile = $('#table-file').DataTable({
@@ -374,7 +382,7 @@ function add_pesanan(kodebrg, jumlah, xorderd_id, kodeorder)
         $('[name="namabarang"]').val(data.barang.nama);
         $('[name="jumlah"]').val(jumlah);
         $('[name="xorderd_id"]').val(xorderd_id);
-        //form
+      	//form
         $('[name="alamat"]').val(data.order.alamat);
         $('[name="telp"]').val(data.order.telp);
         $('[name="ket"]').val(data.order.ket);
@@ -631,6 +639,15 @@ function state_insatuan() {
 }
 
 function edit_data() {
+    if (idx == -1) {
+        return false;
+    }
+
+	statusorder = table.cell(idx, 12).data();
+	if (statusorder !== '<span class="label label-warning">Belum Selesai</span>') {
+    	showNotif('Fail', 'PO sudah diproses!', 'danger')
+        return false;
+    }
     arr_produk =[]
     let label_old = $('.edit-btn').html();
     cbs('.edit-btn',"start","Memuat");
@@ -640,9 +657,7 @@ function edit_data() {
     clearbarang()
     kode = table.cell( idx, 3).data();
     $('.box-upload').addClass('invisible');
-    if (idx == -1) {
-        return false;
-    }
+
     state = 'update';
     $('#form-data')[0].reset();
     $('#img-preview').remove();
@@ -722,7 +737,8 @@ function savedata() {
     $('[name="mask-provinsi"]').val($('[name="provinsi"]  option:selected').html());
     $('[name="mask-city"]').val($('[name="city"]  option:selected').html());
     $('[name="mask-provinsito"]').val($('[name="provinsito"]  option:selected').html());
-    $('[name="mask-cityto"]').val($('[name="cityto"] option:selected').html());
+    $('[name="mask-cityto"]').val($('[name="cityto"]  option:selected').html());
+    $('[name="mask-distto"]').val($('[name="distto"] option:selected').html());
     var url;
     if (state == 'add') {
         url = `${apiurl}/savedata`;
@@ -766,6 +782,12 @@ function savedata() {
 
 function hapus_data() {
     id = table.cell( idx, 2).data();
+	let validasiValue = table.cell( idx, 13).data();
+    if (validasiValue == 't') {
+        showNotif('Perhatian', 'Void Tidak Diijinkan', 'warning');
+        cbs('.edit-btn',"stop",label_old);
+      return false;
+    }
     if (idx == -1) {
         return false;
     }

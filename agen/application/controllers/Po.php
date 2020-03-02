@@ -25,6 +25,7 @@ class Po extends CI_Controller {
         $kodecust   = $this->session->userdata('kodecust');
         $q = "SELECT
                 xorder.*,
+                xpelunasan.posted lunas,
                 xsuratjalan.noresi,
                 mcustomer.nama namacust,
                 mkirim.nama mkirim_nama,
@@ -37,6 +38,7 @@ class Po extends CI_Controller {
             LEFT JOIN mkirim ON mkirim.kode = xorder.ref_kirim
             LEFT JOIN mlayanan ON mlayanan.kode = xorder.ref_layanan
             LEFT JOIN xsuratjalan ON xsuratjalan.ref_order = xorder.kode
+            LEFT JOIN xpelunasan ON xorder.kode = xpelunasan.ref_jual AND xpelunasan.void IS NOT TRUE
             WHERE xorder.void IS NOT TRUE
             AND
                 xorder.tgl
@@ -64,11 +66,17 @@ class Po extends CI_Controller {
             $row['kirimke']     = $r->kirimke;
             $row['mlayanan_nama']= $r->mlayanan_nama;
             $row['noresi']      = $r->noresi;
-            $row['status']      = statuspo($r->status);
+            $row['status']      = $r->status;
             $row['jmlorder']    = $r->jmlorder;
             $row['orderdone']   = $r->orderdone;
             $row['totalall']    = number_format($r->total + $r->bykirim);
-            $row['statusorder'] = ($r->orderdone == $r->jmlorder) ? '<span class="label label-success">Selesai Semua</span>' : '<span class="label label-warning">Belum Selesai</span>' ;
+        	if ($r->status > 4) {
+            	$row['statusorder'] = '<span class="label label-success">Sudah Kirim</span>';
+            } else {
+            	$row['statusorder'] = ($r->orderdone == $r->jmlorder) ? '<span class="label label-info">Ready Kirim</span>' : '<span class="label label-warning">Belum Selesai</span>' ;
+            }
+            $row['lunas']       = $r->lunas;
+        	$row['validasi']   = $r->posted;
             $list[] = $row;
         }
         echo json_encode(array('data' => $list));
