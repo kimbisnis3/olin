@@ -597,14 +597,17 @@
                 $('[name="kurir"]').trigger('change');
               }, 4000);
               setTimeout(function(){
-                $('[name="serv"]').val(`@${data.po.kodekurir}@?${data.po.bykirim / data.po.kgkirim}?`);
-                $('[name="serv"]').trigger('change');
                 $('[name="kodekurir"]').val(data.po.kodekurir);
                 $('[name="kodekurir"]').trigger('change');
                 $('[name="biaya"]').val(data.po.bykirim);
                 $('[name="biaya"]').trigger('change');
                 $('#btnSimpan').prop('disabled',false);
               }, 5000);
+              setTimeout(function(){
+                $('[name="serv"]').val(`@${data.po.kodekurir}@?${data.po.bykirim}?`);
+                $('[name="serv"]').trigger('change');
+                $('#btnSimpan').prop('disabled',false);
+              }, 6000);
               console.log($('[name="cityto"]').val());
               $('.select2').trigger('change');
               $('#modal-data').modal('show');
