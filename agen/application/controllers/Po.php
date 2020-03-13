@@ -99,6 +99,7 @@ class Po extends CI_Controller {
                 msatuan.nama satuan,
                 mgudang.nama gudang,
                 xorderd.jumlah,
+                xorderd.kodepesanan,
                 xorderd.statusd,
                 xorderd._product_id,
                 xorderd._design_id,
@@ -148,6 +149,7 @@ class Po extends CI_Controller {
                             <th>Harga</th>
                             <th>Subtotal</th>
                             <th>Keterangan</th>
+                            <th>Kode Pesanan</th>
                             <th>Status</th>
                             <th>Design</th>
                         </tr>
@@ -163,6 +165,7 @@ class Po extends CI_Controller {
                             <td>'.number_format($r->harga).'</td>
                             <td>'.number_format($r->subtotal).'</td>
                             <td>'.$r->ket.'</td>
+                            <td>'.$r->kodepesanan.'</td>
                             <td>'.statuspo($r->statusd).'</td>
                             <td><button class="btn btn-success btn-flat btn-sm" onclick="grab_design(\''.$r->_product_id.'\',\''.$r->_design_id.'\',\''.$r->_order_id.'\')">Design</button></td>
                         </tr>
@@ -387,6 +390,7 @@ class Po extends CI_Controller {
             $rowb['ref_order']        = $kodeOrder;
             $rowb['ref_brg']          = $Brg->msatbrg_ref_brg;
             $rowb['jumlah']           = $r->jumlah;
+            $rowb['kodepesanan']      = $r->kodepesanan;
             $rowb['harga']            = str_replace(",","",$r->harga);
             $rowb['ref_satbrg']       = $Brg->msatbrg_kode;
             $rowb['ref_gud']          = $Brg->msatbrg_ref_gud;
@@ -853,6 +857,7 @@ class Po extends CI_Controller {
         $a['ref_order'] = $kodeorder;
         $a['ref_brg']   = $Brg->msatbrg_ref_brg;
         $a['jumlah']    = $this->input->post('jumlah');
+        $a['kodepesanan']    = $this->input->post('kodepesanan');
         $a['harga']     = str_replace(",","",$this->input->post('harga'));
         $a['ref_satbrg']= $Brg->msatbrg_kode;
         $a['ref_gud']   = $Brg->msatbrg_ref_gud;

@@ -61,6 +61,7 @@
                     <input type="hidden" class="form-control" name="beratkg" id="beratkg">
                     <input type="hidden" class="form-control" name="total" id="input-total-harga">
                     <input type="hidden" class="form-control" name="xorderd_id" id="xorderd_id">
+                    <input type="hidden" class="form-control" name="kodepesanan" id="kodepesanan">
                   </div>
                 </div>
                 <div class="col-md-4">

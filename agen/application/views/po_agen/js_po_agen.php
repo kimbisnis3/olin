@@ -385,6 +385,7 @@ function add_pesanan(kodebrg, jumlah, xorderd_id, kodeorder)
         $('[name="namabarang"]').val(data.barang.nama);
         $('[name="jumlah"]').val(jumlah);
         $('[name="xorderd_id"]').val(xorderd_id);
+        $('[name="kodepesanan"]').val(kodeorder);
       	//form
         $('[name="alamat"]').val(data.order.alamat);
         $('[name="telp"]').val(data.order.telp);
@@ -468,6 +469,8 @@ function edit_barang(index) {
   $('[name="jumlah"]').val(arr_produk[index]['jumlah'])
   $('[name="harga"]').val(arr_produk[index]['harga'])
   $('[name="beratkg"]').val(arr_produk[index]['beratkg'])
+  $('[name="xorderd_id"]').val(arr_produk[index]['xorderd_id'])
+  $('[name="kodepesanan"]').val(arr_produk[index]['kodepesanan'])
   state_edsatuan()
   $('#btn-simpan-barang').attr('onclick', 'update_barang(' + index + ')');
   total_harga()
@@ -483,6 +486,7 @@ function update_barang(index) {
         'harga': $('[name="harga"]').val(),
         'beratkg': $('[name="beratkg"]').val(),
         'xorderd_id': $('[name="xorderd_id"]').val(),
+        'kodepesanan': $('[name="kodepesanan"]').val(),
     };
     arr_produk[index] = newval;
     reloadbarang()
@@ -506,6 +510,8 @@ function update_barang(index) {
               jumlah: $('[name="jumlah"]').val(),
               harga: $('[name="harga"]').val(),
               beratkg: $('[name="beratkg"]').val(),
+              xorderd_id: $('[name="xorderd_id"]').val(),
+              kodepesanan: $('[name="kodepesanan"]').val(),
           },
           success: function(data) {
               if (data.sukses == 'success') {
@@ -548,6 +554,7 @@ function add_barang() {
             'harga': $('[name="harga"]').val(),
             'beratkg': $('[name="beratkg"]').val(),
             'xorderd_id': $('[name="xorderd_id"]').val(),
+            'kodepesanan': $('[name="kodepesanan"]').val(),
         });
         reloadbarang();
         clearbarang();
@@ -570,6 +577,8 @@ function add_barang() {
                 jumlah: $('[name="jumlah"]').val(),
                 harga: $('[name="harga"]').val(),
                 beratkg: $('[name="beratkg"]').val(),
+                xorderd_id: $('[name="xorderd_id"]').val(),
+                kodepesanan: $('[name="kodepesanan"]').val(),
             },
             success: function(data) {
                 if (data.sukses == 'success') {
