@@ -8,6 +8,9 @@ var state;
 var idx     = -1;
 var table ;
 var arr_produk =[];
+var kodeprovfrom   = 10; //jateng
+var kodecityfrom   = 445; //solo
+var kodedistfrom   = 6164; //laweyan
 
 $(document).ready(function() {
     getAkses(title);
@@ -684,35 +687,42 @@ function edit_data() {
             $('[name="alamat"]').val(data.po.alamat);
             $('[name="telp"]').val(data.po.telp);
             $('[name="berat"]').val(data.po.kgkirim);
-            $('[name="provinsi"]').val(data.po.kodeprovfrom);
-            $('[name="provinsito"]').val(data.po.kodeprovto);
-            $('[name="city"]').val(data.po.kodecityfrom);
+            // $('[name="provinsi"]').val(data.po.kodeprovfrom);
+            $('[name="provinsi"]').val(10);
+            // $('[name="city"]').val(data.po.kodecityfrom);
+            $('[name="city"]').val(445);
             $('[name="ref_bank"]').val(data.po.ref_bank);
             $('[name="namakirim"]').val(data.po.namakirim);
+            $('[name="dist"]').val(6164);
             $('[name="hpkirim"]').val(data.po.hpkirim);
+        	  setTimeout(function(){
+              $('[name="provinsito"]').val(data.po.kodeprovto);
+              $('[name="provinsito"]').trigger('change');
+            }, 3000);
             setTimeout(function(){
               $('[name="cityto"]').val(data.po.kodecityto);
               $('[name="cityto"]').trigger('change');
-            }, 3000);
+            }, 6000);
             setTimeout(function(){
               $('[name="distto"]').val(data.po.kodedistto);
-              $('[name="kurir"]').val(data.po.kurir);
               $('[name="distto"]').trigger('change');
+            }, 9000);
+            setTimeout(function(){
+              $('[name="kurir"]').val(data.po.kurir);
               $('[name="kurir"]').trigger('change');
-            }, 4000);
+            }, 10000);
             setTimeout(function(){
               $('[name="kodekurir"]').val(data.po.kodekurir);
               $('[name="kodekurir"]').trigger('change');
               $('[name="biaya"]').val(data.po.bykirim);
               $('[name="biaya"]').trigger('change');
               $('#btnSimpan').prop('disabled',false);
-            }, 5000);
+            }, 11000);
             setTimeout(function(){
               $('[name="serv"]').val(`@${data.po.kodekurir}@?${data.po.bykirim}?`);
               $('[name="serv"]').trigger('change');
               $('#btnSimpan').prop('disabled',false);
-            }, 6000);
-            console.log($('[name="cityto"]').val());
+            }, 13000);
             $('.select2').trigger('change');
             $('#modal-data').modal('show');
             notifLoading();
