@@ -282,6 +282,23 @@ class Datapayment extends CI_Controller {
         echo json_encode($r);
     }
 
+    function cek_data_payment()
+    {
+        $ref_order = $this->input->post('ref_order');
+        $q = "SELECT
+                SUM ( xpelunasan.bayar ) bayar,
+              	xpelunasan.total,
+              	xpelunasan.total - SUM ( xpelunasan.bayar ) kurang
+              FROM
+              	xpelunasan
+              WHERE
+              	xpelunasan.ref_jual = '$ref_order'
+              GROUP BY
+              	xpelunasan.total";
+        $r['data'] = $this->dbtwo->query($q)->row_array();
+        echo json_encode($r);
+    }
+
     function validdata() {
         $d['posted']    = 't';
         $d['tglposted'] = date("Y-m-d");

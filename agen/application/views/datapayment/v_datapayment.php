@@ -144,6 +144,46 @@
                 </div>
               </div>
             </div>
+            <div id="modal-valid" class="modal fade" role="dialog">
+              <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                  <div class="modal-body">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <center><h4 class="modal-title"></h4></center>
+                  </div>
+                  <div class="modal-body">
+                    <table>
+                      <tbody>
+                      	<tr>
+                          <td>Kode PO</td>
+                          <td> : </td>
+                          <td><span id="v-kodepo"></span></td>
+                        </tr>
+                        <tr>
+                          <td>Total</td>
+                          <td> : </td>
+                          <td><span id="v-total"></span></td>
+                        </tr>
+                        <tr>
+                          <td>Sudah Bayar</td>
+                          <td> : </td>
+                          <td><span id="v-bayar"></span></td>
+                        </tr>
+                        <tr>
+                          <td>Kurang</td>
+                          <td> : </td>
+                          <td><span id="v-kurang"></span></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-warning btn-flat" data-dismiss="modal">Tidak</button>
+                    <button type="button" id="btnValid" class="btn btn-danger btn-flat">Ya</button>
+                  </div>
+                </div>
+              </div>
+            </div>
             <section class="content">
               <div class="row">
                 <div class="col-xs-12">
@@ -510,9 +550,26 @@
       if (idx == -1) {
           return false;
       }
-      $('.modal-title').text('Validasi Data ?');
-      $('#modal-konfirmasi').modal('show');
-      $('#btnHapus').attr('onclick', 'validation_data(' + id + ')');
+      $.ajax({
+          url: `${apiurl}/cek_data_payment`,
+          type: "POST",
+          dataType: "JSON",
+          data: {
+              ref_order: table.cell( idx, 7).data()
+          },
+          success: function(data) {
+            $('.modal-title').text('Validasi Data ?');
+            $('#modal-valid').modal('show');
+            $('#btnValid').attr('onclick', 'validation_data(' + id + ')');
+            $('#v-kodepo').html(table.cell( idx, 7).data());
+            $('#v-bayar').html(format_number(data.data.bayar));
+          	$('#v-kurang').html(format_number(data.data.kurang));
+          	$('#v-total').html(format_number(data.data.total));
+          },
+          error: function(jqXHR, textStatus, errorThrown) {
+              showNotif('Fail', 'Internal Error', 'danger');
+          }
+      });
   }
 
   function validation_data(id) {
@@ -529,12 +586,12 @@
               if (data.sukses == 'success') {
                   refresh();
                   showNotif('Sukses', 'Data Berhasil di Validasi', 'success')
-                  $('#modal-konfirmasi').modal('hide');
+                  $('#modal-valid').modal('hide');
                   barloading(0)
               } else if (data.sukses == 'fail') {
                   refresh();
                   showNotif('Gagal', 'Data Gagal di Validasi', 'danger')
-                  $('#modal-konfirmasi').modal('hide');
+                  $('#modal-valid').modal('hide');
                   barloading(0)
               }
           },
