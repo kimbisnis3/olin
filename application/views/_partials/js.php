@@ -47,6 +47,10 @@
 		}
 	}
 
+	function format_number(number) {
+		return numeral(number).format('0,0')
+	}
+
 	function nilaimax(id, max) {
 	    $('#' + id).keyup(function() {
 	        if (parseInt($('#' + id).val()) > max) {
@@ -209,7 +213,7 @@
 	    });
 	}
 
-	
+
 	function activemenu() {
 		$(".menuinduk-"+kodeinduk).addClass("active");
   		$(".menuanak-"+id_action).addClass("active");
