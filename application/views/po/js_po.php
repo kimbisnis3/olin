@@ -7,6 +7,9 @@
   var idx     = -1;
   var table ;
   var arr_produk =[];
+  var kodeprovfrom   = 10; //jateng
+  var kodecityfrom   = 445; //solo
+  var kodedistfrom   = 6164; //laweyan
 
   $(document).ready(function() {
       getAkses(title);
