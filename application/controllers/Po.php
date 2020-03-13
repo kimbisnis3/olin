@@ -106,6 +106,7 @@ class Po extends CI_Controller {
                 msatuan.nama satuan,
                 mgudang.nama gudang,
                 xorderd.jumlah,
+                xorderd.kodepesanan,
                 xorderd.statusd,
                 xorderd._product_id,
                 xorderd._design_id,
@@ -157,6 +158,7 @@ class Po extends CI_Controller {
                             <th>Harga</th>
                             <th>Subtotal</th>
                             <th>Keterangan</th>
+                            <th>Kode Pesanan</th>
                             <th>Status</th>
                             <th>Design</th>
                         </tr>
@@ -172,6 +174,7 @@ class Po extends CI_Controller {
                             <td>'.number_format($r->harga).'</td>
                             <td>'.number_format($r->subtotal).'</td>
                             <td>'.$r->ket.'</td>
+                            <td>'.$r->kodepesanan.'</td>
                             <td>'.statuspo($r->statusd).'</td>
                             <td><a class="btn btn-success btn-flat btn-sm" href="'.lumise_url($r->ref_cust, $r->_product_id, $r->_design_id, $r->_order_id).'" target="_blank">Design</a></td>
                         </tr>
