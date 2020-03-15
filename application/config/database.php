@@ -28,7 +28,7 @@ $db['default'] = array(
 
 $db['online'] = array(
 	'dsn'	=> '',
-	'hostname' => 'cloudz.gongsoft.com',
+	'hostname' => 'cloud.gongsoft.com',
 	'username' => 'gongsoft',
 	'password' => 'gongsoft2019go',
 	'database' => 'olindb',
