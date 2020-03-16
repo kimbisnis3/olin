@@ -704,34 +704,55 @@ function edit_data() {
             $('[name="namakirim"]').val(data.po.namakirim);
             $('[name="dist"]').val(6164);
             $('[name="hpkirim"]').val(data.po.hpkirim);
-        	  setTimeout(function(){
-              $('[name="provinsito"]').val(data.po.kodeprovto);
-              $('[name="provinsito"]').trigger('change');
-            }, 3000);
-            setTimeout(function(){
-              $('[name="cityto"]').val(data.po.kodecityto);
-              $('[name="cityto"]').trigger('change');
-            }, 6000);
-            setTimeout(function(){
-              $('[name="distto"]').val(data.po.kodedistto);
-              $('[name="distto"]').trigger('change');
-            }, 9000);
-            setTimeout(function(){
-              $('[name="kurir"]').val(data.po.kurir);
-              $('[name="kurir"]').trigger('change');
-            }, 10000);
+            $('[name="kurir"]').val(data.po.kurir);
+            $('[name="kurir"]').trigger('change');
+            $('#select-provinsi-to').load(`${apiurl}/request_province`, function(){
+              $('#select-provinsi-to').val(data.po.kodeprovto);
+              $('#select-provinsi-to').trigger('change');
+              $('#select-city-to').load(`${apiurl}/request_city?province=${data.po.kodeprovto}`, function() {
+                $('#select-city-to').val(data.po.kodecityto);
+                $('#select-city-to').trigger('change');
+                $('#select-dist-to').load(`${apiurl}/request_dist?city=${data.po.kodecityto}`, function() {
+                  $('#select-dist-to').val(data.po.kodedistto);
+                  $('#select-dist-to').trigger('change');
+                  $('#select-service').load(`${apiurl}/request_ongkir?origin=${kodedistfrom}&destination=${data.po.kodedistto}&weight=${data.po.kgkirim}&courier=${data.po.kurir}`, function() {
+                    $('#select-service').val(`@${data.po.kodekurir}@?${data.po.bykirim}?`);
+                  });
+                });
+              });
+            });
             setTimeout(function(){
               $('[name="kodekurir"]').val(data.po.kodekurir);
-              $('[name="kodekurir"]').trigger('change');
               $('[name="biaya"]').val(data.po.bykirim);
-              $('[name="biaya"]').trigger('change');
-              $('#btnSimpan').prop('disabled',false);
-            }, 11000);
-            setTimeout(function(){
-              $('[name="serv"]').val(`@${data.po.kodekurir}@?${data.po.bykirim}?`);
-              $('[name="serv"]').trigger('change');
-              $('#btnSimpan').prop('disabled',false);
-            }, 13000);
+            }, 5000);
+        	  // setTimeout(function(){
+            //   $('[name="provinsito"]').val(data.po.kodeprovto);
+            //   $('[name="provinsito"]').trigger('change');
+            // }, 3000);
+            // setTimeout(function(){
+            //   $('[name="cityto"]').val(data.po.kodecityto);
+            //   $('[name="cityto"]').trigger('change');
+            // }, 6000);
+            // setTimeout(function(){
+            //   $('[name="distto"]').val(data.po.kodedistto);
+            //   $('[name="distto"]').trigger('change');
+            // }, 9000);
+            // setTimeout(function(){
+            //   $('[name="kurir"]').val(data.po.kurir);
+            //   $('[name="kurir"]').trigger('change');
+            // }, 10000);
+            // setTimeout(function(){
+            //   $('[name="kodekurir"]').val(data.po.kodekurir);
+            //   $('[name="kodekurir"]').trigger('change');
+            //   $('[name="biaya"]').val(data.po.bykirim);
+            //   $('[name="biaya"]').trigger('change');
+            //   $('#btnSimpan').prop('disabled',false);
+            // }, 11000);
+            // setTimeout(function(){
+            //   $('[name="serv"]').val(`@${data.po.kodekurir}@?${data.po.bykirim}?`);
+            //   $('[name="serv"]').trigger('change');
+            //   $('#btnSimpan').prop('disabled',false);
+            // }, 13000);
             $('.select2').trigger('change');
             $('#modal-data').modal('show');
             notifLoading();
